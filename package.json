@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "follow-redirects": "^1.15.9",
+    "fs": "^0.0.1-security",
+    "https": "^1.0.0",
+    "os": "^0.1.2",
+    "path": "^0.12.7",
+    "querystring": "^0.2.1"
+  }
+}

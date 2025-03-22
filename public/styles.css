@@ -1,0 +1,106 @@
+html, body {
+    background-color: #33334d;
+    color: white;
+
+    font-family: "Sansita Swashed", system-ui;
+    font-optical-sizing: auto;
+    font-weight: normal;
+    font-style: italic;
+
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+button {
+    font-family: "Sansita Swashed", system-ui;
+    font-weight: normal;
+    color: white;
+    border: none;
+    padding: 0;
+    text-align: center;
+}
+
+img {
+    background-color: transparent;
+}
+
+nav {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.centered {
+    margin: auto;
+    text-align: center;
+}
+
+.righted {
+    margin: auto;
+    text-align: right;
+}
+
+.title {
+    font-size: 5em;
+}
+
+.menu-button {
+    background-color: #33334d;
+    transform: scale(0.66);
+    margin-left: .5em;
+    margin-right: .5em;
+}
+
+.menu-bar {
+    position: fixed;
+    bottom: 0px;
+}
+
+/* .slide {
+    position: relative;
+    overflow: hidden;
+    width: 100px;
+    height: 100px; 
+    border: 1px solid black;
+} */
+
+.slide {
+    position: absolute;
+    right: -30%;
+    transition: .5s;
+}
+
+
+/* #menu-button {
+    position: absolute;
+    left: -50%;
+} */
+
+.spin {
+    transform: rotateX(180deg);
+}
+
+.slide.open {
+    transition: .5s;
+    right: 15%;
+}
+
+
+
+
+
+
+
+.white-box {
+    border-radius: 25px;
+    border: 2px solid white;
+    padding: 5px;
+} 
+
+
+
+
+
