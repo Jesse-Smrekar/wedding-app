@@ -10,9 +10,23 @@ var ACCESS_TOKEN;
 
 const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
+const REDIRECT_URI = 'http://localhost:3000/spotify/auth/redirect';
 
 
-function login() {
+function getAuthorization(res) {
+
+  res.redirect('https://accounts.spotify.com/authorize?' +
+    qs.stringify({
+      response_type: 'code',
+      client_id: CLIENT_ID,
+      scope: 'user-read-playback-state user-modify-playback-state user-read-currently-playing',
+      redirect_uri: REDIRECT_URI,
+      state: randStr(16)
+    }));
+}
+
+
+function login(code) {
 
     var options = {
       'method': 'POST',
@@ -44,12 +58,25 @@ function login() {
     });
     
     var postData = qs.stringify({
-      'grant_type': 'client_credentials'
+      'grant_type': 'authorization_code',
+      'code': code,
+      'redirect_uri': REDIRECT_URI
     });
     
     req.write(postData);
     req.end();
 }
+
+
+function setToken(token) {
+  ACCESS_TOKEN = token;
+}
+
+
+
+
+
+
 
 
 function searchTracks(search) {
@@ -90,7 +117,92 @@ function searchTracks(search) {
 
 
 
+function getQueue() {
 
+  return new Promise((resolve, reject) => {
+      var options = {
+      'method': 'GET',
+      'hostname': 'api.spotify.com',
+      'path': `/v1/me/player/queue`,
+      'headers': {
+          'Authorization': 'Bearer ' + ACCESS_TOKEN,
+      },
+      'maxRedirects': 20
+      };
+      
+      var req = https.request(options, function (res) {
+      var chunks = [];
+      
+      res.on("data", function (chunk) {
+          chunks.push(chunk);
+      });
+      
+      res.on("end", function (chunk) {
+          var body = Buffer.concat(chunks);
+          console.log(`Search Result: ${body.toString()}`);
+          resolve(JSON.parse(body).tracks.items);
+      });
+      
+      res.on("error", function (error) {
+          console.error(error);
+          reject(error);
+      });
+      });
+      
+      req.end();
+  });
+}
+
+
+
+function addToQueue(track) {
+
+  var htmlEscapedTrack = track.replace(':', '%3A');
+
+  return new Promise((resolve, reject) => {
+      var options = {
+      'method': 'POST',
+      'hostname': 'api.spotify.com',
+      'path': `/v1/me/player/queue?uri=${htmlEscapedTrack}`,
+      'headers': {
+          'Authorization': 'Bearer ' + ACCESS_TOKEN,
+      },
+      'maxRedirects': 20
+      };
+      
+      var req = https.request(options, function (res) {
+        var chunks = [];
+        
+        res.on("data", function (chunk) {
+            chunks.push(chunk);
+        });
+        
+        res.on("end", function (chunk) {
+            var body = Buffer.concat(chunks);
+            console.log(`Add to queue response: ${body.toString()}`);
+            resolve();
+        });
+        
+        res.on("error", function (error) {
+            console.error(error);
+            reject(error);
+        });
+      });
+      
+      req.end();
+  });
+}
+
+
+function randStr(length) {
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
 
 
 
@@ -126,5 +238,5 @@ function searchTracks(search) {
 
 
 module.exports = {
-    login, searchTracks
+  getAuthorization, login, setToken, searchTracks, addToQueue
 };

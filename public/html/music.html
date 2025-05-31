@@ -25,6 +25,28 @@
                 <input type="text" id="musicsearch" name="musicsearch" placeholder="Song, Artist, etc.">
             </div>
         </form>
+
+        <button onclick="addToQueue()" style="background-color: darkblue;">Add to Queue</button>
+
+        <div id="search-results-container" class="centered">
+            <table class="centered">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Track</th>
+                        <th>Artist</th>
+                        <th>Album</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody id="search-results">
+                    <tr></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+
+
+
 </body>
 </html>

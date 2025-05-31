@@ -1,5 +1,5 @@
 html, body {
-    background-color: #33334d;
+    background-color: #303134;
     color: white;
 
     font-family: "Sansita Swashed", system-ui;
@@ -48,7 +48,7 @@ nav {
 }
 
 .menu-button {
-    background-color: #33334d;
+    background-color: #303134;
     transform: scale(0.66);
     margin-left: .5em;
     margin-right: .5em;
@@ -72,6 +72,30 @@ nav {
     right: -30%;
     transition: .5s;
 }
+
+#search-results-container {
+    border: 5px solid black;
+    width: 80%;
+    margin-top: 10%;
+}
+
+
+table {
+    border-collapse: collapse;
+}
+
+td, th {
+    text-align: left;
+    text-overflow: ellipsis;
+    width: 20%;
+}
+
+thead tr:nth-child(1) th{
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
 
 
 /* #menu-button {
