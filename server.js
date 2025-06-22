@@ -12,6 +12,9 @@ var qs = require('querystring');
 // Server Constants
 const server = express();
 const port = 3000;
+server.use(express.static('public'));
+server.use(express.urlencoded({ extended: true })); // For URL-encoded data
+
 
 
 // -------------------------------------------------------------------------
@@ -155,17 +158,36 @@ server.get('/spotify/auth/redirect', (req, res) => {
 });
 
 
+server.get('/login', (req, res) => {;
 
-// -------------------------------------------------------------------------
-// STARTUP PROCESSSES
+
+  res.set('Content-Type', 'text/html');
+  res.sendFile(path.join(__dirname, 'public', '/html/login.html'));  
+});
+
+
+
+server.post('/login/user', (req, res) => {
+  
+
+  res.set('Content-Type', 'text/html');
+  res.sendFile(path.join(__dirname, 'public', '/html/itinerary.html'));  
+});
+
+
+
+server.get('/itinerary', (req, res) => {
+
+  res.set('Content-Type', 'text/html');
+  res.sendFile(path.join(__dirname, 'public', '/html/itinerary.html'));  
+});
+
+
 
 if (!!process.env.SPOTIFY_TOKEN) {
   spotify.setToken(process.env.SPOTIFY_TOKEN);
 }
 
-db.init();
-
-server.use(express.static('public'));
 server.listen(port, () => {
   console.log(`✅ Server listening on port ${port}`);
   console.log(`Access by IP: ${utils.getLocalIP()}`)

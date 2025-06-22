@@ -12,16 +12,17 @@ html, body {
     margin: 0;
     max-width: 100%;
     overflow-x: hidden;
+    font-size: x-large;
 }
 
-button {
+/* button {
     font-family: "Sansita Swashed", system-ui;
     font-weight: normal;
     color: white;
     border: none;
     padding: 0;
     text-align: center;
-}
+} */
 
 img {
     background-color: transparent;
@@ -44,7 +45,7 @@ nav {
 }
 
 .title {
-    font-size: 5em;
+    font-size: 3.5em;
 }
 
 .menu-button {
@@ -113,7 +114,11 @@ thead tr:nth-child(1) th{
 }
 
 
-
+.stacked-form-item {
+    width: 90%; 
+    font-size: xx-large;
+    margin-bottom: 1em;
+}
 
 
 
