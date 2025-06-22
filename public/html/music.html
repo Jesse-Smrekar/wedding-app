@@ -23,10 +23,10 @@
                     </svg>
                 </span>
                 <input type="text" id="musicsearch" name="musicsearch" placeholder="Song, Artist, etc.">
-            </div>
+                <input type="submit" value="Search">
         </form>
 
-        <button onclick="addToQueue()" style="background-color: darkblue;">Add to Queue</button>
+        <button id="add-to-queue-button" onclick="addToQueue()" style="background-color: darkblue; visibility: hidden;">Add to Queue</button>
 
         <div id="search-results-container" class="centered">
             <table class="centered">

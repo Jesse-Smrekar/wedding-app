@@ -6,17 +6,16 @@ const path = require('path');
 // Other JS files
 const utils = require('./utils.js');
 const spotify = require('./spotify.js');
+const db = require('./db.js');
 var qs = require('querystring');
 
 // Server Constants
 const server = express();
 const port = 3000;
 
-server.get('/', (req, res) => {
 
-  res.set('Content-Type', 'text/html');
-  res.sendFile(path.join(__dirname, 'public', '/html/home.html'));  
-});
+// -------------------------------------------------------------------------
+// COMMON / SHARED REQUESTS
 
 server.get('/styles.css', (req, res) => {
 
@@ -24,12 +23,75 @@ server.get('/styles.css', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'styles.css'));  
 });
 
+
+
+
+
+
+
+
+
+
+// -------------------------------------------------------------------------
+// HTML PAGES
+
+server.get('/', (req, res) => {
+
+  res.set('Content-Type', 'text/html');
+  res.sendFile(path.join(__dirname, 'public', '/html/home.html'));  
+});
+
+
 server.get('/music', (req, res) => {
 
   res.set('Content-Type', 'text/html');
   res.sendFile(path.join(__dirname, 'public', '/html/music.html'));  
 });
 
+
+server.get('/admin', (req, res) => {
+
+  res.set('Content-Type', 'text/html');
+  res.sendFile(path.join(__dirname, 'public', '/html/admin.html'));  
+});
+
+
+
+
+
+
+
+
+
+
+// -------------------------------------------------------------------------
+// ADMIN ENDPOINTS
+server.get('/users', (req, res) => {
+  const search = req.query.search;
+  console.log(`REQUEST: GET, /users, search: ${search}`)
+
+  var response = [];
+  db.read('SELECT * FROM USERS')
+  .then(result => {
+    response = JSON.stringify(result);
+  });
+
+  res.set('Content-Type', 'application/json');
+  res.send(response)
+});
+
+
+
+
+
+
+
+
+
+
+
+// -------------------------------------------------------------------------
+// MUSIC RELATED ENDPOINTS
 
 server.get('/music/search', (req, res) => {
   const search = req.query.search;
@@ -89,16 +151,23 @@ server.get('/spotify/auth/redirect', (req, res) => {
   console.log(`REQUEST: GET, /spotify/auth/redirect, request: ${code}`)
 
   spotify.login(code);
-  res.sendStatus(200);
+  res.redirect('/music');
 });
+
+
+
+// -------------------------------------------------------------------------
+// STARTUP PROCESSSES
 
 if (!!process.env.SPOTIFY_TOKEN) {
   spotify.setToken(process.env.SPOTIFY_TOKEN);
 }
 
+db.init();
+
 server.use(express.static('public'));
 server.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+  console.log(`✅ Server listening on port ${port}`);
   console.log(`Access by IP: ${utils.getLocalIP()}`)
 });
 

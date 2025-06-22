@@ -45,6 +45,8 @@ function musicSearch(searchText) {
             // '</div>' +
             '</tr>';
         }
+
+        document.getElementById('add-to-queue-button').style.visibility = 'visible';
     })
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);

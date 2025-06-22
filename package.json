@@ -7,6 +7,7 @@
     "https": "^1.0.0",
     "os": "^0.1.2",
     "path": "^0.12.7",
-    "querystring": "^0.2.1"
+    "querystring": "^0.2.1",
+    "sqlite3": "^5.1.7"
   }
 }
