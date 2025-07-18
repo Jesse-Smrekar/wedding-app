@@ -69,6 +69,7 @@ function login(code) {
 
 
 function setToken(token) {
+  console.log('Setting access token: %s', token)
   ACCESS_TOKEN = token;
 }
 
@@ -158,6 +159,8 @@ function getQueue() {
 function addToQueue(track) {
 
   var htmlEscapedTrack = track.replace(':', '%3A');
+
+  // TODO: check that the user can add a track
 
   return new Promise((resolve, reject) => {
       var options = {
