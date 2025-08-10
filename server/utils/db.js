@@ -42,12 +42,12 @@ function init() {
 
 function read(queryString) {
 
-    return DB.all(queryString, (err, rows) =>{
-        if (err) {
-            console.error(err.message);
-        }
-        console.log(rows);
-        return rows;
+    return new Promise((resolve, reject) => {
+        DB.all(queryString, (err, res) => {
+            if (err) return reject(err);
+
+            return resolve(res);
+        });
     });
 
     // var DB;

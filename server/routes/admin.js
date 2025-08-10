@@ -15,7 +15,7 @@ const db = require('../utils/db.js');
 router.get('/', (req, res) => {
 
   res.set('Content-Type', 'text/html');
-  res.sendFile(path.join(__dirname, '../../public', '/html/admin.html'));  
+  res.sendFile(path.join(__dirname, '../../public', '/html/admin.html'));
 });
 
 
@@ -46,14 +46,10 @@ router.get('/users', (req, res) => {
   const search = req.query.search;
   console.log(`REQUEST: GET, /users, search: ${search}`)
 
-  var response = [];
-  db.read('SELECT * FROM USERS')
-  .then(result => {
-    response = JSON.stringify(result);
+  db.read('SELECT * FROM USERS').then(result => {
+    res.set('Content-Type', 'application/json');
+    res.send(JSON.stringify(result))
   });
-
-  res.set('Content-Type', 'application/json');
-  res.send(response)
 });
 
 module.exports = router;

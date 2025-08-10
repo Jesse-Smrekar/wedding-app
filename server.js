@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 // Other JS files
 const utils = require('./server/utils/utils.js');
+const auth = require('./server/utils/auth.js');
 
 // Server Constants
 const app = express();
@@ -33,7 +34,7 @@ app.get('/', (req, res) => {
 
 
 // login page
-app.get('/login', (req, res) => {;
+app.get('/login', (req, res) => {
 
   res.set('Content-Type', 'text/html');
   res.sendFile(path.join(__dirname, 'public', '/html/login.html'));  
@@ -41,8 +42,19 @@ app.get('/login', (req, res) => {;
 
 
 // login user
-app.post('/login/user', (req, res) => {
-  
+app.post('/login/user', async (req, res) => {
+
+  var token = auth.generateJWT('jesse', 'smrekar');
+
+  if (!token) {
+    console.log(`No login found for user, creating a new user: ${'jesse smrekar'}`)
+  }
+
+  res.cookie('jwt', token, {
+        httpOnly: true, // Prevents client-side JavaScript access to the cookie
+        secure: false, //process.env.NODE_ENV === 'production', // Use 'secure' in production for HTTPS
+        maxAge: auth.JWT_TTL_MILLIS
+    });
   res.set('Content-Type', 'text/html');
   res.sendFile(path.join(__dirname, 'public', '/html/home.html'));  
 });
@@ -50,7 +62,7 @@ app.post('/login/user', (req, res) => {
 
 // mount admin endpoints
 const adminEndpoints = require('./server/routes/admin.js');
-app.use('/admin', adminEndpoints);
+app.use('/admin', auth,  adminEndpoints);
 
 
 // mount music endpoints
