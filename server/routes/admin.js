@@ -13,6 +13,7 @@ const db = require('../utils/db.js');
  * Returns the HTML page for admin actions
  */
 router.get('/', (req, res) => {
+  console.log(`REQUEST: GET, /admin`)
 
   res.set('Content-Type', 'text/html');
   res.sendFile(path.join(__dirname, '../../public', '/html/admin.html'));
@@ -29,7 +30,7 @@ router.get('/', (req, res) => {
  * music page.
  */
 router.get('/spotify/login', (req, res) => {
-  console.log(`REQUEST: GET, /spotify/login`)
+  console.log(`REQUEST: GET, /admin/spotify/login`)
 
   spotify.getAuthorization(res);
 });
@@ -44,7 +45,7 @@ router.get('/spotify/login', (req, res) => {
  */
 router.get('/users', (req, res) => {
   const search = req.query.search;
-  console.log(`REQUEST: GET, /users, search: ${search}`)
+  console.log(`REQUEST: GET, /admin/users, search: ${search}`)
 
   db.read('SELECT * FROM USERS').then(result => {
     res.set('Content-Type', 'application/json');
