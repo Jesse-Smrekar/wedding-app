@@ -16,6 +16,23 @@ function toggleActionMenu() {
     }
 }
 
+
+function makeAuthenticatedRequest(httpMethod, url) {
+    let jwt = 'FOOBAR';
+    fetch(`${this.location.origin}${url}`, {
+        method: httpMethod, 
+        headers: {
+            "Authorization": `Bearer ${jwt}`
+        }
+    }).then( res => {
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return res.json(); // or response.text() for non-JSON responses
+    })
+
+}
+
 function musicSearch(searchText) {
     fetch(`${this.location.origin}/music/search?search=${searchText}`)
     .then(res => {

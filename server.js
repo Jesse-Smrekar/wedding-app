@@ -12,6 +12,8 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true })); // For URL-encoded data
 
 
+app.use(utils.logRequest);
+app.use(auth.auth);
 
 
 
@@ -43,11 +45,11 @@ app.get('/login', (req, res) => {
 
 // login user
 app.post('/login/user', async (req, res) => {
-
-  var token = auth.generateJWT('jesse', 'smrekar');
+  console.log("REQUEST: GET, /login/user");
 
   if (!token) {
     console.log(`No login found for user, creating a new user: ${'jesse smrekar'}`)
+      var token = auth.generateJWT('jesse', 'smrekar');
   }
 
   res.cookie('jwt', token, {
@@ -62,7 +64,7 @@ app.post('/login/user', async (req, res) => {
 
 // mount admin endpoints
 const adminEndpoints = require('./server/routes/admin.js');
-app.use('/admin', auth,  adminEndpoints);
+app.use('/admin', adminEndpoints);
 
 
 // mount music endpoints
