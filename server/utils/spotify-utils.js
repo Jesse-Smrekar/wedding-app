@@ -4,13 +4,15 @@ var fs = require('fs');
 var qs = require('querystring');
 
 var ACCESS_TOKEN;
+var REFRESH_TOKEN;
+var EXPIRES_SECONDS;
 
 // Documentation: 
 // https://developer.spotify.com/documentation/web-api/tutorials/client-credentials-flow
 
 const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
-const REDIRECT_URI = 'http://localhost:3000/spotify/auth/redirect';
+const REDIRECT_URI = 'https://127.0.0.1:8443/spotify/auth/redirect';
 
 
 function getAuthorization(res) {
@@ -49,6 +51,8 @@ function login(code) {
       res.on("end", function (chunk) {
         var body = JSON.parse(Buffer.concat(chunks));
         ACCESS_TOKEN = body.access_token;
+        REFRESH_TOKEN = body.refresh_token;
+        setTimeout(refreshToken, (body.expires_in - 30) * 1000);
         console.log(`GOT SPOTIFY TOKEN: ${ACCESS_TOKEN}`);
       });
     
@@ -65,6 +69,50 @@ function login(code) {
     
     req.write(postData);
     req.end();
+}
+
+
+function refreshToken() {
+  var options = {
+    method: 'POST',
+    hostname: 'accounts.spotify.com',
+    path: '/api/token',
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + (new Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64'))
+    },
+    json: true
+  };
+
+  var req = https.request(options, function (res) {
+      var chunks = [];
+    
+      res.on("data", function (chunk) {
+        chunks.push(chunk);
+      });
+    
+      res.on("end", function (chunk) {
+        var body = JSON.parse(Buffer.concat(chunks));
+        console.log(body.toString());
+        ACCESS_TOKEN = body.access_token;
+        if (!!body.refresh_token) {
+          REFRESH_TOKEN = body.refresh_token;
+        }
+        setTimeout(refreshToken, (body.expires_in - 30) * 1000);
+        console.log(`GOT SPOTIFY TOKEN: ${ACCESS_TOKEN}`);
+      });
+    
+      res.on("error", function (error) {
+        console.error(error);
+      });
+  });
+    
+  var postData = qs.stringify({
+    'grant_type': 'refresh_token',
+    'refresh_token': REFRESH_TOKEN
+  });
+  req.write(postData);
+  req.end();
 }
 
 

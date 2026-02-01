@@ -1,20 +1,27 @@
 // Library Imports
 const express = require('express');
 const path = require('path');
+const https = require('https');
+const fs = require('fs');
+
 // Other JS files
 const utils = require('./server/utils/utils.js');
 const auth = require('./server/utils/auth.js');
 
+
 // Server Constants
 const app = express();
-const port = 3000;
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true })); // For URL-encoded data
-
-
 app.use(utils.logRequest);
-app.use(auth.auth);
-
+if (!process.env.DEBUG) {
+  app.use(auth.auth);
+}
+const sslOptions = {
+  key: fs.readFileSync('./certs/server.key'),
+  cert: fs.readFileSync('./certs/server.crt')
+};
+const server = https.createServer(sslOptions, app);
 
 
 // ==========================================================================
@@ -80,7 +87,12 @@ app.use('/spotify', spotifyEndpoints);
 
 
 // Start the app
-app.listen(port, () => {
-  console.log(`✅ Server listening on port ${port}`);
+app.listen(process.env.HTTP_PORT, () => {
+  console.log(`✅ Server listening on port ${process.env.HTTP_PORT}`);
   console.log(`Access by IP: ${utils.getLocalIP()}`)
+});
+
+// start https server
+server.listen(process.env.HTTPS_PORT, () => {
+  console.log(`✅HTTPS available on port ${process.env.HTTPS_PORT}`);
 });
