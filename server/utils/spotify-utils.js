@@ -93,7 +93,6 @@ function refreshToken() {
     
       res.on("end", function (chunk) {
         var body = JSON.parse(Buffer.concat(chunks));
-        console.log(body.toString());
         ACCESS_TOKEN = body.access_token;
         if (!!body.refresh_token) {
           REFRESH_TOKEN = body.refresh_token;
@@ -150,7 +149,7 @@ function searchTracks(search) {
         
         res.on("end", function (chunk) {
             var body = Buffer.concat(chunks);
-            console.log(`Search Result: ${body.toString()}`);
+            // console.log(`Search Result: ${body.toString()}`);
             resolve(JSON.parse(body).tracks.items);
         });
         
@@ -188,7 +187,7 @@ function getQueue() {
       
       res.on("end", function (chunk) {
           var body = Buffer.concat(chunks);
-          console.log(`Search Result: ${body.toString()}`);
+          // console.log(`Search Result: ${body.toString()}`);
           resolve(JSON.parse(body).tracks.items);
       });
       
@@ -230,7 +229,7 @@ function addToQueue(track) {
         
         res.on("end", function (chunk) {
             var body = Buffer.concat(chunks);
-            console.log(`Add to queue response: ${body.toString()}`);
+            // console.log(`Add to queue response: ${body.toString()}`);
             resolve();
         });
         

@@ -45,6 +45,7 @@ function musicSearch(searchText) {
 
         if (!!data && data.length > 0) {
             document.getElementById('search-results').innerHTML = '';
+            document.getElementById('add-to-queue-button').disabled = true;
         }
 
         MUSIC_SEARCH_RESULTS = data;
@@ -52,18 +53,20 @@ function musicSearch(searchText) {
         for (inc in data) {
             var entry = data[inc];
             document.getElementById('search-results').innerHTML += 
-            '<tr id="search-result-' + inc +'" onclick=javascript:makeSelection(' + inc + ')>' +
-            // '<div id="search-result-' + inc +'" onclick=javascript:makeSelection(' + inc + ')>' +
-            '<td style="text-align:center;">' + '<img src="' + entry.album_image + '"/></td>' +
-            '<td style="width:30%;">' + entry.track + '</td>' +
-            '<td>' + entry.artist + '</td>' +
-            '<td>' + entry.album + '</td>' +
-            '<td style="width:10%;">' + millisToMinutesAndSeconds(entry.duration) + '</td>' +
-            // '</div>' +
+            // '<div class="result-button">' +
+            '<tr id="search-result-' + inc +'" class="result-button" onclick=javascript:makeSelection(' + inc + ')>' +
+            '<td class="cell-left" style="text-align:center;width:65px;">' + '<img src="' + entry.album_image + '" style="max-width:66%;"/></td>' +
+            '<td style="width:80%;max-width:300px;">' + entry.track + 
+            '<div class="under-text">' + entry.artist + ' - ' + entry.album + '</div>' +
+            '</td>' +
+            // '<td style="max-width:100px;">' + entry.artist + '</td>' +
+            // '<td style="width:30px;max-width:100px;">' + entry.album + '</td>' +
+            // '<td class="cell-right" style="width:10%;">' + millisToMinutesAndSeconds(entry.duration) + '</td>' +
             '</tr>';
+            // '</div>';
         }
 
-        document.getElementById('add-to-queue-button').style.visibility = 'visible';
+        document.getElementById('search-result-header').style.visibility = 'visible';
     })
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
@@ -85,6 +88,10 @@ function makeSelection(record) {
 
     SELECTION = record;
     document.getElementById('search-result-' + record).style.backgroundColor = 'gray';
+    document.getElementById('add-to-queue-button').disabled = false;
+    document.getElementById('add-to-queue-button').style.visibility = 'visible';
+
+
 }
 
 

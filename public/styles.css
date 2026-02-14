@@ -36,7 +36,12 @@ nav {
 
 .centered {
     margin: auto;
+    /* margin-top: 5%;
+    margin-left: 0%;
+    margin-right: 0%; */
     text-align: center;
+    position: static;
+    display: table;
 }
 
 .righted {
@@ -74,21 +79,76 @@ nav {
     transition: .5s;
 }
 
-#search-results-container {
-    border: 5px solid black;
-    width: 80%;
-    margin-top: 10%;
+#static-top {
+    position: sticky;
+    /* position: fixed; */
+    top: 0;
+    z-index: 1000;
+    background-color: #303134;
 }
 
+#musicsearch {
+    width: 95%;
+    height: 2em;
+    font-size: 16px;
+}
+
+.manual-v-center {
+    display: block;
+    align-items: center;
+}
+
+#search-results-container {
+    width: 95%;
+    margin-top: 5%;
+}
+
+#search-results {
+    width: 100%;
+}
+
+table {
+    width: 100%;
+}
+
+.result-button {
+    padding: 5px;
+    transition: background-color 0.3s ease; /* Smooth transition effect */
+    overflow: hidden;
+}
+.result-button:hover {
+    background-color: #5a4874;
+}
 
 table {
     border-collapse: collapse;
 }
 
+.cell-left {
+    /* border: 2px solid rgb(234, 224, 253); */
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-right: none;
+}
+
+.cell-right {
+    /* border: 2px solid rgb(234, 224, 253); */
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-left: none;
+}
+
 td, th {
+    font-size: large;
     text-align: left;
-    text-overflow: ellipsis;
-    width: 20%;
+    white-space: nowrap;      /* Prevents the text from wrapping to a new line */
+    overflow: scroll;
+    text-overflow:ellipsis;
+    padding: 5px;
+}
+
+tr {
+    width: 100%;
 }
 
 thead tr:nth-child(1) th{
@@ -97,7 +157,27 @@ thead tr:nth-child(1) th{
     z-index: 10;
 }
 
+.under-text {
+    font-style: italic;
+    font-size: x-small;
+}
 
+img {
+  border-radius: 3px;
+}
+
+#queue-button {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    /* height: 2em; */
+}
+
+#add-to-queue-button {
+    width: 95%;
+    height: 8em;
+}
 
 /* #menu-button {
     position: absolute;
@@ -109,8 +189,9 @@ thead tr:nth-child(1) th{
 }
 
 .slide.open {
-    transition: .5s;
-    right: 15%;
+    transition: 1s;
+    bottom: 15%;
+    overflow-y: hidden;
 }
 
 
