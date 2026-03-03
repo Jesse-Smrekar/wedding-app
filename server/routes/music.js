@@ -59,7 +59,7 @@ router.get('/search', (req, res) => {
  * 
  * Add a track to the current Spotify queue.
  */
-router.post('/queue', (req, res) => {
+router.get('/queue', (req, res) => {
   const trackId = req.query.trackId;
   console.log(`REQUEST: POST, /music/queue, trackId: ${trackId}`)
 
