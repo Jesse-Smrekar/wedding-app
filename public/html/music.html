@@ -8,38 +8,46 @@
     <title>Tati & Jared</title>
 </head>
 <body>
-    <div class="centered" style="width: 100%;">
-        <div id="static-top">
-            <p class="search-hint">Add your favorite songs to our playlist!</p>
-            <form id="music-search-form" action="javascript:musicSearch(musicsearch.value)">
-                <div class="search-input-row">
-                    <input type="text" id="musicsearch" name="musicsearch" placeholder="Song, artist, album...">
-                    <button type="submit" class="search-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+    <div id="static-top">
+        <p class="search-hint">Add your favorite songs to the queue!</p>
+        <form id="music-search-form" action="javascript:musicSearch(musicsearch.value)">
+            <div class="search-input-row">
+                <div class="search-input-wrap">
+                    <input type="text" id="musicsearch" name="musicsearch" placeholder="Song, artist, album..."
+                        oninput="document.getElementById('musicsearch-clear').style.display = this.value ? 'flex' : 'none'">
+                    <button type="button" id="musicsearch-clear" style="display:none;"
+                        onclick="document.getElementById('musicsearch').value = ''; this.style.display = 'none'; document.getElementById('musicsearch').focus();">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                         </svg>
                     </button>
                 </div>
-            </form>
-        </div>
+                <button type="submit" class="search-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                    </svg>
+                </button>
+            </div>
+        </form>
+    </div>
 
-        <div id="search-results-container" class="centered">
-            <table class="centered">
-                <thead id="search-result-header" style="visibility: hidden;">
-                    <tr class="search-result">
-                        <th></th>
-                        <th>Track</th>
-                    </tr>
-                </thead>
-                <tbody id="search-results">
-                    <tr></tr>
-                </tbody>
-            </table>
-        </div>
+    <div id="search-results-container">
+        <table>
+            <thead id="search-result-header" style="visibility: hidden;">
+                <tr class="search-result">
+                    <th></th>
+                    <th>Track</th>
+                </tr>
+            </thead>
+            <tbody id="search-results">
+                <tr></tr>
+            </tbody>
+        </table>
+    </div>
 
-        <div id="queue-button" class="slide open" style="visibility: hidden;">
-            <button id="add-to-queue-button" onclick="addToQueue()" disabled>Add to Queue</button>
-        </div>
+    <div id="queue-button" class="slide open" style="visibility: hidden;">
+        <button id="add-to-queue-button" onclick="addToQueue()" disabled>Add to Queue</button>
     </div>
 </body>
 </html>

@@ -34,6 +34,7 @@ function makeAuthenticatedRequest(httpMethod, url) {
 }
 
 function musicSearch(searchText) {
+    document.getElementById('musicsearch').blur();
     fetch(`${this.location.origin}/music/search?search=${searchText}`)
     .then(res => {
         if (!res.ok) {
