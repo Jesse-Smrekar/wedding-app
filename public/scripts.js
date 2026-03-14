@@ -18,30 +18,25 @@ function toggleActionMenu() {
 
 
 function makeAuthenticatedRequest(httpMethod, url) {
-    let jwt = 'FOOBAR';
-    fetch(`${this.location.origin}${url}`, {
-        method: httpMethod, 
-        headers: {
-            "Authorization": `Bearer ${jwt}`
-        }
-    }).then( res => {
-        if (!res.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return res.json(); // or response.text() for non-JSON responses
-    })
+    return new Promise((resolve, reject) => {
+        fetch(`${this.location.origin}${url}`, {
+            method: httpMethod, 
+            headers: {
+                "Authorization": `Bearer ${getJWT()}`
+            }
+        }).then( res => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            resolve(res.json()); // or response.text() for non-JSON responses
+        })
+    });
 
 }
 
 function musicSearch(searchText) {
     document.getElementById('musicsearch').blur();
-    fetch(`${this.location.origin}/music/search?search=${searchText}`)
-    .then(res => {
-        if (!res.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return res.json(); // or response.text() for non-JSON responses
-    })
+    makeAuthenticatedRequest('GET', `/music/search?search=${searchText}`)
     .then(data => {
 
         if (!!data && data.length > 0) {
@@ -115,13 +110,7 @@ function addToQueue() {
         return;
     }
 
-    fetch(`${this.location.origin}/music/queue?trackId=${MUSIC_SEARCH_RESULTS[SELECTION].uri}`)
-    .then(res => {
-        if (!res.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return res.json(); // or response.text() for non-JSON responses
-    })
+    makeAuthenticatedRequest('POST', `/music/queue/${MUSIC_SEARCH_RESULTS[SELECTION].uri}`)
     .then(data => {
 
         console.log("queued song. Response: " + data);
@@ -131,6 +120,18 @@ function addToQueue() {
         console.error('There was a problem with the fetch operation:', error);
         // Handle the error
     });
+}
+
+
+function getJWT() {
+    var allCookies = decodeURIComponent(document.cookie).split(';');
+
+    for (let cookie of allCookies) {
+        cookie = cookie.trim();
+        if (cookie.indexOf('jwt=') == 0) {
+            return cookie.substring(4, cookie.length);
+        }
+    }
 }
 
 /*

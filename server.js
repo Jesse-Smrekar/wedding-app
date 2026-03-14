@@ -53,14 +53,11 @@ app.get('/login', (req, res) => {
 // login user
 app.post('/login/user', async (req, res) => {
   console.log("REQUEST: GET, /login/user");
-
-  if (!token) {
-    console.log(`No login found for user, creating a new user: ${'jesse smrekar'}`)
-      var token = auth.generateJWT('jesse', 'smrekar');
-  }
+  var token = auth.generateJWT(req.body.fname, req.body.lname);
+  console.log(`>>> User: ${req.body.fname} ${req.body.lname} logged in`);
 
   res.cookie('jwt', token, {
-        httpOnly: true, // Prevents client-side JavaScript access to the cookie
+        httpOnly: false, // Prevents client-side JavaScript access to the cookie
         secure: false, //process.env.NODE_ENV === 'production', // Use 'secure' in production for HTTPS
         maxAge: auth.JWT_TTL_MILLIS
     });

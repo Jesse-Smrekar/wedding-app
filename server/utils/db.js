@@ -49,28 +49,15 @@ function read(queryString) {
             return resolve(res);
         });
     });
-
-    // var DB;
-    // try {
-    //     DB = await open();
-    //     var result = await DB.all(queryString);
-    //     console.log(result);
-    //     return result;
-    // } finally {
-    //     if (DB) close(DB);
-    // }
 }
 
-async function write(queryString) {
-//     var DB;
-//     try {
-//         DB = await open();
-//         var result = await DB.run(queryString);
-//         console.log(result);
-//         return result;
-//     } finally {
-//         if (DB) close(DB);
-//     }
+function write(queryString) {
+    return new Promise((resolve, reject) => {
+        DB.run(queryString, function(err) {
+            if (err) return reject(err);
+            return resolve(this);
+        });
+    });
 }
 
 
