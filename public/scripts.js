@@ -83,11 +83,11 @@ function millisToMinutesAndSeconds(millis) {
 function makeSelection(record) {
 
     if (SELECTION != null) {
-        document.getElementById('search-result-' + SELECTION).style.backgroundColor = '';
+        document.getElementById('search-result-' + SELECTION).classList.remove('selected');
     }
 
     SELECTION = record;
-    document.getElementById('search-result-' + record).style.backgroundColor = 'gray';
+    document.getElementById('search-result-' + record).classList.add('selected');
     document.getElementById('add-to-queue-button').disabled = false;
     document.getElementById('add-to-queue-button').style.visibility = 'visible';
 

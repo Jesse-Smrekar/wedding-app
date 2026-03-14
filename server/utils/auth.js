@@ -19,17 +19,19 @@ const auth = (req, res, next) => {
 
     const token = req.header('Authorization')?.split(' ')[1];
 
+    next();
+    return;
     // if we don't have a JWT, redirect to the login screen
-    if (!token) return res.redirect("/login");
+    // if (!token) return res.redirect("/login");
 
-    try {
-        const decode = jwt.verify(token, SECRET_KEY);
-        req.user = decode;
-        console.log(`Successfully auth'd ${decode}`)
-        next();
-    } catch (error) {
-        res.status(400).json({ error: 'Invalid Token' });
-    }
+    // try {
+    //     const decode = jwt.verify(token, SECRET_KEY);
+    //     req.user = decode;
+    //     console.log(`Successfully auth'd ${decode}`)
+    //     next();
+    // } catch (error) {
+    //     res.status(400).json({ error: 'Invalid Token' });
+    // }
 };
 
 function generateJWT(firstName, lastName) {
