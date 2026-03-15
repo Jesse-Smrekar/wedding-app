@@ -28,6 +28,20 @@ function makeAuthenticatedRequest(httpMethod, url) {
             if (!res.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
+
+            if (res.headers.get('content-type').indexOf('html') > 0) {
+                res.text()
+                .then(doc => {
+                    document.body.innerHTML = doc;
+                });
+            }
+
+            if (res.redirected) {
+                window.location.assign(res.url);
+                resolve();
+            }
+
+
             resolve(res.json()); // or response.text() for non-JSON responses
         })
     });
@@ -132,6 +146,7 @@ function getJWT() {
             return cookie.substring(4, cookie.length);
         }
     }
+    return '';
 }
 
 /*

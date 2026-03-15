@@ -10,22 +10,28 @@ const JWT_TTL_MILLIS = 86400000;
 const auth = (req, res, next) => {
 
     // skip auth for the home page, login screen, and non-html requests
-    if (["/favicon.ico", "/", "/login", "/login/user"].includes(req.path)
+    if (["/", "/login", "/login/user", "/spotify/auth/redirect"].includes(req.path)
         || req.path.indexOf(".js") > 0 
         || req.path.indexOf(".css") > 0) {
         next();
         return;
     }
 
-    const token = req.header('Authorization')?.split(' ')[1];
+    // look for auth header
+    var token = req.header('Authorization')?.split(' ')[1];
+
+    // if missing, try from cookies
+    if (!token) {
+        token = req.header('cookie')?.substring(4);
+    }
 
     // if we don't have a JWT, redirect to the login screen
     if (!token) return res.redirect("/login");
 
     try {
         const decode = jwt.verify(token, SECRET_KEY);
-        req.user = decode;
-        console.log(`Successfully auth'd ${decode}`)
+        req.user = decode.user;
+        console.log(`Successfully auth'd ${req.user}`)
         next();
     } catch (error) {
         res.status(400).json({ error: 'Invalid Token' });

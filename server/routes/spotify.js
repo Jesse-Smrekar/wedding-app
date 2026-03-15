@@ -17,14 +17,14 @@ const spotify = require('../utils/spotify-utils.js');
 /**
  * GET /spotify/auth/redirect?code={}
  * 
- * This is the callback endpoint for Spotify OAuth. It redirects back to the music page.
+ * This is the callback endpoint for Spotify OAuth. It redirects back to the home page.
  */
 router.get('/auth/redirect', (req, res) => {
   const code = req.query.code;
   console.log(`REQUEST: GET, /spotify/auth/redirect, request: ${code}`)
 
   spotify.login(code);
-  res.redirect('/music');
+  res.redirect('/');
 });
 
 module.exports = router;

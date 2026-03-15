@@ -11,9 +11,10 @@ const auth = require('./server/utils/auth.js');
 
 // Server Constants
 const app = express();
+app.use(utils.logRequest);
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true })); // For URL-encoded data
-app.use(utils.logRequest);
+
 if (!process.env.DEBUG) {
   app.use(auth.auth);
 }
@@ -50,19 +51,29 @@ app.get('/login', (req, res) => {
 });
 
 
+app.get('/favicon.ico', (req, res) => {
+
+  res.set('Content-Type', 'image/png');
+  res.sendFile(path.join(__dirname, 'public', 'images', 'diamond-ring.png'));
+});
+
+
 // login user
 app.post('/login/user', async (req, res) => {
-  console.log("REQUEST: GET, /login/user");
-  var token = auth.generateJWT(req.body.fname, req.body.lname);
-  console.log(`>>> User: ${req.body.fname} ${req.body.lname} logged in`);
+  console.log("REQUEST: POST, /login/user");
+  auth.generateJWT(req.body.fname, req.body.lname)
+  .then( token => {
 
-  res.cookie('jwt', token, {
-        httpOnly: false, // Prevents client-side JavaScript access to the cookie
-        secure: false, //process.env.NODE_ENV === 'production', // Use 'secure' in production for HTTPS
-        maxAge: auth.JWT_TTL_MILLIS
-    });
-  res.set('Content-Type', 'text/html');
-  res.sendFile(path.join(__dirname, 'public', '/html/home.html'));  
+    console.log(`>>> User: ${req.body.fname} ${req.body.lname} logged in`);
+
+    res.cookie('jwt', token, {
+          httpOnly: false, // Prevents client-side JavaScript access to the cookie
+          secure: false, //process.env.NODE_ENV === 'production', // Use 'secure' in production for HTTPS
+          maxAge: auth.JWT_TTL_MILLIS
+      });
+    res.redirect('/');
+  });
+
 });
 
 
