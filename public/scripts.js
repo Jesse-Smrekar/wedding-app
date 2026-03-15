@@ -126,13 +126,19 @@ function addToQueue() {
 
     makeAuthenticatedRequest('POST', `/music/queue/${MUSIC_SEARCH_RESULTS[SELECTION].uri}`)
     .then(data => {
-
-        console.log("queued song. Response: " + data);
-        window.alert('Added to the queue!');
+        var message = ''
+        if (data.success) {
+            message = 'Added to the queue!';
+        } else if (data.message == 'TOO_SOON') {
+            message = `Woah there, the next time you can queue a song is ${new Date(data.time + 'Z').toLocaleTimeString()}. Go dance!`;
+        } else {
+            message = 'Oops! Something went wrong. Go find Jesse!'
+        }
+        window.alert(message);
     })
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
-        // Handle the error
+        window.alert('Oops! Something went wrong. Go find Jesse!');
     });
 }
 

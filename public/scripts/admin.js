@@ -21,11 +21,11 @@ function getUsers() {
         for (inc in data) {
             var entry = data[inc];
 
-            var timeToDisplay = new Date(entry.NEXT_MUSIC_QUEUE_DATE);
+            var timeToDisplay = new Date(entry.NEXT_MUSIC_QUEUE_DATE + 'Z');
             if (timeToDisplay > new Date("2030-01-01") || timeToDisplay < new Date()) {
                 timeToDisplay = "now";
             } else {
-                timeToDisplay = new Date(entry.NEXT_MUSIC_QUEUE_DATE).toLocaleTimeString();
+                timeToDisplay = new Date(entry.NEXT_MUSIC_QUEUE_DATE + 'Z').toLocaleTimeString();
             }
 
 
