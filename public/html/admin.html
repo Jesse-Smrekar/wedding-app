@@ -2,28 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" type="text/css" href="/styles.css">
+    <link rel="icon" type="image/png" href="/images/diamond-ring.png">
     <script src="scripts.js"></script>
     <script src="/scripts/admin.js"></script>
     <title>Tati & Jared</title>
 </head>
 <body>
-
-    <header class="centered">
-        <h1 class="title">ADMIN PAGE</h1>
-    </header>
-
-    <div class="centered">
-        <a href="/admin/spotify/login">Re-auth Spotify</a>
+    <div id="static-top">
+        <p class="search-hint">Admin Controls</p>
     </div>
 
-    <div class="centered">
-        <div id="users" class="centered">
-            <table class="centered">
+    <div id="admin-content">
+        <a href="/admin/spotify/login" class="admin-action-btn">Re-auth Spotify</a>
+
+        <div id="users">
+            <table>
                 <thead>
-                    <tr>
-                        <th>ID</th>
+                    <tr class="search-result">
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Next Queue Time</th>
@@ -35,7 +32,5 @@
             </table>
         </div>
     </div>
-
-
 </body>
 </html>

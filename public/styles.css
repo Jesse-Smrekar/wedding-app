@@ -307,6 +307,41 @@ tr {
     overflow-y: hidden;
 }
 
+/* ── Admin ── */
+#admin-content {
+    width: 100%;
+    padding: 8px 16px 100px;
+    box-sizing: border-box;
+    padding-top: 80px;
+}
+
+.admin-action-btn {
+    display: block;
+    width: 100%;
+    height: 56px;
+    line-height: 56px;
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-family: "Sansita Swashed", system-ui;
+    font-size: 18px;
+    font-style: italic;
+    letter-spacing: 0.03em;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    margin-bottom: 24px;
+    transition: background-color 0.15s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.admin-action-btn:active {
+    background-color: var(--accent-dark);
+    transform: scale(0.98);
+}
+
 /* ── Utilities ── */
 .manual-v-center {
     display: flex;
