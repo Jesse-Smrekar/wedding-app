@@ -4,7 +4,7 @@ const path = require('path');
 const spotify = require('../utils/spotify-utils.js');
 const db = require('../utils/db.js');
 
-
+const adminList = ['JESSE_SMREKAR'];
 
 
 /**
@@ -14,6 +14,15 @@ const db = require('../utils/db.js');
  */
 router.get('/', (req, res) => {
   console.log(`REQUEST: GET, /admin`)
+
+  // rudimentary page-load-only auth
+  if (!req.user) {
+    res.redirect('/login');
+    return;
+  } else if (!adminList.includes(req.user)) {
+    res.redirect('/');
+    return;
+  }
 
   res.set('Content-Type', 'text/html');
   res.sendFile(path.join(__dirname, '../../public', '/html/admin.html'));
