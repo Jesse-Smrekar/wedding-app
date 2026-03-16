@@ -53,4 +53,23 @@ router.get('/users', (req, res) => {
   });
 });
 
+
+
+router.delete('/users', (req, res) => {
+  var fname = req.query.firstName;
+  var lname = req.query.lastName;
+  console.log(`REQUEST: DELETE, /admin/users`);
+
+    if (fname == "*") {
+      console.log("DELETING ALL USERS");
+      db.write("DELETE FROM USERS WHERE 1=1");
+    } else {
+      console.log(`DELETING USER: ${fname} ${lname}`);
+      db.write(`DELETE FROM USERS WHERE FIRST_NAME = '${fname.trim().toUpperCase()}' AND LAST_NAME = '${lname.trim().toUpperCase()}'`);
+    }
+
+    res.set('Content-Type', 'text/html');
+    res.send("OK");
+});
+
 module.exports = router;

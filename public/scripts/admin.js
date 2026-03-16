@@ -1,50 +1,75 @@
 var USER_RESULTS = [];
+var SELECTED_USERS = new Set();
 
 function getUsers() {
-    fetch(`${this.location.origin}/admin/users`)
+    fetch(`${location.origin}/admin/users`)
     .then(res => {
-        if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-          }
-          return res.json(); // or response.text() for non-JSON responses
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        return res.json();
     })
     .then(data => {
-
-        var userTable = document.getElementById('user-results');
-
-        if (!!data && data.length > 0) {
-            userTable.innerHTML = '';
-        }
-
         USER_RESULTS = data;
-
-        for (inc in data) {
-            var entry = data[inc];
-
-            var timeToDisplay = new Date(entry.NEXT_MUSIC_QUEUE_DATE + 'Z');
-            if (timeToDisplay > new Date("2030-01-01") || timeToDisplay < new Date()) {
-                timeToDisplay = "now";
-            } else {
-                timeToDisplay = new Date(entry.NEXT_MUSIC_QUEUE_DATE + 'Z').toLocaleTimeString();
-            }
-
-
-            userTable.innerHTML += 
-            '<tr id="search-result-' + inc +'">' +
-            // '<div id="search-result-' + inc +'" onclick=javascript:makeSelection(' + inc + ')>' +
-            '<td>' + entry.FIRST_NAME + '</td>' +
-            '<td>' + entry.LAST_NAME + '</td>' +
-            '<td>' + timeToDisplay + '</td>' +
-            '</tr>';
-        }
+        SELECTED_USERS.clear();
+        renderUsers();
+        updateDeleteButton();
     })
-    .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-        // Handle the error
-    });
+    .catch(error => console.error('Error fetching users:', error));
 }
 
+function renderUsers() {
+    var userTable = document.getElementById('user-results');
+    userTable.innerHTML = '';
 
+    for (var i = 0; i < USER_RESULTS.length; i++) {
+        var entry = USER_RESULTS[i];
+        var t = new Date(entry.NEXT_MUSIC_QUEUE_DATE + 'Z');
+        var timeToDisplay;
+        if (t > new Date("2030-01-01") || t < new Date()) {
+            timeToDisplay = "now";
+        } else {
+            timeToDisplay = t.toLocaleTimeString();
+        }
+
+        var selectedClass = SELECTED_USERS.has(i) ? ' selected' : '';
+        userTable.innerHTML +=
+            `<tr id="user-row-${i}" class="result-button${selectedClass}" onclick="toggleUser(${i})">` +
+            `<td class="cell-left">${entry.FIRST_NAME}</td>` +
+            `<td>${entry.LAST_NAME}</td>` +
+            `<td class="cell-right">${timeToDisplay}</td>` +
+            `</tr>`;
+    }
+}
+
+function toggleUser(index) {
+    if (SELECTED_USERS.has(index)) {
+        SELECTED_USERS.delete(index);
+    } else {
+        SELECTED_USERS.add(index);
+    }
+    renderUsers();
+    updateDeleteButton();
+}
+
+function updateDeleteButton() {
+    var btn = document.getElementById('delete-selected-button');
+    if (btn) btn.disabled = SELECTED_USERS.size === 0;
+}
+
+function deleteSelectedUsers() {
+    var toDelete = Array.from(SELECTED_USERS).map(i => USER_RESULTS[i]);
+    var requests = toDelete.map(user =>
+        fetch(`${location.origin}/admin/users?firstName=${encodeURIComponent(user.FIRST_NAME)}&lastName=${encodeURIComponent(user.LAST_NAME)}`, {
+            method: 'DELETE'
+        })
+    );
+    Promise.all(requests).then(() => getUsers());
+}
+
+function purgeUsers() {
+    if (!confirm('Delete all users? This cannot be undone.')) return;
+    fetch(`${location.origin}/admin/users?firstName=*`, { method: 'DELETE' })
+        .then(() => getUsers());
+}
 
 window.onload = () => {
     getUsers();

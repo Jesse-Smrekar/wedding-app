@@ -6,7 +6,11 @@ const SECRET_KEY = process.env.JWT_SECRET;
 const JWT_TTL = '24h';
 const JWT_TTL_MILLIS = 86400000;
 
-
+/**
+ * Note to reader: this is not real auth. It's not trying to be real auth. We just want a way to distinguish users
+ * and be able to identify their actions. This is going to run for a total of like 6 hours and no personal data will be 
+ * uploaded. Don't worry about it.
+ */
 const auth = (req, res, next) => {
 
     // skip auth for the home page, login screen, and non-html requests
