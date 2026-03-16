@@ -2,55 +2,87 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" type="text/css" href="/styles.css">
     <link rel="icon" type="image/png" href="/images/diamond-ring.png">
     <script src="scripts.js"></script>
     <title>Tati & Jared</title>
 </head>
 <body>
+    <div id="itinerary-page">
 
-    <a id="home" class="righted" href="/">
-        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="white" class="bi bi-house" viewBox="0 0 16 16">
-            <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5"/>
-        </svg>
-    </a>
+        <header class="itinerary-header">
+            <h1 class="title">Itinerary</h1>
+        </header>
 
-    <header class="centered">
-        <h1 class="title">Itinerary</h1>
-    </header>
+        <p class="page-intro">Join us for an evening of love, laughter, and celebration.</p>
 
+        <table class="itinerary">
+            <tr><td>Ceremony at St. Joseph Catholic Community</td><td>2:00 PM</td></tr>
+            <tr><td>Make your way to the Crowne Plaza</td><td>3:00 PM</td></tr>
+            <tr><td>Cocktail hour</td><td>4:00 PM</td></tr>
+            <tr><td>Dinner</td><td>6:00 PM</td></tr>
+            <tr><td>Dancing</td><td>8:00 PM</td></tr>
+        </table>
 
+        <div class="location-card">
+            <p class="location-name">St. Joseph Catholic Community</p>
+            <div class="map-btn-row">
+                <a href="https://maps.google.com/maps?q=St+Joeseph+Historic+Church,Plymouth,MN" class="map-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+                    </svg>
+                    Google Maps
+                </a>
+                <a href="https://maps.apple/p/20gNA~YJsw2d7m" class="map-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 16.016a7.5 7.5 0 0 0 1.962-14.74A1 1 0 0 0 9 0H7a1 1 0 0 0-.962 1.276A7.5 7.5 0 0 0 8 16.016zm6.5-7.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
+                        <path d="m6.94 7.44 4.95-2.83-2.83 4.95-4.949 2.83 2.828-4.95z"/>
+                    </svg>
+                    Apple Maps
+                </a>
+            </div>
+        </div>
 
-    
+        <div class="location-card">
+            <p class="location-name">Crowne Plaza Minneapolis West</p>
+            <div class="map-btn-row">
+                <a href="https://maps.google.com/maps?q=Crowne+Plaza,Plymouth,MN" class="map-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+                    </svg>
+                    Google Maps
+                </a>
+                <a href="https://maps.apple/p/91DuFQfuLsTyCr" class="map-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 16.016a7.5 7.5 0 0 0 1.962-14.74A1 1 0 0 0 9 0H7a1 1 0 0 0-.962 1.276A7.5 7.5 0 0 0 8 16.016zm6.5-7.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
+                        <path d="m6.94 7.44 4.95-2.83-2.83 4.95-4.949 2.83 2.828-4.95z"/>
+                    </svg>
+                    Apple Maps
+                </a>
+            </div>
+        </div>
 
-    <div id="menu" class="centered">
-        <!-- <button onclick="getOverflowEle()">print overflow</button>
-        <button>B</button>
-        <button>C</button> -->
-        <!-- MUSIC -->
-        <p>Lorem Ipsum paragraph describing the events of the evening</br>
-            This is the first Item</br>
-            Second item</br>
-            The third item is the longest</br>
-            Last Item
-        </p>
-
-        <a href="https://www.google.com/maps/place/1234+Address+Ln+Golden+Valley+MN+12345">Google Maps</a>
-        <a href="https://maps.apple.com/?q=1234+Address+Ln+Golden+Valley+MN+12345">Apple Maps</a>
-
-        <p>1234 Address Ln, Golden Valley, MN, 12345</p>
-
-
-        <!-- DIRECTIONS -->
-        <a id="directions" class="menu-button" href="/itinerary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" fill="white" class="bi bi-pin-map" viewBox="0 0 18 18">
-                <path fill-rule="evenodd" d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8z"/>
-                <path fill-rule="evenodd" d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z"/>
-            </svg>
-        </a>
+        <div id="googleMap"></div>
 
     </div>
-
-
 </body>
+
+
+<script>
+    function myMap() {
+        var church = new google.maps.LatLng(45.027831,-93.445264);
+        var crownePlaza = new google.maps.LatLng(45.016098, -93.452448);
+        var mapProp= {
+            center: {lat: 45.0221705, lng: -93.4494385},
+            zoom:13,
+        };
+        var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+        var marker1 = new google.maps.Marker({position: church});
+        marker1.setMap(map);
+        var marker2 = new google.maps.Marker({position: crownePlaza});
+        marker2.setMap(map);
+    }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvVio5UPSA8wPs5KPxlpi9_Adr9rg4jCE&callback=myMap"></script>
