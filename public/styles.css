@@ -7,6 +7,24 @@
     --text: #ffffff;
     --text-muted: #a0a0a0;
     --radius: 12px;
+    --selected-bg: #1a3328;
+    --border: #2a2a2a;
+    --map-btn-active: #333;
+    --shadow: rgba(0, 0, 0, 0.6);
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --bg: #ffffff;
+        --surface: #f2f2f2;
+        --surface-hover: #e5e5e5;
+        --text: #121212;
+        --text-muted: #636363;
+        --selected-bg: #d4f0e0;
+        --border: #e0e0e0;
+        --map-btn-active: #d0d0d0;
+        --shadow: rgba(0, 0, 0, 0.1);
+    }
 }
 
 html, body {
@@ -80,7 +98,7 @@ nav {
     z-index: 1000;
     background-color: var(--bg);
     padding: 20px 16px 14px;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 4px 24px var(--shadow);
 }
 
 .search-hint {
@@ -217,7 +235,7 @@ thead#search-result-header th {
 }
 
 .result-button.selected {
-    background-color: #1a3328;
+    background-color: var(--selected-bg);
 }
 
 .cell-left {
@@ -338,7 +356,7 @@ table.itinerary td {
     font-size: 16px;
     font-style: normal;
     padding: 10px 0;
-    border-bottom: 1px solid #2a2a2a;
+    border-bottom: 1px solid var(--border);
     vertical-align: middle;
 }
 
@@ -346,12 +364,16 @@ table.itinerary tr:last-child td {
     border-bottom: none;
 }
 
-table.itinerary td:last-child {
+table.itinerary td:first-child {
+    width: 66%;
+}
+
+table.itinerary td:last-child,
+table.itinerary th:last-child {
     text-align: right;
     color: var(--text-muted);
     white-space: nowrap;
-    padding-left: 24px;
-    width: 1%;
+    padding-left: 16px;
     font-size: 15px;
 }
 
@@ -391,7 +413,7 @@ table.itinerary td:last-child {
 }
 
 .map-btn:active {
-    background-color: #333;
+    background-color: var(--map-btn-active);
     transform: scale(0.97);
 }
 
