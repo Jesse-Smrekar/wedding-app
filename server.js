@@ -104,3 +104,6 @@ app.listen(process.env.HTTP_PORT, () => {
 server.listen(process.env.HTTPS_PORT, () => {
   console.log(`✅HTTPS available on port ${process.env.HTTPS_PORT}`);
 });
+
+
+fs.appendFile(path.join(__dirname, 'server', 'logs', 'conn_logs.txt'), `\n\n--- SERVER START ${new Date().toISOString()} ---\n\n`, ()=>{});
