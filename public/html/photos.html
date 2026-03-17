@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <link rel="icon" type="image/png" href="/images/diamond-ring.png">
+    <script src="scripts.js"></script>
+    <title>Tati & Jared</title>
+</head>
+<body>
+
+    <a href="/" class="home-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5"/>
+        </svg>
+    </a>
+
+    <div id="photos-page">
+
+        <header class="photos-header">
+            <h1 class="title">Photos</h1>
+        </header>
+
+        <p class="page-intro">Share your favorite moments from the big day!</p>
+
+        <!-- Hidden file input -->
+        <input
+            type="file"
+            id="photo-input"
+            accept=".jpg,.jpeg,.png,.heic,.heif,.raw,.arw,.cr2,.nef,.orf,.rw2,.sr2"
+            multiple
+            style="display:none;"
+        >
+
+        <!-- Drop / tap area -->
+        <div class="upload-area" id="upload-area" onclick="document.getElementById('photo-input').click()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" viewBox="0 0 16 16" style="color: var(--text-muted);">
+                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
+                <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"/>
+            </svg>
+            <span class="upload-area-btn">Choose Photos</span>
+            <span class="upload-area-label">or drag and drop here</span>
+            <span class="upload-area-label">JPG &middot; PNG &middot; HEIC &middot; RAW</span>
+        </div>
+
+        <!-- Photo count -->
+        <p class="photo-count" id="photo-count" style="display:none;"></p>
+
+        <!-- Preview grid -->
+        <div class="preview-grid" id="preview-grid"></div>
+
+        <!-- Note -->
+        <div class="note-label">
+            <span>Note <span style="color: var(--text-muted); font-size:13px;">(optional)</span></span>
+            <span class="note-char-count" id="note-char-count">0 / 500</span>
+        </div>
+        <textarea
+            id="photo-note"
+            placeholder="Add a note to go with your photos..."
+            maxlength="500"
+            oninput="updateCharCount()"
+        ></textarea>
+
+    </div>
+
+    <div id="photos-submit-bar">
+        <button id="photos-submit-btn" onclick="submitPhotos()" disabled>Upload Photos</button>
+    </div>
+
+    <script>
+        const MAX_PHOTOS = 10;
+        let selectedFiles = [];
+
+        const input      = document.getElementById('photo-input');
+        const uploadArea = document.getElementById('upload-area');
+        const grid       = document.getElementById('preview-grid');
+        const countEl    = document.getElementById('photo-count');
+        const submitBtn  = document.getElementById('photos-submit-btn');
+
+        // ── File input change ──
+        input.addEventListener('change', () => {
+            addFiles(Array.from(input.files));
+            input.value = '';
+        });
+
+        // ── Drag and drop ──
+        uploadArea.addEventListener('dragover', e => {
+            e.preventDefault();
+            uploadArea.classList.add('drag-over');
+        });
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
+        uploadArea.addEventListener('drop', e => {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+            addFiles(Array.from(e.dataTransfer.files));
+        });
+
+        function addFiles(newFiles) {
+            const remaining = MAX_PHOTOS - selectedFiles.length;
+            newFiles.slice(0, remaining).forEach(f => selectedFiles.push(f));
+            renderPreviews();
+        }
+
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            renderPreviews();
+        }
+
+        const RAW_EXTS = /\.(heic|heif|raw|arw|cr2|nef|orf|rw2|sr2)$/i;
+
+        function renderPreviews() {
+            grid.innerHTML = '';
+
+            selectedFiles.forEach((file, i) => {
+                const item = document.createElement('div');
+                item.className = 'preview-item';
+
+                const canPreview = file.type.startsWith('image/') && !RAW_EXTS.test(file.name);
+
+                if (canPreview) {
+                    const img = document.createElement('img');
+                    const url = URL.createObjectURL(file);
+                    img.src = url;
+                    img.onload = () => URL.revokeObjectURL(url);
+                    item.appendChild(img);
+                } else {
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'preview-item-placeholder';
+                    placeholder.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 512 512" style="opacity:0.5;">
+                            <path d="M193.1 32c-18.7 0-36.2 9.4-46.6 24.9L120.5 96 64 96C28.7 96 0 124.7 0 160L0 416c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-256c0-35.3-28.7-64-64-64l-56.5 0-26-39.1C355.1 41.4 337.6 32 318.9 32L193.1 32zm-6.7 51.6c1.5-2.2 4-3.6 6.7-3.6l125.7 0c2.7 0 5.2 1.3 6.7 3.6l33.2 49.8c4.5 6.7 11.9 10.7 20 10.7l69.3 0c8.8 0 16 7.2 16 16l0 256c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16l0-256c0-8.8 7.2-16 16-16l69.3 0c8 0 15.5-4 20-10.7l33.2-49.8zM256 384a112 112 0 1 0 0-224 112 112 0 1 0 0 224zM192 272a64 64 0 1 1 128 0 64 64 0 1 1 -128 0z"/>
+                        </svg>
+                        <span class="preview-item-filename">${file.name}</span>
+                    `;
+                    item.appendChild(placeholder);
+                }
+
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'preview-remove';
+                removeBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                    </svg>
+                `;
+                removeBtn.onclick = e => { e.stopPropagation(); removeFile(i); };
+                item.appendChild(removeBtn);
+
+                grid.appendChild(item);
+            });
+
+            const atLimit = selectedFiles.length >= MAX_PHOTOS;
+            if (selectedFiles.length > 0) {
+                countEl.textContent = `${selectedFiles.length} / ${MAX_PHOTOS} photos selected`;
+                countEl.className = 'photo-count' + (atLimit ? ' at-limit' : '');
+                countEl.style.display = 'block';
+            } else {
+                countEl.style.display = 'none';
+            }
+
+            uploadArea.style.display = atLimit ? 'none' : 'flex';
+            submitBtn.disabled = selectedFiles.length === 0;
+        }
+
+        function updateCharCount() {
+            const len = document.getElementById('photo-note').value.length;
+            document.getElementById('note-char-count').textContent = `${len} / 500`;
+        }
+
+        function submitPhotos() {
+            const note = document.getElementById('photo-note').value.trim();
+            const formData = new FormData();
+            selectedFiles.forEach(f => formData.append('photos', f));
+            if (note) formData.append('note', note);
+
+            // TODO: wire up back-end endpoint
+            // fetch('/photos/upload', { method: 'POST', body: formData })
+            //     .then(res => res.json())
+            //     .then(data => { ... });
+        }
+    </script>
+
+</body>
+</html>

@@ -28,6 +28,8 @@
 }
 
 html, body {
+    background: url('/images/rose_background_15.png') no-repeat center center fixed;
+    background-size: cover;
     background-color: var(--bg);
     color: var(--text);
 
@@ -377,6 +379,227 @@ table.itinerary th:last-child {
     font-size: 15px;
 }
 
+
+
+/* ── Photos ── */
+#photos-page {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 24px 16px 100px;
+    box-sizing: border-box;
+}
+
+.photos-header {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.upload-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: var(--surface);
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 36px 16px;
+    cursor: pointer;
+    transition: border-color 0.15s, background-color 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    text-align: center;
+}
+
+.upload-area.drag-over {
+    border-color: var(--accent);
+    background-color: var(--selected-bg);
+}
+
+.upload-area-label {
+    font-size: 15px;
+    font-style: normal;
+    color: var(--text-muted);
+}
+
+.upload-area-btn {
+    height: 40px;
+    padding: 0 20px;
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-family: "Sansita Swashed", system-ui;
+    font-size: 15px;
+    font-style: italic;
+    cursor: pointer;
+    pointer-events: none;
+}
+
+.photo-count {
+    font-size: 13px;
+    font-style: normal;
+    color: var(--text-muted);
+    text-align: right;
+    margin: 8px 0 4px;
+}
+
+.photo-count.at-limit {
+    color: var(--accent);
+}
+
+.preview-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.preview-item {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background-color: var(--surface);
+}
+
+.preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0;
+}
+
+.preview-item-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.preview-item-filename {
+    font-size: 11px;
+    font-style: normal;
+    color: var(--text-muted);
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+}
+
+.preview-remove {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: rgba(0,0,0,0.6);
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.note-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 15px;
+    font-style: normal;
+    margin: 20px 0 8px;
+}
+
+.note-char-count {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+#photo-note {
+    width: 100%;
+    min-height: 100px;
+    background-color: var(--surface);
+    border: 2px solid transparent;
+    border-radius: var(--radius);
+    padding: 12px;
+    color: var(--text);
+    font-family: "Sansita Swashed", system-ui;
+    font-size: 15px;
+    font-style: normal;
+    resize: vertical;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+#photo-note:focus {
+    border-color: var(--accent);
+}
+
+#photo-note::placeholder {
+    color: var(--text-muted);
+}
+
+#photos-submit-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(transparent, var(--bg) 35%);
+    box-sizing: border-box;
+}
+
+#photos-submit-btn {
+    width: 100%;
+    height: 56px;
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-family: "Sansita Swashed", system-ui;
+    font-size: 18px;
+    font-style: italic;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: background-color 0.15s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#photos-submit-btn:active:not(:disabled) {
+    background-color: var(--accent-dark);
+    transform: scale(0.98);
+}
+
+#photos-submit-btn:disabled {
+    background-color: var(--surface);
+    color: var(--text-muted);
+    cursor: default;
+}
+
+/* ── Directions ── */
+#directions-page {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+    box-sizing: border-box;
+}
+
+.directions-header {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+
 .location-card {
     background-color: var(--surface);
     border-radius: var(--radius);
@@ -506,6 +729,71 @@ table.itinerary th:last-child {
     background-color: var(--surface);
     color: var(--text-muted);
     cursor: default;
+}
+
+/* ── Home Grid ── */
+#home-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 24px 16px 40px;
+    max-width: 480px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.home-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    background-color: var(--surface);
+    border-radius: 20px;
+    border: none;
+    padding: 32px 16px;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text);
+    font-family: "Sansita Swashed", system-ui;
+    font-size: 18px;
+    font-style: italic;
+    letter-spacing: 0.03em;
+    min-height: 140px;
+    border: 2px solid var(--text);
+    transition: background-color 0.15s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+}
+
+.home-card:active {
+    background-color: var(--surface-hover);
+    transform: scale(0.96);
+}
+
+/* ── Home Button ── */
+.home-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: var(--surface);
+    color: var(--text);
+    border: 2px solid var(--text);
+    text-decoration: none;
+    transition: background-color 0.15s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.home-btn:active {
+    background-color: var(--surface-hover);
+    transform: scale(0.94);
 }
 
 /* ── Utilities ── */
