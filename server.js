@@ -7,6 +7,7 @@ const fs = require('fs');
 // Other JS files
 const utils = require('./server/utils/utils.js');
 const auth = require('./server/utils/auth.js');
+const db = require('./server/utils/db.js');
 
 
 // Server Constants
@@ -81,6 +82,10 @@ app.post('/login/user', async (req, res) => {
 const adminEndpoints = require('./server/routes/admin.js');
 app.use('/admin', adminEndpoints);
 
+// mount photos endpoints
+const photosEndpoints = require('./server/routes/photos.js');
+app.use('/photos', photosEndpoints);
+
 
 // mount music endpoints
 const musicEndpoints = require('./server/routes/music.js');
@@ -105,5 +110,6 @@ server.listen(process.env.HTTPS_PORT, () => {
   console.log(`✅HTTPS available on port ${process.env.HTTPS_PORT}`);
 });
 
+db.init();
 
 fs.appendFile(path.join(__dirname, 'server', 'logs', 'conn_logs.txt'), `\n\n--- SERVER START ${new Date().toISOString()} ---\n\n`, ()=>{});

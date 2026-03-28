@@ -106,8 +106,26 @@ function submitPhotos() {
     selectedFiles.forEach(f => formData.append('photos', f));
     if (note) formData.append('note', note);
 
-    // TODO: wire up back-end endpoint
-    // fetch('/photos/upload', { method: 'POST', body: formData })
-    //     .then(res => res.json())
-    //     .then(data => { ... });
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Uploading…';
+
+    fetch('/photos/upload', { method: 'POST', body: formData })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                selectedFiles = [];
+                renderPreviews();
+                document.getElementById('photo-note').value = '';
+                updateCharCount();
+                submitBtn.textContent = 'Upload Photos';
+                alert(`${data.count} photo${data.count !== 1 ? 's' : ''} uploaded successfully!`);
+            } else {
+                throw new Error(data.error || 'Upload failed.');
+            }
+        })
+        .catch(err => {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Upload Photos';
+            alert(`Upload failed: ${err.message}`);
+        });
 }
