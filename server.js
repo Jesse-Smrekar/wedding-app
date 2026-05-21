@@ -18,9 +18,10 @@ app.use(express.urlencoded({ extended: true })); // For URL-encoded data
 if (!process.env.DEBUG) {
   app.use(auth.auth);
 }
+
 const sslOptions = {
-  key: fs.readFileSync('./certs/server.key'),
-  cert: fs.readFileSync('./certs/server.crt')
+  key: atob(process.env.SERVER_SSL_KEY_B64),
+  cert: atob(process.env.SERVER_SSL_CERT_B64)
 };
 const server = https.createServer(sslOptions, app);
 
