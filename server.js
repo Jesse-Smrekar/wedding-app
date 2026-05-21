@@ -1,7 +1,7 @@
 // Library Imports
 const express = require('express');
 const path = require('path');
-const https = require('https');
+// const https = require('https');
 const fs = require('fs');
 
 // Other JS files
@@ -20,15 +20,13 @@ if (!process.env.DEBUG) {
   app.use(auth.auth);
 }
 
-console.log("SERVER SSL KEY: " + process.env.SERVER_SSL_KEY_B64)
-console.log("SERVER SSL CERT: " + process.env.SERVER_SSL_CERT_B64)
-
-
-const sslOptions = {
-  key: atob(process.env.SERVER_SSL_KEY_B64),
-  cert: atob(process.env.SERVER_SSL_CERT_B64)
-};
-const server = https.createServer(sslOptions, app);
+// console.log("SERVER SSL KEY: " + process.env.SERVER_SSL_KEY_B64)
+// console.log("SERVER SSL CERT: " + process.env.SERVER_SSL_CERT_B64)
+// const sslOptions = {
+//   key: atob(process.env.SERVER_SSL_KEY_B64),
+//   cert: atob(process.env.SERVER_SSL_CERT_B64)
+// };
+// const server = https.createServer(sslOptions, app);
 
 
 // ==========================================================================
@@ -111,9 +109,9 @@ app.listen(process.env.HTTP_PORT, () => {
 });
 
 // start https server
-server.listen(process.env.HTTPS_PORT, () => {
-  console.log(`✅HTTPS available on port ${process.env.HTTPS_PORT}`);
-});
+// server.listen(process.env.HTTPS_PORT, () => {
+//   console.log(`✅HTTPS available on port ${process.env.HTTPS_PORT}`);
+// });
 
 db.init();
 
