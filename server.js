@@ -20,6 +20,10 @@ if (!process.env.DEBUG) {
   app.use(auth.auth);
 }
 
+console.log("SERVER SSL KEY: " + process.env.SERVER_SSL_KEY_B64)
+console.log("SERVER SSL CERT: " + process.env.SERVER_SSL_CERT_B64)
+
+
 const sslOptions = {
   key: atob(process.env.SERVER_SSL_KEY_B64),
   cert: atob(process.env.SERVER_SSL_CERT_B64)
