@@ -4,6 +4,8 @@ const path = require('path');
 const spotify = require('../utils/spotify-utils.js');
 const db = require('../utils/db.js');
 
+const QUEUE_WAIT_MINUTES = 30;
+
 
 if (process.env.SPOTIFY_TOKEN) {
   spotify.setToken(process.env.SPOTIFY_TOKEN);
@@ -99,7 +101,7 @@ async function getUsersNextQueueTime(fname, lname) {
 
 
 function updateUserNextQueueTime(fname, lname) {
-    return db.write(`UPDATE USERS SET NEXT_MUSIC_QUEUE_DATE = DATETIME('now', '+30 minutes') WHERE FIRST_NAME = '${fname.toUpperCase()}' AND LAST_NAME = '${lname.toUpperCase()}'`);
+    return db.write(`UPDATE USERS SET NEXT_MUSIC_QUEUE_DATE = DATETIME('now', '+${QUEUE_WAIT_MINUTES} minutes') WHERE FIRST_NAME = '${fname.toUpperCase()}' AND LAST_NAME = '${lname.toUpperCase()}'`);
 }
 
 module.exports = router;
