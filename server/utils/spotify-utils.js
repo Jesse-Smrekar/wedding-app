@@ -12,7 +12,7 @@ var EXPIRES_SECONDS;
 
 const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
-const REDIRECT_URI = 'https://127.0.0.1:8443/spotify/auth/redirect';
+const REDIRECT_URI = process.env.SPOTIFY_AUTH_REDIRECT_URL;
 
 
 function getAuthorization(res) {
