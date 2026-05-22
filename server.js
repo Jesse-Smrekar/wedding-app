@@ -52,6 +52,19 @@ app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', '/html/login.html'));  
 });
 
+// itinerary page
+app.get('/itinerary', (req, res) => {
+
+  res.set('Content-Type', 'text/html');
+  res.sendFile(path.join(__dirname, 'public', '/html/itinerary.html'));  
+});
+
+// directions page
+app.get('/directions', (req, res) => {
+
+  res.set('Content-Type', 'text/html');
+  res.sendFile(path.join(__dirname, 'public', '/html/directions.html'));  
+});
 
 app.get('/favicon.ico', (req, res) => {
 
