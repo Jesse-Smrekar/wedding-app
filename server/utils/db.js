@@ -9,6 +9,12 @@ const pool = new Pool({
 
 
 async function init() {
+
+    // await pool.query('DELETE FROM users WHERE 1=1');
+    // await pool.query('DELETE FROM uploads WHERE 1=1');
+    // await pool.query('DELETE FROM upload_files WHERE 1=1');
+
+
     await pool.query(`
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
@@ -32,14 +38,6 @@ async function init() {
             user_id INTEGER
         )
     `);
-    await pool.query('DELETE FROM uploads WHERE 1=1');
-    await pool.query('DELETE FROM upload_files WHERE 1=1');
-
-    // await pool.query(`
-    //     INSERT INTO uploads (date, note, user_id)
-    //     VALUES ('2099-01-01 01:00:00.000', 'TEST NOTE', 1)
-    //     ON CONFLICT DO NOTHING
-    // `);
 
     await pool.query(`
         CREATE TABLE IF NOT EXISTS upload_files (
@@ -49,11 +47,6 @@ async function init() {
             file_data BYTEA
         )
     `);
-    // await pool.query(`
-    //     INSERT INTO upload_files (upload_id, filename, file_data)
-    //     VALUES (1, 'TEST_FILE_NAME', NULL)
-    //     ON CONFLICT DO NOTHING
-    // `);
 
     console.log('✅ Database Initialized.');
 }
