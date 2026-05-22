@@ -22,7 +22,7 @@ function renderUsers() {
 
     for (var i = 0; i < USER_RESULTS.length; i++) {
         var entry = USER_RESULTS[i];
-        var t = new Date(entry.NEXT_MUSIC_QUEUE_DATE + 'Z');
+        var t = new Date(entry.next_music_queue_date);
         var timeToDisplay;
         if (t > new Date("2030-01-01") || t < new Date()) {
             timeToDisplay = "now";
@@ -33,8 +33,8 @@ function renderUsers() {
         var selectedClass = SELECTED_USERS.has(i) ? ' selected' : '';
         userTable.innerHTML +=
             `<tr id="user-row-${i}" class="result-button${selectedClass}" onclick="toggleUser(${i})">` +
-            `<td class="cell-left">${entry.FIRST_NAME}</td>` +
-            `<td>${entry.LAST_NAME}</td>` +
+            `<td class="cell-left">${entry.first_name}</td>` +
+            `<td>${entry.last_name}</td>` +
             `<td class="cell-right">${timeToDisplay}</td>` +
             `</tr>`;
     }
@@ -58,7 +58,7 @@ function updateDeleteButton() {
 function deleteSelectedUsers() {
     var toDelete = Array.from(SELECTED_USERS).map(i => USER_RESULTS[i]);
     var requests = toDelete.map(user =>
-        fetch(`${location.origin}/admin/users?firstName=${encodeURIComponent(user.FIRST_NAME)}&lastName=${encodeURIComponent(user.LAST_NAME)}`, {
+        fetch(`${location.origin}/admin/users?firstName=${encodeURIComponent(user.first_name)}&lastName=${encodeURIComponent(user.last_name)}`, {
             method: 'DELETE'
         })
     );

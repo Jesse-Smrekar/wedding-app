@@ -15,10 +15,8 @@ const app = express();
 app.use(utils.logRequest);
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true })); // For URL-encoded data
+app.use(auth.auth);
 
-if (!process.env.DEBUG) {
-  app.use(auth.auth);
-}
 
 // console.log("SERVER SSL KEY: " + process.env.SERVER_SSL_KEY_B64)
 // console.log("SERVER SSL CERT: " + process.env.SERVER_SSL_CERT_B64)

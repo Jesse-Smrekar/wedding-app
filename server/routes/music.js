@@ -18,9 +18,7 @@ if (process.env.SPOTIFY_TOKEN) {
  * Returns the HTML page for adding and removing music
  */
 router.get('/', (req, res) => {
-
-  res.set('Content-Type', 'text/html');
-  res.sendFile(path.join(__dirname, '../../public', '/html/music.html'));  
+  res.redirect('/html/music.html');
 });
 
 
@@ -70,7 +68,7 @@ router.post('/queue/:trackId', (req, res) => {
   getUsersNextQueueTime(...req.user.split('_'))
   .then(nextTime => {
 
-    if (!nextTime || new Date(nextTime + 'Z') > new Date()) {
+    if (!nextTime || nextTime > new Date()) {
       data = {sucess: 'false', message: 'TOO_SOON', time: nextTime};
       res.set('Content-Type', 'application/json');
       res.send(data);
@@ -96,12 +94,12 @@ router.post('/queue/:trackId', (req, res) => {
 
 async function getUsersNextQueueTime(fname, lname) {
     var result = await db.read(`SELECT NEXT_MUSIC_QUEUE_DATE FROM USERS WHERE FIRST_NAME = '${fname.toUpperCase()}' AND LAST_NAME = '${lname.toUpperCase()}'`);
-    return !!result && result.length > 0 ? result[0].NEXT_MUSIC_QUEUE_DATE : null; 
+    return !!result && result.length > 0 ? result[0].next_music_queue_date : null;
 }
 
 
 function updateUserNextQueueTime(fname, lname) {
-    return db.write(`UPDATE USERS SET NEXT_MUSIC_QUEUE_DATE = DATETIME('now', '+${QUEUE_WAIT_MINUTES} minutes') WHERE FIRST_NAME = '${fname.toUpperCase()}' AND LAST_NAME = '${lname.toUpperCase()}'`);
+    return db.write(`UPDATE users SET next_music_queue_date = NOW() + INTERVAL '${QUEUE_WAIT_MINUTES} minutes' WHERE first_name = '${fname.toUpperCase()}' AND last_name = '${lname.toUpperCase()}'`);
 }
 
 module.exports = router;

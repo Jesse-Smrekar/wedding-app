@@ -1,86 +1,85 @@
-const sqlite3 = require('sqlite3').verbose();
+const { Pool } = require('pg');
 
-
-var DB = new sqlite3.Database('wedding.db', (err) => {
-    if (err) {
-        console.error(err.message);
-    }
-    console.log('✅ Opened database connection.');
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: false,
+    user: process.env.PGUSER, 
+    password: process.env.PGPASSWORD
 });
 
 
-// function close(db) {
-//     db.close((err) => {
-//       if (err) {
-//         console.error(err.message);
-//       }
-//       console.log('✅ Closed the database connection.');
-//     });
-// }
-
-
 async function init() {
-    const initScript = `
-        CREATE TABLE IF NOT EXISTS USERS (ID INTEGER PRIMARY KEY, FIRST_NAME TEXT, LAST_NAME TEXT, NEXT_MUSIC_QUEUE_DATE TEXT, UNIQUE(FIRST_NAME, LAST_NAME));
-        INSERT OR IGNORE INTO USERS VALUES (1, 'JESSE', 'SMREKAR', '2099-01-01 01:00:00.000');
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            first_name TEXT,
+            last_name TEXT,
+            next_music_queue_date TIMESTAMPTZ,
+            UNIQUE(first_name, last_name)
+        )
+    `);
+    await pool.query(`
+        INSERT INTO users (first_name, last_name, next_music_queue_date)
+        VALUES ('JESSE', 'SMREKAR', '2099-01-01 01:00:00.000')
+        ON CONFLICT DO NOTHING
+    `);
 
-        CREATE TABLE IF NOT EXISTS UPLOADS (ID INTEGER PRIMARY KEY, DATE TEXT, NOTE TEXT, USER_ID INTEGER);
-        INSERT OR IGNORE INTO UPLOADS VALUES (1, '2099-01-01 01:00:00.000', 'TEST NOTE', 1);
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS uploads (
+            id SERIAL PRIMARY KEY,
+            date TEXT,
+            note TEXT,
+            user_id INTEGER
+        )
+    `);
+    await pool.query('DELETE FROM uploads WHERE 1=1');
+    await pool.query('DELETE FROM upload_files WHERE 1=1');
 
-        CREATE TABLE IF NOT EXISTS UPLOAD_FILES (UPLOAD_ID INTEGER PRIMARY KEY, FILENAME TEXT);
-        INSERT OR IGNORE INTO UPLOAD_FILES VALUES (1, 'TEST_FILE_NAME');
-    `;
+    // await pool.query(`
+    //     INSERT INTO uploads (date, note, user_id)
+    //     VALUES ('2099-01-01 01:00:00.000', 'TEST NOTE', 1)
+    //     ON CONFLICT DO NOTHING
+    // `);
 
-    while(!DB.open) { 
-        await sleep(1000);
-    }
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS upload_files (
+            id SERIAL PRIMARY KEY,
+            upload_id INTEGER,
+            filename TEXT,
+            file_data BYTEA
+        )
+    `);
+    // await pool.query(`
+    //     INSERT INTO upload_files (upload_id, filename, file_data)
+    //     VALUES (1, 'TEST_FILE_NAME', NULL)
+    //     ON CONFLICT DO NOTHING
+    // `);
 
-    DB.exec(initScript, (err) =>{
-        if (err) {
-            console.error(err.message);
-            if (err.message.indexOf('NOTADB')) {
-                console.error("DB not initialized. You need to run `sqlite3 wedding.db`");
-            }
-        }
-        console.log('✅ Database Initialized.');
-    });
+    console.log('✅ Database Initialized.');
 }
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+
+function read(queryString, params) {
+    return pool.query(queryString, params).then(result => result.rows);
 }
 
-function read(queryString) {
 
-    return new Promise((resolve, reject) => {
-        DB.all(queryString, (err, res) => {
-            if (err) return reject(err);
-
-            return resolve(res);
-        });
-    });
-}
-
-/**
- * Writes to the database with the given query.
- * 
- * @param {*} queryString - the "write" query to execute
- * @returns the last inserted ID
- */
 function write(queryString) {
-    return new Promise((resolve, reject) => {
-        DB.run(queryString, (result, err) => {
-            if (err) return reject(err);
+    const isInsert = queryString.trim().toUpperCase().startsWith('INSERT');
+    const query = isInsert ? `${queryString} RETURNING *` : queryString;
 
-            read('SELECT last_insert_rowid() as last')
-            .then(ans => {
-                return resolve(ans[0].last)
-            });
-        });
+    return pool.query(query).then(result => {
+        if (isInsert && result.rows.length > 0) {
+            return result.rows[0].id ?? null;
+        }
+        return null;
     });
 }
 
 
-module.exports = {
-  init, read, write
-};
+function query(text, params) {
+    return pool.query(text, params).then(result => result.rows);
+}
+
+
+module.exports = { init, read, write, query };

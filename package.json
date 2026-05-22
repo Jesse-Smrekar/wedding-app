@@ -8,8 +8,8 @@
     "multer": "^2.1.1",
     "os": "^0.1.2",
     "path": "^0.12.7",
-    "querystring": "^0.2.1",
-    "sqlite3": "^6.0.1"
+    "pg": "^8.21.0",
+    "querystring": "^0.2.1"
   },
   "scripts": {
     "start": "node server.js"

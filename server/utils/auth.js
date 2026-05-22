@@ -48,19 +48,19 @@ async function createUser(firstName, lastName) {
 }
 
 async function generateJWT(firstName, lastName) {
-    let result = await db.read(`SELECT * FROM USERS WHERE FIRST_NAME = '${firstName.toUpperCase()}' AND LAST_NAME = '${lastName.toUpperCase()}'`);
+    let result = await db.read(`SELECT * FROM users WHERE first_name = $1 AND last_name = $2`, [firstName.toUpperCase(), lastName.toUpperCase()]);
     let user = result[0];
 
     if (!user) {
         await createUser(firstName, lastName);
-        result = await db.read(`SELECT * FROM USERS WHERE FIRST_NAME = '${firstName.toUpperCase()}' AND LAST_NAME = '${lastName.toUpperCase()}'`);
+        result = await db.read(`SELECT * FROM users WHERE first_name = $1 AND last_name = $2`, [firstName.toUpperCase(), lastName.toUpperCase()]);
         user = result[0];
     }
 
     if (!user) throw new Error(`Failed to find or create user: ${firstName} ${lastName}`);
 
     const payload = {
-        user: `${user.FIRST_NAME}_${user.LAST_NAME}`,
+        user: `${user.first_name}_${user.last_name}`,
         role: user.ROLE
     };
 
