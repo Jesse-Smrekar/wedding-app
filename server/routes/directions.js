@@ -4,12 +4,12 @@ const path = require('path');
 
 
 /**
- * GET /itinerary
+ * GET /directions
  * 
- * Returns the HTML for the itinerary page
+ * Returns the HTML for the directions page
  */
 router.get('/', (req, res) => {
-  res.redirect('/html/itinerary.html');
+  res.redirect('/html/directions.html');
 });
 
 module.exports = router;
