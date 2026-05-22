@@ -68,7 +68,8 @@ router.post('/queue/:trackId', (req, res) => {
   getUsersNextQueueTime(...req.user.split('_'))
   .then(nextTime => {
 
-    if (!nextTime || nextTime > new Date()) {
+    // bypass limits for admin
+    if (req.user != 'JESSE_SMREKAR' && (!nextTime || nextTime > new Date())) {
       data = {sucess: 'false', message: 'TOO_SOON', time: nextTime};
       res.set('Content-Type', 'application/json');
       res.send(data);

@@ -44,7 +44,7 @@ const auth = (req, res, next) => {
 
 
 async function createUser(firstName, lastName) {
-    return db.write(`INSERT OR IGNORE INTO USERS (FIRST_NAME, LAST_NAME, NEXT_MUSIC_QUEUE_DATE) VALUES ('${firstName.toUpperCase()}', '${lastName.toUpperCase()}', '2099-01-01 01:00:00.000')`);
+    return db.write(`INSERT INTO USERS (FIRST_NAME, LAST_NAME, NEXT_MUSIC_QUEUE_DATE) VALUES ('${firstName.toUpperCase()}', '${lastName.toUpperCase()}', NOW())`);
 }
 
 async function generateJWT(firstName, lastName) {
