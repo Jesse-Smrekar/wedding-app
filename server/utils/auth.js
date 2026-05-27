@@ -44,10 +44,21 @@ const auth = (req, res, next) => {
 
 
 async function createUser(firstName, lastName) {
+    if (!firstName || !lastName) {
+        throw new Error('First name and last name are required to create a user.');
+    }
     return db.write(`INSERT INTO USERS (FIRST_NAME, LAST_NAME, NEXT_MUSIC_QUEUE_DATE) VALUES ('${firstName.toUpperCase()}', '${lastName.toUpperCase()}', NOW())`);
 }
 
 async function generateJWT(firstName, lastName) {
+    if (!firstName || !lastName) {
+        throw new Error('First name and last name are required.');
+    }
+
+    if (!SECRET_KEY) {
+        throw new Error('JWT_SECRET is not configured.');
+    }
+
     let result = await db.read(`SELECT * FROM users WHERE first_name = $1 AND last_name = $2`, [firstName.toUpperCase(), lastName.toUpperCase()]);
     let user = result[0];
 

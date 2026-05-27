@@ -16,14 +16,25 @@ const spotify = require('../utils/spotify-utils.js');
 
 /**
  * GET /spotify/auth/redirect?code={}
- * 
+ *
  * This is the callback endpoint for Spotify OAuth. It redirects back to the home page.
  */
 router.get('/auth/redirect', (req, res) => {
   const code = req.query.code;
-  console.log(`REQUEST: GET, /spotify/auth/redirect, request: ${code}`)
+  console.log(`REQUEST: GET, /spotify/auth/redirect, code present: ${!!code}`)
 
-  spotify.login(code);
+  if (!code) {
+    console.error('Spotify auth redirect missing code parameter');
+    return res.status(400).send('Missing authorization code from Spotify.');
+  }
+
+  try {
+    spotify.login(code);
+  } catch (err) {
+    console.error('Error initiating Spotify login:', err);
+    return res.status(500).send('Failed to complete Spotify authentication.');
+  }
+
   res.redirect('/');
 });
 

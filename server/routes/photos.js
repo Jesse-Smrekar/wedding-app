@@ -46,22 +46,31 @@ router.get('/', (req, res) => {
  * Returns the photos uploaded by the current user.
  */
 router.get('/mine', async (req, res) => {
+    if (!req.user) {
+        return res.status(401).json({ error: 'Not authenticated.' });
+    }
+
     const [fname, lname] = req.user.split('_');
 
-    const rows = await db.read(
-        `SELECT file_data FROM upload_files
-            JOIN uploads ON upload_files.upload_id = uploads.id
-            JOIN users ON uploads.user_id = users.id
-            WHERE users.first_name = $1 AND users.last_name = $2`,
-        [fname, lname]
-    );
+    try {
+        const rows = await db.read(
+            `SELECT file_data FROM upload_files
+                JOIN uploads ON upload_files.upload_id = uploads.id
+                JOIN users ON uploads.user_id = users.id
+                WHERE users.first_name = $1 AND users.last_name = $2`,
+            [fname, lname]
+        );
 
-    rows.forEach((row, i) => {
-        const filename = rows.length === 1 ? 'TEST_IMAGE' : `TEST_IMAGE_${i}`;
-        fs.writeFileSync(path.join(UPLOAD_DIR, filename), row.file_data);
-    });
+        rows.forEach((row, i) => {
+            const filename = rows.length === 1 ? 'TEST_IMAGE' : `TEST_IMAGE_${i}`;
+            fs.writeFileSync(path.join(UPLOAD_DIR, filename), row.file_data);
+        });
 
-    res.json({ success: true, count: rows.length });
+        res.json({ success: true, count: rows.length });
+    } catch (err) {
+        console.error('Error retrieving photos:', err);
+        res.status(500).json({ error: 'Failed to retrieve photos.' });
+    }
 });
 
 
@@ -72,6 +81,10 @@ router.get('/mine', async (req, res) => {
  * Files are saved to server/uploads/photos/ and their data stored in the DB.
  */
 router.post('/upload', upload.array('photos', MAX_FILES), async (req, res) => {
+    if (!req.user) {
+        return res.status(401).json({ error: 'Not authenticated.' });
+    }
+
     if (!req.files || req.files.length === 0) {
         return res.status(400).json({ error: 'No photos uploaded.' });
     }
@@ -79,31 +92,48 @@ router.post('/upload', upload.array('photos', MAX_FILES), async (req, res) => {
     const note = (req.body.note || '').slice(0, 500);
     const [firstName, lastName] = req.user.split('_');
 
-    const saved = req.files.map((file, i) => {
-        const sanitized = file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_');
-        const filename = `${Date.now()}-${i}-${sanitized}`;
-        fs.writeFileSync(path.join(UPLOAD_DIR, filename), file.buffer);
-        return { filename, originalName: file.originalname, size: file.size, buffer: file.buffer };
-    });
+    try {
+        const saved = [];
+        for (const [i, file] of req.files.entries()) {
+            const sanitized = file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_');
+            const filename = `${Date.now()}-${i}-${sanitized}`;
+            try {
+                fs.writeFileSync(path.join(UPLOAD_DIR, filename), file.buffer);
+            } catch (fsErr) {
+                console.error(`Failed to write file ${filename}:`, fsErr);
+                return res.status(500).json({ error: 'Failed to save one or more files.' });
+            }
+            saved.push({ filename, originalName: file.originalname, size: file.size, buffer: file.buffer });
+        }
 
-    const uploadId = await db.write(
-        `INSERT INTO uploads (date, note, user_id)
-        VALUES (
-            '${new Date().toISOString()}',
-            '${note}',
-            (SELECT id FROM users WHERE first_name = '${firstName}' AND last_name = '${lastName}')
-        )`
-    );
-
-    for (const file of saved) {
-        await db.query(
-            'INSERT INTO upload_files (upload_id, filename, file_data) VALUES ($1, $2, $3)',
-            [uploadId, file.filename, file.buffer]
+        const uploadId = await db.write(
+            `INSERT INTO uploads (date, note, user_id)
+            VALUES (
+                '${new Date().toISOString()}',
+                '${note}',
+                (SELECT id FROM users WHERE first_name = '${firstName}' AND last_name = '${lastName}')
+            )`
         );
-    }
 
-    console.log(`>>> Photos uploaded: ${saved.length} file(s). Note: "${note}"`);
-    res.json({ success: true, count: saved.length, files: saved.map(f => ({ filename: f.filename, originalName: f.originalName, size: f.size })) });
+        if (!uploadId) {
+            console.error('Failed to create upload record — no uploadId returned');
+            return res.status(500).json({ error: 'Failed to record upload. User may not exist.' });
+        }
+
+        for (const file of saved) {
+            await db.query(
+                'INSERT INTO upload_files (upload_id, filename, file_data) VALUES ($1, $2, $3)',
+                [uploadId, file.filename, file.buffer]
+            );
+        }
+
+        console.log(`>>> Photos uploaded: ${saved.length} file(s). Note: "${note}"`);
+        res.json({ success: true, count: saved.length, files: saved.map(f => ({ filename: f.filename, originalName: f.originalName, size: f.size })) });
+
+    } catch (err) {
+        console.error('Upload error:', err);
+        res.status(500).json({ error: 'An error occurred while uploading photos.' });
+    }
 });
 
 

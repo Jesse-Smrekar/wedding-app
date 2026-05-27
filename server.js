@@ -76,10 +76,18 @@ app.get('/favicon.ico', (req, res) => {
 // login user
 app.post('/login/user', async (req, res) => {
   console.log("REQUEST: POST, /login/user");
-  auth.generateJWT(req.body.fname, req.body.lname)
+
+  const fname = (req.body.fname || '').trim();
+  const lname = (req.body.lname || '').trim();
+
+  if (!fname || !lname) {
+    return res.status(400).send('First and last name are required.');
+  }
+
+  auth.generateJWT(fname, lname)
   .then( token => {
 
-    console.log(`>>> User: ${req.body.fname} ${req.body.lname} logged in`);
+    console.log(`>>> User: ${fname} ${lname} logged in`);
 
     res.cookie('jwt', token, {
           httpOnly: false, // Prevents client-side JavaScript access to the cookie
@@ -87,6 +95,10 @@ app.post('/login/user', async (req, res) => {
           maxAge: auth.JWT_TTL_MILLIS
       });
     res.redirect('/');
+  })
+  .catch(err => {
+    console.error(`Login error for ${fname} ${lname}:`, err);
+    res.status(500).send('Login failed. Please try again.');
   });
 
 });
@@ -124,6 +136,15 @@ app.listen(process.env.HTTP_PORT, () => {
 //   console.log(`✅HTTPS available on port ${process.env.HTTPS_PORT}`);
 // });
 
-db.init();
+db.init().catch(err => {
+  console.error('❌ Database initialization failed:', err);
+});
 
 fs.appendFile(path.join(__dirname, 'server', 'logs', 'conn_logs.txt'), `\n\n--- SERVER START ${new Date().toISOString()} ---\n\n`, ()=>{});
+
+// Global error handler — catches any error passed to next(err) or unhandled throws in async routes
+app.use((err, req, res, next) => {
+  console.error(`Unhandled error on ${req.method} ${req.path}:`, err);
+  if (res.headersSent) return next(err);
+  res.status(500).json({ error: 'An unexpected server error occurred.' });
+});

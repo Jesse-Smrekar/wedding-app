@@ -14,13 +14,26 @@ function getLocalIP() {
     }
 }
 
+const LOG_PATH = path.join(__dirname, '..', 'logs', 'conn_logs.txt');
+const LOG_DIR  = path.dirname(LOG_PATH);
+
 function logRequest(req, res, next) {
     console.log(`REQUEST: ${req.method}, ${req.url}`);
 
-    var IP = req.ip.split(':').at(-1);
+    var IP = req.ip ? req.ip.split(':').at(-1) : 'unknown';
     var date = new Date().toISOString();
     var message = `${IP}\t${date}\t${req.url}\n`;
-    fs.appendFile(path.join(__dirname, '..', 'logs', 'conn_logs.txt'), message, ()=>{next();});
+
+    fs.mkdir(LOG_DIR, { recursive: true }, (mkdirErr) => {
+        if (mkdirErr) {
+            console.warn('Failed to create log directory:', mkdirErr.message);
+            return next();
+        }
+        fs.appendFile(LOG_PATH, message, (err) => {
+            if (err) console.warn('Failed to write to conn_logs.txt:', err.message);
+            next();
+        });
+    });
 }
 
 module.exports = {
