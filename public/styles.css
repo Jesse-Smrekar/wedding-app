@@ -773,6 +773,125 @@ table.itinerary th:last-child {
     transform: scale(0.96);
 }
 
+/* ── Home Photo Slideshow ── */
+#photo-slideshow {
+    max-width: 480px;
+    margin: 0 auto 48px;
+    padding: 0 16px;
+    box-sizing: border-box;
+}
+
+.slideshow-heading {
+    text-align: center;
+    font-size: 1.1em;
+    font-style: italic;
+    color: var(--text-muted);
+    margin: 0 0 14px;
+}
+
+.slideshow-track-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 20px;
+    overflow: hidden;
+    /* background-color: var(--surface); */
+}
+
+.slideshow-track {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+}
+
+.slideshow-slide {
+    position: relative; /* positioning parent for the absolutely-placed img */
+    min-width: 100%;
+    flex-shrink: 0;
+}
+
+.slideshow-slide img {
+    /* Bypass the percentage-height chain that breaks on mobile Safari.
+       Absolute inset gives explicit dimensions without needing height:100%
+       to resolve through a flex → absolute-positioned ancestor. */
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 0;
+    display: block;
+}
+
+.slideshow-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    padding: 0;
+    line-height: 1;
+}
+
+.slideshow-arrow:active {
+    background-color: rgba(0, 0, 0, 0.65);
+}
+
+.slideshow-prev { left: 10px; }
+.slideshow-next { right: 10px; }
+
+.slideshow-dots {
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.slideshow-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--border);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    flex-shrink: 0;
+}
+
+.slideshow-dot.active {
+    background-color: var(--accent);
+    transform: scale(1.3);
+}
+
+.slideshow-caption {
+    text-align: center;
+    font-size: 13px;
+    font-style: normal;
+    color: var(--text-muted);
+    margin: 10px 0 0;
+    min-height: 18px;
+    padding: 0 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 /* ── Home Button ── */
 .home-btn {
     /* position: absolute;

@@ -40,6 +40,98 @@ router.get('/', (req, res) => {
 });
 
 
+const MIME_TYPES = {
+    '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
+    '.png': 'image/png',  '.heic': 'image/heic',
+    '.heif': 'image/heif', '.raw': 'image/x-raw',
+    '.arw': 'image/x-sony-arw', '.cr2': 'image/x-canon-cr2',
+    '.nef': 'image/x-nikon-nef', '.orf': 'image/x-olympus-orf',
+    '.rw2': 'image/x-panasonic-rw2', '.sr2': 'image/x-sony-sr2',
+};
+
+
+/**
+ * GET /photos/slideshow
+ *
+ * Returns metadata for all public photos (used by the home page carousel).
+ * Does not require authentication — public photos are visible to anyone.
+ */
+router.get('/slideshow', async (req, res) => {
+    try {
+
+        const rows = await db.read(
+            `SELECT id, filename, uploader, note
+             FROM (
+                 SELECT upload_files.id,
+                        upload_files.filename,
+                        users.first_name AS uploader,
+                        uploads.note,
+                        uploads.date,
+                        ROW_NUMBER() OVER (
+                            PARTITION BY upload_files.upload_id
+                            ORDER BY upload_files.id
+                        ) AS rn
+                 FROM upload_files
+                 JOIN uploads ON upload_files.upload_id = uploads.id
+                 JOIN users   ON uploads.user_id = users.id
+                 WHERE uploads.public = true
+             ) ranked
+             WHERE rn <= 2
+             ORDER BY date DESC
+             LIMIT 8`
+        );
+        res.json(rows.map(r => ({
+            id:       r.id,
+            filename: r.filename,
+            uploader: r.uploader,
+            note:     r.note || ''
+        })));
+    } catch (err) {
+        console.error('Error fetching slideshow metadata:', err);
+        res.status(500).json({ error: 'Failed to load slideshow.' });
+    }
+});
+
+
+/**
+ * GET /photos/slideshow/:id
+ *
+ * Streams the raw image bytes for a single public photo.
+ * Does not require authentication.
+ */
+router.get('/slideshow/:id', async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    if (!id || isNaN(id)) {
+        return res.status(400).json({ error: 'Invalid photo ID.' });
+    }
+
+    try {
+        const rows = await db.read(
+            `SELECT upload_files.filename, upload_files.file_data
+             FROM upload_files
+             JOIN uploads ON upload_files.upload_id = uploads.id
+             WHERE upload_files.id = $1 AND uploads.public = true`,
+            [id]
+        );
+
+        if (!rows || rows.length === 0) {
+            return res.status(404).json({ error: 'Photo not found or not public.' });
+        }
+
+        const { filename, file_data } = rows[0];
+        const ext = path.extname(filename).toLowerCase();
+        const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+
+        res.set('Content-Type', contentType);
+        res.set('Cache-Control', 'public, max-age=3600');
+        res.send(file_data);
+    } catch (err) {
+        console.error(`Error fetching photo id=${id}:`, err);
+        res.status(500).json({ error: 'Failed to load photo.' });
+    }
+});
+
+
 /**
  * GET /photos/mine
  *

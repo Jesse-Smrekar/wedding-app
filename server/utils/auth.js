@@ -13,9 +13,11 @@ const JWT_TTL_MILLIS = 86400000;
  */
 const auth = (req, res, next) => {
 
-    // skip auth for the home page, login screen, and non-html requests
+    // skip auth for the home page, login screen, non-html requests,
+    // and public photo slideshow (visible on the unauthenticated home page)
     if (["/", "/login", "/login/user", "/spotify/auth/redirect"].includes(req.path)
-        || req.path.indexOf(".js") > 0 
+        || req.path.startsWith('/photos/slideshow')
+        || req.path.indexOf(".js") > 0
         || req.path.indexOf(".css") > 0) {
         next();
         return;
