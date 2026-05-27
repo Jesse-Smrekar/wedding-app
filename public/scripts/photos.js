@@ -9,6 +9,7 @@ window.onload = () => {
     uploadArea = document.getElementById('upload-area');
     grid       = document.getElementById('preview-grid');
     countEl    = document.getElementById('photo-count');
+    pubSlider  = document.getElementById('pub-slider');
     submitBtn  = document.getElementById('photos-submit-btn');
 
     // ── File input change ──
@@ -87,8 +88,10 @@ function renderPreviews() {
         countEl.textContent = `${selectedFiles.length} / ${MAX_PHOTOS} photos selected`;
         countEl.className = 'photo-count' + (atLimit ? ' at-limit' : '');
         countEl.style.display = 'block';
+        pubSlider.style.display = 'flex';
     } else {
         countEl.style.display = 'none';
+        pubSlider.style.display = 'none';
     }
 
     uploadArea.style.display = atLimit ? 'none' : 'flex';
@@ -105,6 +108,7 @@ function submitPhotos() {
     const formData = new FormData();
     selectedFiles.forEach(f => formData.append('photos', f));
     if (note) formData.append('note', note);
+    formData.append('public', document.getElementById('public').checked);
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Uploading…';

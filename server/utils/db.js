@@ -34,6 +34,7 @@ async function init() {
                 id SERIAL PRIMARY KEY,
                 date TEXT,
                 note TEXT,
+                public BOOLEAN default false,
                 user_id INTEGER
             )
         `);
