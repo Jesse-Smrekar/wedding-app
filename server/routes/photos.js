@@ -219,7 +219,7 @@ router.post('/upload', upload.array('photos', MAX_FILES), async (req, res) => {
     }
 
     const note = (req.body.note || '').slice(0, 500);
-    const public = req.body.public ?? false;
+    const isPublic = req.body.public === 'true' || req.body.public === true;
     const [firstName, lastName] = req.user.split('_');
 
     try {
@@ -238,12 +238,13 @@ router.post('/upload', upload.array('photos', MAX_FILES), async (req, res) => {
 
         const uploadId = await db.write(
             `INSERT INTO uploads (date, note, public, user_id)
-            VALUES (
-                '${new Date().toISOString()}',
-                '${note}',
-                '${public}',
-                (SELECT id FROM users WHERE first_name = '${firstName}' AND last_name = '${lastName}')
-            )`
+             VALUES (
+                 $1,
+                 $2,
+                 $3,
+                 (SELECT id FROM users WHERE first_name = $4 AND last_name = $5)
+             )`,
+            [new Date().toISOString(), note, isPublic, firstName, lastName]
         );
 
         if (!uploadId) {

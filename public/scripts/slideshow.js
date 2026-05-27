@@ -3,12 +3,38 @@ var current = 0;
 var timer   = null;
 var INTERVAL_MS = 10000;
 
-var section  = document.getElementById('photo-slideshow');
-var track    = document.getElementById('slideshow-track');
-var dotsWrap = document.getElementById('slideshow-dots');
-var caption  = document.getElementById('slideshow-caption');
-// var prevBtn  = document.getElementById('slideshow-prev');
-// var nextBtn  = document.getElementById('slideshow-next');
+var section    = document.getElementById('photo-slideshow');
+var track      = document.getElementById('slideshow-track');
+var trackWrap  = document.querySelector('.slideshow-track-wrap');
+var dotsWrap   = document.getElementById('slideshow-dots');
+var caption    = document.getElementById('slideshow-caption');
+
+// Horizontal swipe to advance slides
+var swipeStartX = 0;
+var swipeStartY = 0;
+var swiping     = false;
+
+trackWrap.addEventListener('touchstart', function (e) {
+    swipeStartX = e.touches[0].clientX;
+    swipeStartY = e.touches[0].clientY;
+    swiping = false;
+}, { passive: true });
+
+trackWrap.addEventListener('touchmove', function (e) {
+    var dx = e.touches[0].clientX - swipeStartX;
+    var dy = e.touches[0].clientY - swipeStartY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 6) {
+        swiping = true;
+        e.preventDefault(); // block vertical page-snap while swiping horizontally
+    }
+}, { passive: false });
+
+trackWrap.addEventListener('touchend', function (e) {
+    if (!swiping) return;
+    var dx = e.changedTouches[0].clientX - swipeStartX;
+    if (Math.abs(dx) > 40) advance(dx < 0 ? 1 : -1);
+    swiping = false;
+}, { passive: true });;
 
 function goTo(index) {
     current = ((index % photos.length) + photos.length) % photos.length;

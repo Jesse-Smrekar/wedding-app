@@ -11,11 +11,13 @@
 </head>
 <body>
 
-    <a href="/" class="home-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
-        </svg>
-    </a>
+    <div class="home-btn">
+        <a href="/" >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
+            </svg>
+        </a>
+    </div>
 
     <div id="photos-page">
 
@@ -26,6 +28,9 @@
         <p class="page-intro">Share your favorite moments from the big day!</p>
 
         <!-- Hidden file input -->
+        <div class="note-label">
+            <span>Photos</span>
+        </div>
         <input
             type="file"
             id="photo-input"
@@ -51,26 +56,31 @@
         <!-- Preview grid -->
         <div class="preview-grid" id="preview-grid"></div>
 
-        <!-- Public slider -->
-        <div id="pub-slider" style="display:none;align-items:center;margin-top:20px;">
-            <label class="switch">
-                <input id="public" type="checkbox">
-                <span class="slider round"></span>
-            </label>
-            <span class="photo-count" style="margin:auto;margin-left:8px;">Make these public? (Let others see these photos)</span>
-        </div>
-
         <!-- Note -->
         <div class="note-label">
-            <span>Note <span style="color: var(--text-muted); font-size:13px;">(optional)</span></span>
+            <span>Caption <span style="color: var(--text-muted); font-size:13px;">(optional)</span></span>
             <span class="note-char-count" id="note-char-count">0 / 500</span>
         </div>
         <textarea
             id="photo-note"
-            placeholder="Add a note to go with your photos..."
+            placeholder="Add a caption to go with your photos..."
             maxlength="500"
             oninput="updateCharCount()"
         ></textarea>
+
+        <!-- Public slider -->
+         <div class="note-label">
+            <span>Visibility <span style="color: var(--text-muted); font-size:13px;">(optional)</span></span>
+        </div>
+        <div id="pub-slider" style="display:flex;align-items:center;margin-top:20px;">
+            <label class="switch">
+                <input id="public" type="checkbox">
+                <span class="slider round"></span>
+            </label>
+            <span class="photo-count" style="margin:auto;margin-left:8px;">Make these public?</span>
+        </div>
+        <span class="photo-count">(others will be able to see your photos and caption)</span>
+
 
     </div>
 

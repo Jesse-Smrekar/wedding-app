@@ -66,11 +66,11 @@ function read(queryString, params) {
 }
 
 
-function write(queryString) {
+function write(queryString, params) {
     const isInsert = queryString.trim().toUpperCase().startsWith('INSERT');
     const query = isInsert ? `${queryString} RETURNING *` : queryString;
 
-    return pool.query(query)
+    return pool.query(query, params)
         .then(result => {
             if (isInsert && result.rows.length > 0) {
                 return result.rows[0].id ?? null;

@@ -88,10 +88,10 @@ function renderPreviews() {
         countEl.textContent = `${selectedFiles.length} / ${MAX_PHOTOS} photos selected`;
         countEl.className = 'photo-count' + (atLimit ? ' at-limit' : '');
         countEl.style.display = 'block';
-        pubSlider.style.display = 'flex';
+        // pubSlider.style.display = 'flex';
     } else {
         countEl.style.display = 'none';
-        pubSlider.style.display = 'none';
+        // pubSlider.style.display = 'none';
     }
 
     uploadArea.style.display = atLimit ? 'none' : 'flex';
