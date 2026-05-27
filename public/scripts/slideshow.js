@@ -1,7 +1,7 @@
 var photos  = [];
 var current = 0;
 var timer   = null;
-var INTERVAL_MS = 6000;
+var INTERVAL_MS = 10000;
 
 var section  = document.getElementById('photo-slideshow');
 var track    = document.getElementById('slideshow-track');
@@ -17,9 +17,7 @@ function goTo(index) {
         d.classList.toggle('active', i === current);
     });
     var p = photos[current];
-    caption.innerHTML = p.note
-        ? '\u{1F4F8} ' + p.uploader + '</br>' + p.note
-        : '\u{1F4F8} ' + p.uploader;
+    caption.innerHTML = '\u{1F4F8} ' + p.uploader + '<br>' + (p.note || ' ');
 }
 
 function startTimer() {

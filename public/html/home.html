@@ -54,16 +54,24 @@
 
     <!-- GUEST PHOTO SLIDESHOW (hidden until photos load) -->
     <section id="photo-slideshow" style="display:none;">
-        <p class="slideshow-heading">Guest Photos</p>
-        <div class="slideshow-track-wrap">
+        <p class="slideshow-heading">
+            Swipe to see guest photos
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-down-short" viewBox="0 -10     24 24">
+                <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4"/>
+            </svg>
+        </p>
+        <p class="slideshow-gallery-hint">Tap photo to open full gallery</p>
+        <div class="slideshow-track-wrap" onclick="makeAuthenticatedRequest('GET', '/photos/gallery');" style="cursor:pointer;">
             <div class="slideshow-track" id="slideshow-track"></div>
-            <!-- <button class="slideshow-arrow slideshow-prev" id="slideshow-prev" aria-label="Previous photo">&#8249;</button>
-            <button class="slideshow-arrow slideshow-next" id="slideshow-next" aria-label="Next photo">&#8250;</button> -->
         </div>
         <div class="slideshow-dots" id="slideshow-dots"></div>
         <p class="slideshow-caption" id="slideshow-caption"></p>
+
     </section>
     <script src="/scripts/slideshow.js"></script>
+
+
+
 
 </body>
 </html>

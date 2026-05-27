@@ -51,6 +51,43 @@ const MIME_TYPES = {
 
 
 /**
+ * GET /photos/gallery
+ *
+ * Serves the full guest photo gallery page.
+ */
+router.get('/gallery', (req, res) => {
+    res.redirect('/html/gallery.html');
+});
+
+
+/**
+ * GET /photos/gallery/list
+ *
+ * Returns metadata for all public photos, newest first.
+ */
+router.get('/gallery/list', async (req, res) => {
+    try {
+        const rows = await db.read(
+            `SELECT upload_files.id, users.first_name AS uploader, uploads.note
+             FROM upload_files
+             JOIN uploads ON upload_files.upload_id = uploads.id
+             JOIN users   ON uploads.user_id = users.id
+             WHERE uploads.public = true
+             ORDER BY uploads.date DESC`
+        );
+        res.json(rows.map(r => ({
+            id:       r.id,
+            uploader: r.uploader,
+            note:     r.note || ''
+        })));
+    } catch (err) {
+        console.error('Error fetching gallery list:', err);
+        res.status(500).json({ error: 'Failed to load gallery.' });
+    }
+});
+
+
+/**
  * GET /photos/slideshow
  *
  * Returns metadata for all public photos (used by the home page carousel).

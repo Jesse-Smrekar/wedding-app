@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" type="image/png" href="/images/diamond-ring.png">
+    <script src="/scripts.js"></script>
+    <title>Guest Gallery · Tati & Jared</title>
+</head>
+<body>
+
+    <a href="/" class="home-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
+        </svg>
+    </a>
+
+    <div id="gallery-page">
+
+        <header class="gallery-header">
+            <h1 class="title">Guest Gallery</h1>
+            <p class="page-intro" id="gallery-count"></p>
+        </header>
+
+        <div id="gallery-grid"></div>
+
+        <p id="gallery-empty" style="display:none; text-align:center; color:var(--text-muted); font-size:15px; font-style:normal; padding: 40px 16px;">
+            No public photos yet — be the first to share one!
+        </p>
+
+    </div>
+
+    <!-- Lightbox -->
+    <div id="gallery-lightbox" aria-modal="true" role="dialog">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close">&#x2715;</button>
+
+        <div id="lightbox-img-wrap">
+            <img id="lightbox-img" src="" alt="">
+        </div>
+
+        <div id="lightbox-footer">
+            <p id="lightbox-caption"></p>
+            <div id="lightbox-nav">
+                <button class="lightbox-nav-btn" id="lightbox-prev" aria-label="Previous photo">&#8249;</button>
+                <span id="lightbox-counter"></span>
+                <button class="lightbox-nav-btn" id="lightbox-next" aria-label="Next photo">&#8250;</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/scripts/gallery.js"></script>
+
+</body>
+</html>
