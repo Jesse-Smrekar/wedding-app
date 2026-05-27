@@ -130,7 +130,7 @@ function addToQueue() {
         if (data.success) {
             message = 'Added to the queue!';
         } else if (data.message == 'TOO_SOON') {
-            message = `Woah there, the next time you can queue a song is ${new Date(data.time + 'Z').toLocaleTimeString()}. Go dance!`;
+            message = `Woah there, the next time you can queue a song is ${new Date(data.time).toLocaleTimeString()}. Go dance!`;
         } else {
             message = 'Oops! Something went wrong. Go find Jesse!'
         }

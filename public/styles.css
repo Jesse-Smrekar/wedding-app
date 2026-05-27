@@ -172,9 +172,9 @@ nav {
 }
 
 .search-btn {
-    width: 48px;
+    width: 96px;
     height: 48px;
-    border-radius: 50%;
+    border-radius: 48px;
     border: none;
     background-color: var(--accent);
     color: white;
@@ -775,22 +775,23 @@ table.itinerary th:last-child {
 
 /* ── Home Button ── */
 .home-btn {
-    position: absolute;
+    /* position: absolute;
     top: 14px;
-    right: 14px;
+    left: 14px; */
     z-index: 1001;
-    display: flex;
+    /* display: flex; */
     align-items: center;
     justify-content: center;
     width: 44px;
     height: 44px;
-    border-radius: 50%;
-    background-color: var(--surface);
+    padding: 10px;
+    /* border-radius: 50%; */
+    /* background-color: var(--surface); */
     color: var(--text);
-    border: 2px solid var(--text);
+    /* border: 2px solid var(--text); */
     text-decoration: none;
-    transition: background-color 0.15s, transform 0.1s;
-    -webkit-tap-highlight-color: transparent;
+    /* transition: background-color 0.15s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent; */
 }
 
 .home-btn:active {

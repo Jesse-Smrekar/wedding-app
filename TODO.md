@@ -15,11 +15,11 @@
 
 
 - Music
-  - [ ] display the time until next queue availability as a countdown in the music page
+  - [x] display the time until next queue availability as a countdown in the music page
 
 
 - Directions
-  - [ ] Make it so google maps links open in a new tab
+  - [x] Make it so google maps links open in a new tab
 
 ## Notes
 
