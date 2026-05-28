@@ -16,7 +16,7 @@ const auth = (req, res, next) => {
     // skip auth for the home page, login screen, non-html requests,
     // and public photo slideshow (visible on the unauthenticated home page)
     if (["/", "/login", "/login/user", "/spotify/auth/redirect"].includes(req.path)
-        || req.path.startsWith('/photos/slideshow')
+        || req.path.startsWith('/photos/view')
         || req.path.indexOf(".js") > 0
         || req.path.indexOf(".css") > 0) {
         next();

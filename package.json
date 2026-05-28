@@ -9,7 +9,8 @@
     "os": "^0.1.2",
     "path": "^0.12.7",
     "pg": "^8.21.0",
-    "querystring": "^0.2.1"
+    "querystring": "^0.2.1",
+    "sharp": "^0.34.5"
   },
   "scripts": {
     "start": "node server.js"

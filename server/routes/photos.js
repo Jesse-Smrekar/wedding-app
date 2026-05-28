@@ -3,6 +3,7 @@ const router = express.Router();
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
+const sharp = require('sharp');
 const db = require('../utils/db.js');
 
 const ALLOWED_EXTENSIONS = /\.(jpg|jpeg|png|heic|heif|raw|arw|cr2|nef|orf|rw2|sr2)$/i;
@@ -131,12 +132,12 @@ router.get('/slideshow', async (req, res) => {
 
 
 /**
- * GET /photos/slideshow/:id
+ * GET /photos/view/:id
  *
  * Streams the raw image bytes for a single public photo.
  * Does not require authentication.
  */
-router.get('/slideshow/:id', async (req, res) => {
+router.get('/view/:id', async (req, res) => {
     const id = parseInt(req.params.id, 10);
     if (!id || isNaN(id)) {
         return res.status(400).json({ error: 'Invalid photo ID.' });
@@ -156,9 +157,23 @@ router.get('/slideshow/:id', async (req, res) => {
         }
 
         const { filename, file_data } = rows[0];
+
+        if (req.query.thumb === '1') {
+            try {
+                const thumbnail = await sharp(file_data)
+                    .resize(400, 400, { fit: 'cover', position: 'centre' })
+                    .jpeg({ quality: 50 })
+                    .toBuffer();
+                res.set('Content-Type', 'image/jpeg');
+                res.set('Cache-Control', 'public, max-age=86400');
+                return res.send(thumbnail);
+            } catch (thumbErr) {
+                console.warn(`Thumbnail generation failed for id=${id}, serving original:`, thumbErr.message);
+            }
+        }
+
         const ext = path.extname(filename).toLowerCase();
         const contentType = MIME_TYPES[ext] || 'application/octet-stream';
-
         res.set('Content-Type', contentType);
         res.set('Cache-Control', 'public, max-age=3600');
         res.send(file_data);

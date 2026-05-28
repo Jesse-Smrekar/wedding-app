@@ -13,7 +13,7 @@ var counterEl   = document.getElementById('lightbox-counter');
 function openLightbox(index) {
     lightboxIndex = index;
     var p = photos[index];
-    lightboxImg.src = '/photos/slideshow/' + p.id;
+    lightboxImg.src = '/photos/view/' + p.id;
     lightboxImg.alt = p.note || 'Photo by ' + p.uploader;
     captionEl.innerHTML = p.note
         ? '\u{1F4F8} ' + p.uploader + '<br><span>' + p.note + '</span>'
@@ -74,7 +74,7 @@ fetch('/photos/gallery/list', {
             cell.className = 'gallery-thumb';
             var img = document.createElement('img');
             img.loading = 'lazy';
-            img.src = '/photos/slideshow/' + p.id;
+            img.src = '/photos/view/' + p.id + '?thumb=1';
             img.alt = p.note || 'Photo by ' + p.uploader;
             cell.appendChild(img);
             cell.addEventListener('click', function () { openLightbox(i); });

@@ -85,7 +85,7 @@ fetch('/photos/slideshow')
             var slide = document.createElement('div');
             slide.className = 'slideshow-slide';
             var img = document.createElement('img');
-            img.src = '/photos/slideshow/' + p.id;
+            img.src = '/photos/view/' + p.id;
             img.alt = p.note || ('Photo by ' + p.uploader);
             slide.appendChild(img);
             track.appendChild(slide);
