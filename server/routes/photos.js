@@ -161,6 +161,7 @@ router.get('/view/:id', async (req, res) => {
         if (req.query.thumb === '1') {
             try {
                 const thumbnail = await sharp(file_data)
+                    .rotate()
                     .resize(400, 400, { fit: 'cover', position: 'centre' })
                     .jpeg({ quality: 50 })
                     .toBuffer();
