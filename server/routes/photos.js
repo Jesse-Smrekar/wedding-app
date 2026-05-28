@@ -253,8 +253,8 @@ router.post('/upload', upload.array('photos', MAX_FILES), async (req, res) => {
             );
         }
 
-        console.log(`>>> Photos uploaded: ${saved.length} file(s). Note: "${note}"`);
-        res.json({ success: true, count: saved.length, files: saved.map(f => ({ filename: f.filename, originalName: f.originalName, size: f.size })) });
+        console.log(`>>> Photos uploaded: ${sanitized_files.length} file(s). Note: "${note}"`);
+        res.json({ success: true, count: sanitized_files.length, files: sanitized_files.map(f => ({ filename: f.filename, originalName: f.originalName, size: f.size })) });
 
     } catch (err) {
         console.error('Upload error:', err);
