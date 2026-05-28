@@ -739,8 +739,9 @@ table.itinerary th:last-child {
     grid-template-columns: 1fr 1fr;
     gap: 16px;
     padding: 24px 16px 40px;
-    max-width: 480px;
-    margin: 0;
+    width: 100%;
+    /* max-width: 480px; */
+    margin: 0 auto;
     box-sizing: border-box;
 }
 
@@ -761,7 +762,8 @@ table.itinerary th:last-child {
     font-size: 18px;
     font-style: italic;
     letter-spacing: 0.03em;
-    min-height: 140px;
+    min-height: 160px;
+    min-width: 160px;
     border: 2px solid var(--text);
     transition: background-color 0.15s, transform 0.1s;
     -webkit-tap-highlight-color: transparent;

@@ -155,6 +155,11 @@ function getJWT() {
     return '';
 }
 
+const jwt = getJWT();
+if ((!jwt || jwt == '') && window.location.pathname != '/login') {
+    window.location.assign('/login');
+}
+
 /*
 // TROUBLESHOOTING HORIZONTAL SCROLL
 

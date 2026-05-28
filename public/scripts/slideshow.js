@@ -73,8 +73,7 @@ function toCamelCase(str) {
     return result;
 }
 
-fetch('/photos/slideshow')
-    .then(function (r) { return r.json(); })
+makeAuthenticatedRequest('GET', '/photos/slideshow')
     .then(function (data) {
         if (!Array.isArray(data) || data.length === 0) return;
         photos = data;
