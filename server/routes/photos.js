@@ -223,17 +223,11 @@ router.post('/upload', upload.array('photos', MAX_FILES), async (req, res) => {
     const [firstName, lastName] = req.user.split('_');
 
     try {
-        const saved = [];
+        const sanitized_files = [];
         for (const [i, file] of req.files.entries()) {
             const sanitized = file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_');
             const filename = `${Date.now()}-${i}-${sanitized}`;
-            try {
-                fs.writeFileSync(path.join(UPLOAD_DIR, filename), file.buffer);
-            } catch (fsErr) {
-                console.error(`Failed to write file ${filename}:`, fsErr);
-                return res.status(500).json({ error: 'Failed to save one or more files.' });
-            }
-            saved.push({ filename, originalName: file.originalname, size: file.size, buffer: file.buffer });
+            sanitized_files.push({ filename, originalName: file.originalname, size: file.size, buffer: file.buffer });
         }
 
         const uploadId = await db.write(
@@ -252,7 +246,7 @@ router.post('/upload', upload.array('photos', MAX_FILES), async (req, res) => {
             return res.status(500).json({ error: 'Failed to record upload. User may not exist.' });
         }
 
-        for (const file of saved) {
+        for (const file of sanitized_files) {
             await db.query(
                 'INSERT INTO upload_files (upload_id, filename, file_data) VALUES ($1, $2, $3)',
                 [uploadId, file.filename, file.buffer]
