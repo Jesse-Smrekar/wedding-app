@@ -101,7 +101,7 @@ router.get('/slideshow', async (req, res) => {
              FROM (
                  SELECT upload_files.id,
                         upload_files.filename,
-                        users.first_name AS uploader,
+                        users.first_name || ' ' || users.last_name AS uploader,
                         uploads.note,
                         uploads.date,
                         ROW_NUMBER() OVER (

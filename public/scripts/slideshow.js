@@ -43,7 +43,7 @@ function goTo(index) {
         d.classList.toggle('active', i === current);
     });
     var p = photos[current];
-    caption.innerHTML = '\u{1F4F8} ' + p.uploader + '<br>' + (p.note || ' ');
+    caption.innerHTML = '\u{1F4F8} ' + toCamelCase(p.uploader) + '<br>' + (p.note || ' ');
 }
 
 function startTimer() {
@@ -56,6 +56,21 @@ function startTimer() {
 function advance(dir) {
     goTo(current + dir);
     startTimer();
+}
+
+function toCamelCase(str) {
+    var result = str.toLowerCase();
+    var newLetter = result[0].toUpperCase();
+    result = newLetter + result.slice(1);
+    
+    var last = 0;
+    while (str.indexOf(' ', last) > 0) {
+        let idx = str.indexOf(' ', last) + 1;
+        newLetter = result[idx].toUpperCase();
+        result = result.slice(0, idx) + newLetter + result.slice(idx + 1);
+        last = idx + 1;
+    }
+    return result;
 }
 
 fetch('/photos/slideshow')
@@ -76,9 +91,7 @@ fetch('/photos/slideshow')
             track.appendChild(slide);
         });
 
-        // build dots (cap at 20 so they don't overflow on many photos)
-        var dotCount = Math.min(photos.length, 20);
-        for (var i = 0; i < dotCount; i++) {
+        for (var i = 0; i < photos.length; i++) {
             (function (idx) {
                 var dot = document.createElement('button');
                 dot.className = 'slideshow-dot' + (idx === 0 ? ' active' : '');
