@@ -55,4 +55,15 @@ function showQueueOverlay(nextQueueTime, queuedTracks) {
     }, 1000);
 }
 
-document.addEventListener('DOMContentLoaded', checkQueueTime);
+function adjustResultsOffset() {
+    var staticTop = document.getElementById('static-top');
+    var container = document.getElementById('search-results-container');
+    if (staticTop && container) {
+        container.style.paddingTop = staticTop.offsetHeight + 'px';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    adjustResultsOffset();
+    checkQueueTime();
+});

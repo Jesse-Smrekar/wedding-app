@@ -135,6 +135,8 @@ function addToQueue() {
             message = 'Oops! Something went wrong. Go find Jesse!'
         }
         window.alert(message);
+
+        location.reload();
     })
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
