@@ -2,33 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" type="text/css" href="/styles.css">
     <link rel="icon" type="image/png" href="/images/diamond-ring.png">
     <script src="scripts.js"></script>
     <title>Tati & Jared</title>
 </head>
-<body>
+<body class="login-page">
 
-    <header class="centered">
-        <h1 class="title">Who are ya?</h1>
-    </header>
+    <div id="welcome-card">
 
-    <div class="centered" style="width:90%;">
-        <form id="login-form" style="display:flex;" action="/login/user" method="POST">
-            <div class="centered" >
-                <label for="fname" style="float:left;"><b>First Name</b></label>
-                <input class="stacked-form-item" type="text" placeholder="First" name="fname" required>
-            
-                <label for="lname" style="float:left;"><b>Last Name</b></label>
-                <input class="stacked-form-item" type="text" placeholder="Last" name="lname" required>
-            
-                <button class="stacked-form-item" style="width:80%;" name="submit" type="submit">Continue</button>
-                <!-- <label>
-                  <input type="checkbox" checked="checked" name="remember"> Remember me
-                </label> -->
-            </div>
+        <img id="welcome-ring" src="/images/diamond-ring.png" alt="rings">
+
+        <h1 id="welcome-title">Jared & Tati</h1>
+        <p id="welcome-date">June 7, 2025 &middot; Welcome!</p>
+
+        <p id="welcome-prompt">What's your name?</p>
+
+        <form id="login-form" action="/login/user" method="POST">
+            <input class="welcome-input" type="text" placeholder="First name" name="fname" autocomplete="given-name" required>
+            <input class="welcome-input" type="text" placeholder="Last name" name="lname" autocomplete="family-name" required>
+            <button id="welcome-submit" name="submit" type="submit">Let's go!</button>
         </form>
+
     </div>
 
 </body>

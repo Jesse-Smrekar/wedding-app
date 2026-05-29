@@ -39,7 +39,6 @@ app.get('/styles.css', (req, res) => {
 
 // home page
 app.get('/', (req, res) => {
-
   res.set('Content-Type', 'text/html');
   res.sendFile(path.join(__dirname, 'public', '/html/home.html'));  
 });

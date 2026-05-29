@@ -566,6 +566,109 @@ table.itinerary th:last-child {
     cursor: default;
 }
 
+/* ── Welcome / Login ── */
+body.login-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100dvh;
+    padding: 24px 24px calc(24px + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box;
+}
+
+#welcome-card {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+}
+
+#welcome-ring {
+    width: 72px;
+    height: 72px;
+    margin-bottom: 16px;
+}
+
+#welcome-title {
+    font-size: 2.4em;
+    text-align: center;
+    margin: 0 0 6px;
+}
+
+#welcome-date {
+    font-size: 15px;
+    font-style: normal;
+    color: var(--text-muted);
+    text-align: center;
+    margin: 0 0 36px;
+}
+
+#welcome-prompt {
+    font-size: 17px;
+    font-style: normal;
+    color: var(--text);
+    text-align: center;
+    margin: 0 0 20px;
+}
+
+#login-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.welcome-input {
+    width: 100%;
+    height: 52px;
+    background-color: var(--surface);
+    border: 2px solid transparent;
+    border-radius: 50px;
+    padding: 0 20px;
+    color: var(--text);
+    font-family: "Sansita Swashed", system-ui;
+    font-size: 16px;
+    font-style: italic;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.welcome-input:focus {
+    border-color: var(--accent);
+}
+
+.welcome-input::placeholder {
+    color: var(--text-muted);
+}
+
+#welcome-submit {
+    width: 100%;
+    height: 56px;
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-family: "Sansita Swashed", system-ui;
+    font-size: 18px;
+    font-style: italic;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    margin-top: 4px;
+    transition: background-color 0.15s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#welcome-submit:active {
+    background-color: var(--accent-dark);
+    transform: scale(0.98);
+}
+
 /* ── Directions ── */
 #directions-page {
     max-width: 600px;
