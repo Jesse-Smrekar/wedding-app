@@ -901,6 +901,113 @@ table.itinerary th:last-child {
     overflow: hidden;
 }
 
+/* ── Queue Wait Overlay ── */
+#queue-wait-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: var(--bg);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+#queue-wait-overlay .home-btn {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    display: flex;
+}
+
+#queue-countdown {
+    color: var(--text);
+    font-size: 56px;
+    font-style: normal;
+    margin: 0;
+    letter-spacing: 0.04em;
+}
+
+.queue-overlay-msg {
+    color: var(--text-muted);
+    font-size: 15px;
+    font-style: normal;
+    margin: 0;
+    text-align: center;
+    padding: 0 24px;
+}
+
+.queue-overlay-submsg {
+    color: var(--text-muted);
+    font-size: 14px;
+    font-style: normal;
+    margin: 0;
+    text-align: center;
+}
+
+#queued-tracks-list {
+    width: 100%;
+    max-width: 400px;
+    margin-top: 8px;
+    padding: 0 16px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow-y: auto;
+}
+
+.queued-track-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: var(--surface);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+}
+
+.queued-track-thumb {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.queued-track-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.queued-track-name {
+    font-size: 14px;
+    font-style: normal;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.queued-track-artist {
+    font-size: 12px;
+    font-style: normal;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.queued-track-order {
+    font-size: 12px;
+    font-style: normal;
+    color: var(--accent);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
 /* ── Home Button ── */
 .home-btn {
     /* position: absolute;

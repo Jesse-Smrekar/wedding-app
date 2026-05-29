@@ -23,10 +23,19 @@ async function init() {
                 UNIQUE(first_name, last_name)
             )
         `);
+
         await pool.query(`
             INSERT INTO users (first_name, last_name, next_music_queue_date)
             VALUES ('JESSE', 'SMREKAR', '2099-01-01 12:00:00.000000-05')
             ON CONFLICT DO NOTHING
+        `);
+
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS queued_tracks (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER,
+                track_id TEXT
+            )
         `);
 
         await pool.query(`

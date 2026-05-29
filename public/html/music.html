@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="/styles.css">
     <link rel="icon" type="image/png" href="/images/diamond-ring.png">
     <script src="../scripts.js"></script>
+    <script src="../scripts/music.js"></script>
     <title>Tati & Jared</title>
 </head>
 <body>
@@ -62,5 +63,18 @@
     <div id="queue-button" class="slide open" style="visibility: hidden;">
         <button id="add-to-queue-button" onclick="addToQueue()" disabled>Add to Queue</button>
     </div>
+
+    <div id="queue-wait-overlay" style="display:none;">
+        <a href="/" class="home-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" stroke-width="10" class="bi bi-chevron-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
+            </svg>
+        </a>
+        <p class="queue-overlay-msg">You can add another song in</p>
+        <p id="queue-countdown"></p>
+        <p class="queue-overlay-submsg">Go dance!</p>
+        <div id="queued-tracks-list"></div>
+    </div>
+
 </body>
 </html>

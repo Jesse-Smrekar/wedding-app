@@ -102,6 +102,7 @@ router.post('/queue/:trackId', (req, res) => {
     }
 
     return spotify.addToQueue(trackId)
+    .then(() => addQueuedTrackRecord(fname, lname, trackId))
     .then(() => updateUserNextQueueTime(fname, lname))
     .then(() => {
       res.set('Content-Type', 'application/json');
@@ -110,6 +111,55 @@ router.post('/queue/:trackId', (req, res) => {
   })
   .catch(err => {
     console.error('Queue error:', err);
+    res.status(500).json({ success: false, message: 'UNKNOWN' });
+  });
+});
+
+
+/**
+ *  GET /music/info
+ * 
+ *  returns a json object containing the next time (UTC) the user can queue a song.
+ *  and the order of their previously queued tracks.
+ */
+router.get('/info', (req, res) => {
+
+  if (!req.user) {
+    return res.status(401).json({ error: 'Not authenticated.' });
+  }
+
+  const [fname, lname] = req.user.split('_');
+  var tracks = [];
+  var queue = [];
+  getQueuedTracks(fname, lname)
+  .then(rows => tracks = rows)
+  .then(() => spotify.getQueue())
+  .then(data => queue = data)
+  .then(() => getUsersNextQueueTime(fname, lname))
+  .then(nextTime => {
+
+    var queueOrder = [];
+    if (!!queue) {
+      for (i=0; i<queue.length; i++) {
+        if (tracks.includes(queue[i].uri)) {
+          queue[i]['order'] = i;
+          queueOrder.push(queue[i]);
+        }
+      }
+    }
+    
+
+
+    res.set('Content-Type', 'application/json');
+    res.send(
+      {
+        nextQueueTime: nextTime,
+        queuedTracks: queueOrder
+      }
+    );
+  })
+  .catch(err => {
+    console.error('Error getting users next queue time:', err);
     res.status(500).json({ success: false, message: 'UNKNOWN' });
   });
 });
@@ -124,6 +174,25 @@ async function getUsersNextQueueTime(fname, lname) {
         console.error('Error reading queue time:', err);
         return null;
     }
+}
+
+
+function addQueuedTrackRecord(fname, lname, trackId) {
+    if (!fname || !lname || !trackId) return Promise.resolve();
+  return db.write(`INSERT INTO queued_tracks (user_id, track_id) 
+    VALUES ((SELECT id FROM users WHERE first_name = $1 AND last_name = $2), $3)`, [fname, lname, trackId])
+    .catch( err => console.error('Error inserting queued track record: ', err));
+}
+
+function getQueuedTracks(fname, lname) {
+  if (!fname || !lname) return Promise.resolve();
+  return db.read(
+    ` SELECT queued_tracks.track_id
+      FROM queued_tracks
+      JOIN users ON queued_tracks.user_id = users.id
+      WHERE users.first_name = $1 AND users.last_name = $2`, [fname, lname])
+    .then(rows => rows.map(r => r.track_id))
+    .catch( err => console.error('Error inserting queued track record: ', err));
 }
 
 

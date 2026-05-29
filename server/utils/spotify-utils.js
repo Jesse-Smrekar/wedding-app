@@ -246,7 +246,7 @@ function getQueue() {
       res.on("end", function (chunk) {
           var body = Buffer.concat(chunks);
           // console.log(`Search Result: ${body.toString()}`);
-          resolve(JSON.parse(body).tracks.items);
+          resolve(JSON.parse(body).queue);
       });
       
       res.on("error", function (error) {
@@ -362,5 +362,5 @@ function randStr(length) {
 
 
 module.exports = {
-  getAuthorization, login, setToken, searchTracks, addToQueue
+  getAuthorization, login, setToken, searchTracks, addToQueue, getQueue
 };
