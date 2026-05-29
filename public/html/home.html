@@ -28,6 +28,27 @@
             overflow: hidden;
             margin: 0;
         }
+        .slideshow-gallery-btn {
+            display: block;
+            width: 100%;
+            height: 48px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-family: "Sansita Swashed", system-ui;
+            font-size: 16px;
+            font-style: italic;
+            letter-spacing: 0.03em;
+            cursor: pointer;
+            margin-bottom: 14px;
+            transition: background-color 0.15s, transform 0.1s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .slideshow-gallery-btn:active {
+            background-color: var(--accent-dark);
+            transform: scale(0.98);
+        }
         #photo-slideshow {
             min-height: 100vh;
             min-height: 100dvh;
@@ -98,11 +119,8 @@
 
     <!-- PAGE 2: guest photo slideshow (hidden until photos load) -->
     <section id="photo-slideshow" style="display:none;">
-        <p class="slideshow-heading">
-            Recent Photos
-        </p>
-        <p class="slideshow-gallery-hint">Tap photo to open full gallery</p>
-        <div class="slideshow-track-wrap" onclick="makeAuthenticatedRequest('GET', '/photos/gallery');" style="cursor:pointer;">
+        <button class="slideshow-gallery-btn" onclick="makeAuthenticatedRequest('GET', '/photos/gallery');">Full Photo Gallery</button>
+        <div class="slideshow-track-wrap">
             <div class="slideshow-track" id="slideshow-track"></div>
         </div>
         <div class="slideshow-dots" id="slideshow-dots"></div>

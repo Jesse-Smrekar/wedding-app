@@ -19,16 +19,16 @@ window.onload = () => {
     });
 
     // ── Drag and drop ──
-    uploadArea.addEventListener('dragover', e => {
-        e.preventDefault();
-        uploadArea.classList.add('drag-over');
-    });
-    uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
-    uploadArea.addEventListener('drop', e => {
-        e.preventDefault();
-        uploadArea.classList.remove('drag-over');
-        addFiles(Array.from(e.dataTransfer.files));
-    });
+    // uploadArea.addEventListener('dragover', e => {
+    //     e.preventDefault();
+    //     uploadArea.classList.add('drag-over');
+    // });
+    // uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
+    // uploadArea.addEventListener('drop', e => {
+    //     e.preventDefault();
+    //     uploadArea.classList.remove('drag-over');
+    //     addFiles(Array.from(e.dataTransfer.files));
+    // });
 };
 
 function addFiles(newFiles) {
@@ -94,7 +94,7 @@ function renderPreviews() {
         // pubSlider.style.display = 'none';
     }
 
-    uploadArea.style.display = atLimit ? 'none' : 'flex';
+    uploadArea.style.display = atLimit ? 'none' : 'block';
     submitBtn.disabled = selectedFiles.length === 0;
 }
 

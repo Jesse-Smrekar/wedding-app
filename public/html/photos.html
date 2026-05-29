@@ -22,10 +22,26 @@
     <div id="photos-page">
 
         <header class="photos-header">
-            <h1 class="title">Photos</h1>
+            <h1 class="title" style="margin:0">Photos</h1>
         </header>
 
-        <p class="page-intro">Share your favorite moments from the big day!</p>
+        <p class="page-intro">Share photos with everyone or privately with the bride and groom. If you would like to see what others have shared, go to the 
+            <b><a href="/photos/gallery" class="dancing-text" style="text-decoration: none;">
+            <span>P</span>
+            <span>h</span>
+            <span>o</span>
+            <span>t</span>
+            <span>o</span>
+            <span>&nbsp;</span>
+            <span>G</span>
+            <span>a</span>
+            <span>l</span>
+            <span>l</span>
+            <span>e</span>
+            <span>r</span>
+            <span>y</span>
+            </a></b>!
+        </p>
 
         <!-- Hidden file input -->
         <div class="note-label">
@@ -39,16 +55,7 @@
             style="display:none;"
         >
 
-        <!-- Drop / tap area -->
-        <div class="upload-area" id="upload-area" onclick="document.getElementById('photo-input').click()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" viewBox="0 0 16 16" style="color: var(--text-muted);">
-                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
-                <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"/>
-            </svg>
-            <span class="upload-area-btn">Choose Photos</span>
-            <span class="upload-area-label">or drag and drop here</span>
-            <span class="upload-area-label">JPG &middot; PNG &middot; HEIC &middot; RAW</span>
-        </div>
+        <button id="upload-area" onclick="document.getElementById('photo-input').click()">Take / Select Photos</button>
 
         <!-- Photo count -->
         <p class="photo-count" id="photo-count" style="display:none;"></p>

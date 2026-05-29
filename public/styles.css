@@ -71,6 +71,7 @@ nav {
 
 .title {
     font-size: 2em;
+    margin: 0;
 }
 
 .menu-button {
@@ -384,56 +385,34 @@ table.itinerary th:last-child {
 #photos-page {
     max-width: 600px;
     margin: 0 auto;
-    padding: 24px 16px 100px;
+    padding: 0px 16px 100px;
     box-sizing: border-box;
 }
 
 .photos-header {
     text-align: center;
-    margin-bottom: 8px;
+    margin: 0;
 }
 
-.upload-area {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    background-color: var(--surface);
-    border: 2px dashed var(--border);
-    border-radius: var(--radius);
-    padding: 36px 16px;
-    cursor: pointer;
-    transition: border-color 0.15s, background-color 0.15s;
-    -webkit-tap-highlight-color: transparent;
-    text-align: center;
-}
-
-.upload-area.drag-over {
-    border-color: var(--accent);
-    background-color: var(--selected-bg);
-}
-
-.upload-area-label {
-    font-size: 15px;
-    font-style: normal;
-    color: var(--text-muted);
-}
-
-.upload-area-btn {
-    display: flex;
-    align-items: center;
-    height: 40px;
-    padding: 0 20px;
+#upload-area {
+    width: 100%;
+    height: 56px;
     background-color: var(--accent);
     color: white;
     border: none;
     border-radius: 50px;
     font-family: "Sansita Swashed", system-ui;
-    font-size: 15px;
+    font-size: 18px;
     font-style: italic;
+    letter-spacing: 0.03em;
     cursor: pointer;
-    pointer-events: none;
+    transition: background-color 0.15s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#upload-area:active {
+    background-color: var(--accent-dark);
+    transform: scale(0.98);
 }
 
 .photo-count {
@@ -1018,7 +997,7 @@ table.itinerary th:last-child {
     justify-content: center;
     width: 44px;
     height: 44px;
-    padding: 15px;
+    padding: 15px 15px 0px 15px;
     /* border-radius: 50%; */
     /* background-color: var(--surface); */
     color: var(--text);
@@ -1271,4 +1250,33 @@ input:checked + .slider:before {
     color: rgba(255,255,255,0.5);
     min-width: 52px;
     text-align: center;
+}
+
+
+
+
+.dancing-text span {
+  display: inline-block;
+  animation: dance .25s infinite alternate; /* Loops the dance infinitely */
+}
+
+/* Add delays to create the "wave" effect */
+.dancing-text span:nth-child(2) { animation-delay: 0.05s; }
+.dancing-text span:nth-child(3) { animation-delay: 0.1s; }
+.dancing-text span:nth-child(4) { animation-delay: 0.15s; }
+.dancing-text span:nth-child(5) { animation-delay: 0.2s; }
+.dancing-text span:nth-child(6) { animation-delay: 0.25s; }
+.dancing-text span:nth-child(7) { animation-delay: 0.3s; }
+.dancing-text span:nth-child(8) { animation-delay: 0.35s; }
+.dancing-text span:nth-child(9) { animation-delay: 0.4s; }
+.dancing-text span:nth-child(10) { animation-delay: 0.45s; }
+.dancing-text span:nth-child(11) { animation-delay: 0.5s; }
+.dancing-text span:nth-child(12) { animation-delay: 0.55s; }
+.dancing-text span:nth-child(13) { animation-delay: 0.60s; }
+
+
+
+@keyframes dance {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-2px); } /* Moves text up */
 }

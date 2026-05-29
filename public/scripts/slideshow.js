@@ -1,7 +1,7 @@
 var photos  = [];
 var current = 0;
 var timer   = null;
-var INTERVAL_MS = 10000;
+var INTERVAL_MS = 6000;
 
 var section    = document.getElementById('photo-slideshow');
 var track      = document.getElementById('slideshow-track');
