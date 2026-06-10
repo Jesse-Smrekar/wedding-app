@@ -1,15 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Berkshire+Swash&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Berkshire+Swash&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
     --bg: #121212;
-    --surface: #120c27;
+    --surface: #1e1e1e;
     --surface-hover: #282828;
-    --accent: #1db954;
-    --accent-dark: #17a046;
+    --accent: #d4d4d4;
+    --accent-dark: #b8b8b8;
+    --accent-text: #1a1a1a;
     --text: #ffffff;
     --text-muted: #a0a0a0;
     --radius: 12px;
-    --selected-bg: #1a3328;
+    --selected-bg: #333333;
     --border: #2a2a2a;
     --map-btn-active: #333;
     --shadow: rgba(0, 0, 0, 0.6);
@@ -18,11 +20,11 @@
 @media (prefers-color-scheme: light) {
     :root {
         --bg: #ffffff;
-        --surface: #aacdfa;
-        --surface-hover: #758ead;
+        --surface: #ececec;
+        --surface-hover: #d8d8d8;
         --text: #121212;
         --text-muted: #636363;
-        --selected-bg: #d4f0e0;
+        --selected-bg: #dcdcdc;
         --border: #e0e0e0;
         --map-btn-active: #d0d0d0;
         --shadow: rgba(0, 0, 0, 0.1);
@@ -30,7 +32,7 @@
 }
 
 html, body {
-    background: url('/images/rose_background_15.png') no-repeat center center fixed;
+    /* background: url('/images/rose_background_15.png') no-repeat center center fixed; */
     background-size: cover;
     background-color: var(--bg);
     color: var(--text);
@@ -72,7 +74,7 @@ nav {
 }
 
 h1, h2, h3, h4, h5, h6, .title {
-    font-family: "Berkshire Swash", serif;
+    font-family: "Elms Sans", serif;
     font-style: normal;
 }
 
@@ -186,7 +188,7 @@ h1, h2, h3, h4, h5, h6, .title {
     border-radius: 48px;
     border: none;
     background-color: var(--accent);
-    color: white;
+    color: var(--accent-text);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -306,7 +308,7 @@ tr {
     width: 100%;
     height: 56px;
     background-color: var(--accent);
-    color: white;
+    color: var(--accent-text);
     border: none;
     border-radius: 50px;
     font-family: "Sansita Swashed", system-ui;
@@ -406,7 +408,7 @@ table.itinerary th:last-child {
     width: 100%;
     height: 56px;
     background-color: var(--accent);
-    color: white;
+    color: var(--accent-text);
     border: none;
     border-radius: 50px;
     font-family: "Sansita Swashed", system-ui;
@@ -551,7 +553,7 @@ table.itinerary th:last-child {
     width: 100%;
     height: 56px;
     background-color: var(--accent);
-    color: white;
+    color: var(--accent-text);
     border: none;
     border-radius: 50px;
     font-family: "Sansita Swashed", system-ui;
@@ -659,8 +661,8 @@ body.login-page {
     width: 100%;
     height: 56px;
     background-color: var(--accent);
-    color: white;
-    border: none;
+    color: var(--accent-text);
+    border: 2px solid var(--text);
     border-radius: 50px;
     font-family: "Sansita Swashed", system-ui;
     font-size: 18px;
@@ -757,7 +759,7 @@ body.login-page {
     height: 48px;
     line-height: 48px;
     background-color: var(--accent);
-    color: white;
+    color: var(--accent-text);
     border: none;
     border-radius: 50px;
     font-family: "Sansita Swashed", system-ui;
