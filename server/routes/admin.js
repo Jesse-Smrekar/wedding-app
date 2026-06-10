@@ -3,6 +3,7 @@ const router = express.Router();
 const path = require('path');
 const spotify = require('../utils/spotify-utils.js');
 const db = require('../utils/db.js');
+const music = require('./music.js');
 
 const adminList = ['JESSE_SMREKAR'];
 
@@ -106,6 +107,24 @@ router.delete('/users', (req, res) => {
       console.error('Error deleting user(s):', err);
       res.status(500).json({ error: 'Failed to delete user(s).' });
     });
+});
+
+
+router.patch('/toggleMusicQueue', (req, res) => {
+  if (!req.user || !adminList.includes(req.user)) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
+  db.write(`UPDATE music_queue SET limit_enabled = NOT limit_enabled RETURNING limit_enabled`)
+  .then(result => {
+    res.set('Content-Type', 'application/json');
+    res.send(JSON.stringify({ queueLimitEnabled: result[0].limit_enabled }));
+  })
+  .catch(err => {
+    console.error('Error toggling music queue limit:', err);
+    res.status(500).json({ error: 'Failed to toggle music queue limit.' });
+  });
+
 });
 
 module.exports = router;

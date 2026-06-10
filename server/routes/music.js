@@ -4,7 +4,7 @@ const path = require('path');
 const spotify = require('../utils/spotify-utils.js');
 const db = require('../utils/db.js');
 
-const QUEUE_WAIT_MINUTES = 30;
+const SUPER_USERS = ["JESSE_SMREKAR"];
 
 
 if (process.env.SPOTIFY_TOKEN) {
@@ -91,11 +91,10 @@ router.post('/queue/:trackId', (req, res) => {
 
   const [fname, lname] = req.user.split('_');
 
-  getUsersNextQueueTime(fname, lname)
-  .then(nextTime => {
+  shouldAllowQueueForUser(fname, lname)
+  .then(shouldAllowQueueing => {
 
-    // bypass limits for admin
-    if (req.user != 'JESSE_SMREKAR' && (!nextTime || nextTime > new Date())) {
+    if (!shouldAllowQueueing) {
       const data = { success: false, message: 'TOO_SOON', time: nextTime };
       res.set('Content-Type', 'application/json');
       return res.send(data);
@@ -129,12 +128,15 @@ router.get('/info', (req, res) => {
   }
 
   const [fname, lname] = req.user.split('_');
+  var limitFlag;
   var tracks = [];
   var queue = [];
   getQueuedTracks(fname, lname)
   .then(rows => tracks = rows)
   .then(() => spotify.getQueue())
   .then(data => queue = data)
+  .then(() => getQueueLimitFlag())
+  .then(flag => limitFlag = flag)
   .then(() => getUsersNextQueueTime(fname, lname))
   .then(nextTime => {
 
@@ -149,10 +151,12 @@ router.get('/info', (req, res) => {
     }
     
 
+    
 
     res.set('Content-Type', 'application/json');
     res.send(
       {
+        queueLimitEnabled: limitFlag,
         nextQueueTime: nextTime,
         queuedTracks: queueOrder
       }
@@ -164,6 +168,39 @@ router.get('/info', (req, res) => {
   });
 });
 
+
+
+
+
+
+
+
+
+
+
+// HELPER FUNCTIONS
+
+
+async function shouldAllowQueueForUser(fname, lname) {
+
+  var limitFlag = await getQueueLimitFlag();
+
+  // bypass limit if disabled or if it's a super user
+  if (!limitFlag ||
+      !!SUPER_USERS.includes(`${fname.toUpperCase()}_${lname.toUpperCase()}`)) {
+    return true;
+  }
+
+  getUsersNextQueueTime(fname, lname)
+  .then( time => {
+    return time < new Date();
+  })
+  .catch(err => {
+    console.log("Error checking the date of next queue time!", err);
+    // default to allow
+    return true;
+  });
+}
 
 async function getUsersNextQueueTime(fname, lname) {
     if (!fname || !lname) return null;
@@ -198,8 +235,13 @@ function getQueuedTracks(fname, lname) {
 
 function updateUserNextQueueTime(fname, lname) {
     if (!fname || !lname) return Promise.resolve();
-    return db.write(`UPDATE users SET next_music_queue_date = NOW() + INTERVAL '${QUEUE_WAIT_MINUTES} minutes' WHERE first_name = '${fname.toUpperCase()}' AND last_name = '${lname.toUpperCase()}'`)
+    return db.write(`UPDATE users SET next_music_queue_date = NOW() + ((SELECT wait_minutes FROM music_queue LIMIT 1) * INTERVAL '1 minute') WHERE first_name = '${fname.toUpperCase()}' AND last_name = '${lname.toUpperCase()}'`)
         .catch(err => console.error('Error updating queue time:', err));
+}
+
+function getQueueLimitFlag() {
+  return db.read(`SELECT limit_enabled FROM music_queue LIMIT 1`)
+  .then(rows => rows[0].limit_enabled)
 }
 
 module.exports = router;

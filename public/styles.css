@@ -1,6 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Berkshire+Swash&display=swap');
+
 :root {
     --bg: #121212;
-    --surface: #1e1e1e;
+    --surface: #120c27;
     --surface-hover: #282828;
     --accent: #1db954;
     --accent-dark: #17a046;
@@ -16,8 +18,8 @@
 @media (prefers-color-scheme: light) {
     :root {
         --bg: #ffffff;
-        --surface: #f2f2f2;
-        --surface-hover: #e5e5e5;
+        --surface: #aacdfa;
+        --surface-hover: #758ead;
         --text: #121212;
         --text-muted: #636363;
         --selected-bg: #d4f0e0;
@@ -69,6 +71,11 @@ nav {
     text-align: right;
 }
 
+h1, h2, h3, h4, h5, h6, .title {
+    font-family: "Berkshire Swash", serif;
+    font-style: normal;
+}
+
 .title {
     font-size: 2em;
     margin: 0;
@@ -76,6 +83,7 @@ nav {
 
 .menu-button {
     background-color: var(--bg);
+    opacity: 50%;
     transform: scale(0.66);
     margin-left: .5em;
     margin-right: .5em;
@@ -832,7 +840,7 @@ body.login-page {
     align-items: center;
     justify-content: center;
     gap: 14px;
-    background-color: var(--surface);
+    background-color: rgb(from var(--surface) r g b / 0.85);
     border-radius: 20px;
     border: none;
     padding: 32px 16px;

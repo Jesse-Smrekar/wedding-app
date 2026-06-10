@@ -57,6 +57,20 @@ async function init() {
             )
         `);
 
+        await pool.query(`
+           CREATE TABLE IF NOT EXISTS music_queue (
+                id SERIAL PRIMARY KEY,
+                limit_enabled BOOLEAN default true,
+                wait_minutes INTEGER
+           ) 
+        `);
+
+        await pool.query(`
+            INSERT INTO music_queue (id, limit_enabled, wait_minutes)
+            VALUES (1, true, 30)
+            ON CONFLICT DO NOTHING
+        `);
+
         console.log('✅ Database Initialized.');
     } catch (err) {
         console.error('❌ Database init error:', err);
@@ -84,7 +98,7 @@ function write(queryString, params) {
             if (isInsert && result.rows.length > 0) {
                 return result.rows[0].id ?? null;
             }
-            return null;
+            return result.rows;
         })
         .catch(err => {
             console.error('DB write error:', err.message);

@@ -2,7 +2,7 @@
 function checkQueueTime() {
     makeAuthenticatedRequest('GET', '/music/info')
     .then(data => {
-        if (new Date(data.nextQueueTime) > new Date()) {
+        if (data.queueLimitEnabled && new Date(data.nextQueueTime) > new Date()) {
             showQueueOverlay(new Date(data.nextQueueTime), data.queuedTracks || []);
         }
     });
