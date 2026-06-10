@@ -89,8 +89,9 @@ app.post('/login/user', async (req, res) => {
     console.log(`>>> User: ${fname} ${lname} logged in`);
 
     res.cookie('jwt', token, {
-          httpOnly: false, // Prevents client-side JavaScript access to the cookie
-          secure: false, //process.env.NODE_ENV === 'production', // Use 'secure' in production for HTTPS
+          httpOnly: true, // Prevents client-side JavaScript access to the cookie
+          secure: process.env.NODE_ENV === 'production', // Use 'secure' in production for HTTPS
+          sameSite: 'lax',
           maxAge: auth.JWT_TTL_MILLIS
       });
     res.redirect('/');

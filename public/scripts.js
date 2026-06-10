@@ -20,13 +20,11 @@ function toggleActionMenu() {
 function makeAuthenticatedRequest(httpMethod, url) {
     return new Promise((resolve, reject) => {
         fetch(`${this.location.origin}${url}`, {
-            method: httpMethod, 
-            headers: {
-                "Authorization": `Bearer ${getJWT()}`
-            }
+            method: httpMethod,
+            credentials: 'same-origin' // send the httpOnly jwt cookie automatically
         }).then( res => {
             if (!res.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`HTTP error! status: ${res.status}`);
             }
 
             if (res.headers.get('content-type').indexOf('html') > 0) {
@@ -145,22 +143,9 @@ function addToQueue() {
 }
 
 
-function getJWT() {
-    var allCookies = decodeURIComponent(document.cookie).split(';');
-
-    for (let cookie of allCookies) {
-        cookie = cookie.trim();
-        if (cookie.indexOf('jwt=') == 0) {
-            return cookie.substring(4, cookie.length);
-        }
-    }
-    return '';
-}
-
-const jwt = getJWT();
-if ((!jwt || jwt == '') && window.location.pathname != '/login') {
-    window.location.assign('/login');
-}
+// Auth is enforced server-side: the auth middleware redirects unauthenticated
+// requests for protected pages to /login. The jwt cookie is httpOnly and is sent
+// automatically by the browser, so the client no longer needs to read it.
 
 /*
 // TROUBLESHOOTING HORIZONTAL SCROLL

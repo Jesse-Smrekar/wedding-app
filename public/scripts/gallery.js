@@ -58,7 +58,7 @@ document.addEventListener('keydown', function (e) {
 });
 
 fetch('/photos/gallery/list', {
-    headers: { 'Authorization': 'Bearer ' + getJWT() }
+    credentials: 'same-origin' // send the httpOnly jwt cookie automatically
 })
     .then(function (r) { return r.json(); })
     .then(function (data) {

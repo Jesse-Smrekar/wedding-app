@@ -27,7 +27,11 @@ const auth = (req, res, next) => {
 
     // if missing, try from cookies
     if (!token) {
-        token = req.header('cookie')?.substring(4);
+        const cookies = req.header('cookie') ?? '';
+        token = cookies
+            .split('; ')
+            .find(c => c.startsWith('jwt='))
+            ?.slice(4);
     }
 
     // if we don't have a JWT, redirect to the login screen
