@@ -1,5 +1,7 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Berkshire+Swash&display=swap'); */
 @import url('https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Momo+Signature&display=swap');
+
 
 :root {
     --bg: #121212;
@@ -15,6 +17,8 @@
     --border: #2a2a2a;
     --map-btn-active: #333;
     --shadow: rgba(0, 0, 0, 0.6);
+    --danger: #c0392b;
+    --danger-dark: #a93226;
 }
 
 @media (prefers-color-scheme: light) {
@@ -40,10 +44,13 @@ html, body {
     font-family: "Sansita Swashed", system-ui;
     font-optical-sizing: auto;
     font-weight: normal;
-    font-style: italic;
 
+    display: flex;
+    flex-direction: column;
     justify-content: center;
-    padding: 0;
+    align-items: center;
+    gap: 0;
+    padding: 15px 15px calc(15px + env(safe-area-inset-bottom, 0px));
     margin: 0;
     max-width: 100%;
     overflow-x: hidden;
@@ -73,14 +80,109 @@ nav {
     text-align: right;
 }
 
+.jared-and-tati {
+  font-family: "Momo Signature", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
 h1, h2, h3, h4, h5, h6, .title {
     font-family: "Elms Sans", serif;
     font-style: normal;
+    font-size: 2em;
+    margin: 0;
 }
 
 .title {
     font-size: 2em;
     margin: 0;
+}
+
+/* ── Buttons (shared) ── */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    border: none;
+    border-radius: 50px;
+    background-color: var(--accent);
+    color: var(--accent-text);
+    font-family: "Sansita Swashed", system-ui;
+    font-size: 16px;
+    letter-spacing: 0.03em;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background-color 0.15s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn:active:not(:disabled) {
+    background-color: var(--accent-dark);
+    transform: scale(0.98);
+}
+
+.btn:disabled {
+    background-color: var(--surface);
+    color: var(--text-muted);
+    cursor: default;
+}
+
+/* Full-width tall action button */
+.btn-block {
+    display: flex;
+    width: 100%;
+    height: 56px;
+    font-size: 18px;
+}
+
+/* Destructive variant */
+.btn-danger {
+    background-color: var(--danger);
+    color: #fff;
+}
+
+.btn-danger:active:not(:disabled) {
+    background-color: var(--danger-dark);
+}
+
+/* ── Inputs (shared) ── */
+.field {
+    width: 100%;
+    height: 48px;
+    background-color: var(--surface);
+    border: 2px solid transparent;
+    border-radius: 50px;
+    padding: 0 18px;
+    color: var(--text);
+    font-family: "Sansita Swashed", system-ui;
+    font-size: 16px;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.field:focus {
+    border-color: var(--accent);
+}
+
+.field::placeholder {
+    color: var(--text-muted);
+    font-style: normal;
+}
+
+/* Multiline textarea variant */
+.field-area {
+    height: auto;
+    min-height: 100px;
+    border-radius: var(--radius);
+    padding: 12px;
+    font-size: 15px;
+    resize: vertical;
 }
 
 .menu-button {
@@ -157,50 +259,15 @@ h1, h2, h3, h4, h5, h6, .title {
     color: var(--text);
 }
 
+/* extends .field — only the clear-button padding offset is unique */
 #musicsearch {
-    width: 100%;
-    height: 48px;
-    background-color: var(--surface);
-    border: 2px solid transparent;
-    border-radius: 50px;
     padding: 0 44px 0 18px;
-    color: var(--text);
-    font-family: "Sansita Swashed", system-ui;
-    font-size: 16px;
-    outline: none;
-    transition: border-color 0.2s;
-    -webkit-appearance: none;
-    appearance: none;
 }
 
-#musicsearch:focus {
-    border-color: var(--accent);
-}
-
-#musicsearch::placeholder {
-    color: var(--text-muted);
-    font-style: normal;
-}
-
+/* extends .btn — fixed width for the icon+label search action */
 .search-btn {
     width: 96px;
-    height: 48px;
-    border-radius: 48px;
-    border: none;
-    background-color: var(--accent);
-    color: var(--accent-text);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
     flex-shrink: 0;
-    transition: background-color 0.15s, transform 0.1s;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.search-btn:active {
-    background-color: var(--accent-dark);
-    transform: scale(0.94);
 }
 
 /* ── Search results ── */
@@ -304,33 +371,6 @@ tr {
     box-sizing: border-box;
 }
 
-#add-to-queue-button {
-    width: 100%;
-    height: 56px;
-    background-color: var(--accent);
-    color: var(--accent-text);
-    border: none;
-    border-radius: 50px;
-    font-family: "Sansita Swashed", system-ui;
-    font-size: 18px;
-    font-style: italic;
-    letter-spacing: 0.03em;
-    cursor: pointer;
-    transition: background-color 0.15s, transform 0.1s;
-    -webkit-tap-highlight-color: transparent;
-}
-
-#add-to-queue-button:active:not(:disabled) {
-    background-color: var(--accent-dark);
-    transform: scale(0.98);
-}
-
-#add-to-queue-button:disabled {
-    background-color: var(--surface);
-    color: var(--text-muted);
-    cursor: default;
-}
-
 .slide.open {
     transition: 1s;
     bottom: 0;
@@ -338,12 +378,6 @@ tr {
 }
 
 /* ── Itinerary ── */
-#itinerary-page {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 24px 16px 48px;
-    box-sizing: border-box;
-}
 
 .itinerary-header {
     text-align: center;
@@ -389,41 +423,19 @@ table.itinerary th:last-child {
     font-size: 15px;
 }
 
-
-
-/* ── Photos ── */
-#photos-page {
+.page-container {
+    width: 100%;
     max-width: 600px;
     margin: 0 auto;
-    padding: 0px 16px 100px;
     box-sizing: border-box;
 }
 
-.photos-header {
+.page-title {
     text-align: center;
     margin: 0;
 }
 
-#upload-area {
-    width: 100%;
-    height: 56px;
-    background-color: var(--accent);
-    color: var(--accent-text);
-    border: none;
-    border-radius: 50px;
-    font-family: "Sansita Swashed", system-ui;
-    font-size: 18px;
-    font-style: italic;
-    letter-spacing: 0.03em;
-    cursor: pointer;
-    transition: background-color 0.15s, transform 0.1s;
-    -webkit-tap-highlight-color: transparent;
-}
-
-#upload-area:active {
-    background-color: var(--accent-dark);
-    transform: scale(0.98);
-}
+/* ── Photos ── */
 
 .photo-count {
     font-size: 13px;
@@ -514,31 +526,6 @@ table.itinerary th:last-child {
     color: var(--text-muted);
 }
 
-#photo-note {
-    width: 100%;
-    min-height: 100px;
-    background-color: var(--surface);
-    border: 2px solid transparent;
-    border-radius: var(--radius);
-    padding: 12px;
-    color: var(--text);
-    font-family: "Sansita Swashed", system-ui;
-    font-size: 15px;
-    font-style: normal;
-    resize: vertical;
-    outline: none;
-    box-sizing: border-box;
-    transition: border-color 0.2s;
-}
-
-#photo-note:focus {
-    border-color: var(--accent);
-}
-
-#photo-note::placeholder {
-    color: var(--text-muted);
-}
-
 #photos-submit-bar {
     position: fixed;
     bottom: 0;
@@ -549,35 +536,8 @@ table.itinerary th:last-child {
     box-sizing: border-box;
 }
 
-#photos-submit-btn {
-    width: 100%;
-    height: 56px;
-    background-color: var(--accent);
-    color: var(--accent-text);
-    border: none;
-    border-radius: 50px;
-    font-family: "Sansita Swashed", system-ui;
-    font-size: 18px;
-    font-style: italic;
-    letter-spacing: 0.03em;
-    cursor: pointer;
-    transition: background-color 0.15s, transform 0.1s;
-    -webkit-tap-highlight-color: transparent;
-}
-
-#photos-submit-btn:active:not(:disabled) {
-    background-color: var(--accent-dark);
-    transform: scale(0.98);
-}
-
-#photos-submit-btn:disabled {
-    background-color: var(--surface);
-    color: var(--text-muted);
-    cursor: default;
-}
-
 /* ── Welcome / Login ── */
-body.login-page {
+/* body.login-page {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -585,7 +545,7 @@ body.login-page {
     min-height: 100dvh;
     padding: 24px 24px calc(24px + env(safe-area-inset-bottom, 0px));
     box-sizing: border-box;
-}
+} */
 
 #welcome-card {
     width: 100%;
@@ -600,12 +560,7 @@ body.login-page {
     width: 72px;
     height: 72px;
     margin-bottom: 16px;
-}
-
-#welcome-title {
-    font-size: 2.4em;
-    text-align: center;
-    margin: 0 0 6px;
+    color: var(--text);
 }
 
 #welcome-date {
@@ -616,8 +571,8 @@ body.login-page {
     margin: 0 0 36px;
 }
 
-#welcome-prompt {
-    font-size: 17px;
+.instructional-text {
+    font-size: 0.8em;
     font-style: normal;
     color: var(--text);
     text-align: center;
@@ -631,65 +586,24 @@ body.login-page {
     gap: 12px;
 }
 
+/* extends .field — taller and italic for the name entry */
 .welcome-input {
-    width: 100%;
     height: 52px;
-    background-color: var(--surface);
-    border: 2px solid transparent;
-    border-radius: 50px;
     padding: 0 20px;
-    color: var(--text);
-    font-family: "Sansita Swashed", system-ui;
-    font-size: 16px;
     font-style: italic;
-    outline: none;
-    box-sizing: border-box;
-    transition: border-color 0.2s;
-    -webkit-appearance: none;
-    appearance: none;
 }
 
-.welcome-input:focus {
-    border-color: var(--accent);
-}
-
-.welcome-input::placeholder {
-    color: var(--text-muted);
-}
-
+/* extends .btn .btn-block — adds an outline border and top spacing */
 #welcome-submit {
-    width: 100%;
-    height: 56px;
-    background-color: var(--accent);
-    color: var(--accent-text);
     border: 2px solid var(--text);
-    border-radius: 50px;
-    font-family: "Sansita Swashed", system-ui;
-    font-size: 18px;
-    font-style: italic;
-    letter-spacing: 0.03em;
-    cursor: pointer;
     margin-top: 4px;
-    transition: background-color 0.15s, transform 0.1s;
-    -webkit-tap-highlight-color: transparent;
-}
-
-#welcome-submit:active {
-    background-color: var(--accent-dark);
-    transform: scale(0.98);
 }
 
 /* ── Directions ── */
-#directions-page {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 24px 16px 48px;
-    box-sizing: border-box;
-}
-
 .directions-header {
     text-align: center;
     margin-bottom: 8px;
+    margin-top: 10px;
 }
 
 
@@ -754,37 +668,9 @@ body.login-page {
     gap: 10px;
 }
 
+/* extends .btn — equal-width items in the admin action row */
 .admin-action-btn {
     flex: 1;
-    height: 48px;
-    line-height: 48px;
-    background-color: var(--accent);
-    color: var(--accent-text);
-    border: none;
-    border-radius: 50px;
-    font-family: "Sansita Swashed", system-ui;
-    font-size: 16px;
-    font-style: italic;
-    letter-spacing: 0.03em;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    box-sizing: border-box;
-    transition: background-color 0.15s, transform 0.1s;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.admin-action-btn:active {
-    background-color: var(--accent-dark);
-    transform: scale(0.98);
-}
-
-.admin-danger-btn {
-    background-color: #c0392b;
-}
-
-.admin-danger-btn:active {
-    background-color: #a93226;
 }
 
 #delete-button {
@@ -795,33 +681,6 @@ body.login-page {
     padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
     background: linear-gradient(transparent, var(--bg) 35%);
     box-sizing: border-box;
-}
-
-#delete-selected-button {
-    width: 100%;
-    height: 56px;
-    background-color: #c0392b;
-    color: white;
-    border: none;
-    border-radius: 50px;
-    font-family: "Sansita Swashed", system-ui;
-    font-size: 18px;
-    font-style: italic;
-    letter-spacing: 0.03em;
-    cursor: pointer;
-    transition: background-color 0.15s, transform 0.1s;
-    -webkit-tap-highlight-color: transparent;
-}
-
-#delete-selected-button:active:not(:disabled) {
-    background-color: #a93226;
-    transform: scale(0.98);
-}
-
-#delete-selected-button:disabled {
-    background-color: var(--surface);
-    color: var(--text-muted);
-    cursor: default;
 }
 
 /* ── Home Grid ── */
@@ -851,7 +710,6 @@ body.login-page {
     color: var(--text);
     font-family: "Sansita Swashed", system-ui;
     font-size: 18px;
-    font-style: italic;
     letter-spacing: 0.03em;
     min-height: 160px;
     min-width: 160px;
@@ -1101,9 +959,9 @@ body.login-page {
 
 /* ── Home Button ── */
 .home-btn {
-    /* position: absolute;
+    position: absolute;
     top: 14px;
-    left: 14px; */
+    left: 14px;
     z-index: 1001;
     /* display: flex; */
     align-items: center;
@@ -1214,12 +1072,8 @@ input:checked + .slider:before {
 }
 /* END SLIDER */
 
+
 /* ── Guest Gallery ── */
-#gallery-page {
-    max-width: 600px;
-    margin: 0 auto;
-    padding-bottom: 48px;
-}
 
 .gallery-header {
     text-align: center;

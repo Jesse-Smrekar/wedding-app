@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" type="text/css" href="/styles.css">
+    <link rel="icon" type="image/svg+xml" href="/images/diamond-ring.svg">
     <link rel="icon" type="image/png" href="/images/diamond-ring.png">
     <script src="../scripts.js"></script>
     <script src="/scripts/photos.js"></script>
@@ -19,13 +20,13 @@
         </a>
     </div>
 
-    <div id="photos-page">
+    <div class="page-container">
 
-        <header class="photos-header">
-            <h1 class="title" style="margin:0">Photos</h1>
+        <header class="page-title">
+            <h1 class="title">Photos</h1>
         </header>
 
-        <p class="page-intro">Share photos with everyone or privately with the bride and groom. If you would like to see what others have shared, go to the 
+        <p class="page-intro">Share photos with everyone or privately with the bride and groom. If you would like to see what others have shared, go to the </br>
             <b><a href="/photos/gallery" class="dancing-text" style="text-decoration: none;">
             <span>P</span>
             <span>h</span>
@@ -55,7 +56,7 @@
             style="display:none;"
         >
 
-        <button id="upload-area" onclick="document.getElementById('photo-input').click()">Take / Select Photos</button>
+        <button id="upload-area" class="btn btn-block" onclick="document.getElementById('photo-input').click()">Take / Select Photos</button>
 
         <!-- Photo count -->
         <p class="photo-count" id="photo-count" style="display:none;"></p>
@@ -70,6 +71,7 @@
         </div>
         <textarea
             id="photo-note"
+            class="field field-area"
             placeholder="Add a caption to go with your photos..."
             maxlength="500"
             oninput="updateCharCount()"
@@ -92,7 +94,7 @@
     </div>
 
     <div id="photos-submit-bar">
-        <button id="photos-submit-btn" onclick="submitPhotos()" disabled>Upload Photos</button>
+        <button id="photos-submit-btn" class="btn btn-block" onclick="submitPhotos()" disabled>Upload Photos</button>
     </div>
 
 </body>

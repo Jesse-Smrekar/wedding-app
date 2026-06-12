@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/styles.css">
+    <link rel="icon" type="image/svg+xml" href="/images/diamond-ring.svg">
     <link rel="icon" type="image/png" href="/images/diamond-ring.png">
     <script src="scripts.js"></script>
     <title>Jared & Tati</title>
@@ -16,6 +17,12 @@
             scroll-snap-type: y mandatory;
             overscroll-behavior-y: contain;
             -webkit-overflow-scrolling: touch;
+            /* Keep scroll/snap behavior but hide the scrollbar chrome */
+            scrollbar-width: none;          /* Firefox */
+            -ms-overflow-style: none;       /* legacy Edge/IE */
+        }
+        #home-snap-container::-webkit-scrollbar {
+            display: none;                  /* Chrome, Safari, modern Edge */
         }
         #snap-page-1 {
             height: 100vh;
@@ -28,26 +35,10 @@
             overflow: hidden;
             margin: 0;
         }
+        /* extends .btn — full width with spacing below */
         .slideshow-gallery-btn {
-            display: block;
             width: 100%;
-            height: 48px;
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-family: "Sansita Swashed", system-ui;
-            font-size: 16px;
-            font-style: italic;
-            letter-spacing: 0.03em;
-            cursor: pointer;
             margin-bottom: 14px;
-            transition: background-color 0.15s, transform 0.1s;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .slideshow-gallery-btn:active {
-            background-color: var(--accent-dark);
-            transform: scale(0.98);
         }
         #photo-slideshow {
             min-height: 100vh;
@@ -67,7 +58,7 @@
     <!-- PAGE 1: nav grid -->
     <div id="snap-page-1">
         <header class="centered">
-            <p class="title">Jared & Tati</p>
+            <h1 class="jared-and-tati">Jared & Tati</h1>
         </header>
 
         <div class="centered">
@@ -108,18 +99,20 @@
                 </a>
 
             </div>
+
+            <p class="instructional-text">
+                Swipe to see guest photos
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-down-short" viewBox="0 -10     24 24">
+                    <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4"/>
+                </svg>
+            </p>
         </div>
-        <p class="slideshow-heading">
-            Swipe to see guest photos
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-down-short" viewBox="0 -10     24 24">
-                <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4"/>
-            </svg>
-        </p>
+        
     </div>
 
     <!-- PAGE 2: guest photo slideshow (hidden until photos load) -->
     <section id="photo-slideshow" style="display:none;">
-        <button class="slideshow-gallery-btn" onclick="makeAuthenticatedRequest('GET', '/photos/gallery');">Full Photo Gallery</button>
+        <button class="btn slideshow-gallery-btn" onclick="makeAuthenticatedRequest('GET', '/photos/gallery');">Full Photo Gallery</button>
         <div class="slideshow-track-wrap">
             <div class="slideshow-track" id="slideshow-track"></div>
         </div>
