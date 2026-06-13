@@ -4,41 +4,47 @@
 
 
 :root {
-    --bg: #121212;
-    --surface: #1e1e1e;
-    --surface-hover: #282828;
+    --bg: #ffffff;
+    --surface: #ececec;
+    --surface-hover: #d8d8d8;
     --accent: #d4d4d4;
     --accent-dark: #b8b8b8;
     --accent-text: #1a1a1a;
-    --text: #ffffff;
-    --text-muted: #a0a0a0;
+    --text: #121212;
+    --text-muted: #636363;
     --radius: 12px;
-    --selected-bg: #333333;
-    --border: #2a2a2a;
-    --map-btn-active: #333;
-    --shadow: rgba(0, 0, 0, 0.6);
+    --selected-bg: #dcdcdc;
+    --border: #e0e0e0;
+    --map-btn-active: #d0d0d0;
+    --shadow: rgba(0, 0, 0, 0.1);
     --danger: #c0392b;
     --danger-dark: #a93226;
+    --confirm: #06e760;
+    --spotify: #1ED760;
 }
 
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
     :root {
-        --bg: #ffffff;
-        --surface: #ececec;
-        --surface-hover: #d8d8d8;
-        --text: #121212;
-        --text-muted: #636363;
-        --selected-bg: #dcdcdc;
-        --border: #e0e0e0;
-        --map-btn-active: #d0d0d0;
-        --shadow: rgba(0, 0, 0, 0.1);
+        --bg: #121212;
+        --surface: #1e1e1e;
+        --surface-hover: #282828;
+        --text: #ffffff;
+        --text-muted: #a0a0a0;
+        --selected-bg: #333333;
+        --border: #2a2a2a;
+        --map-btn-active: #333;
+        --shadow: rgba(0, 0, 0, 0.6);
+        --confirm: #04913c;
     }
 }
 
 html, body {
     /* background: url('/images/rose_background_15.png') no-repeat center center fixed; */
-    background-size: cover;
-    background-color: var(--bg);
+    /* Default (light scheme): bright pastel gradient — light enough for dark text */    
+    background-image: linear-gradient(-45deg, #ffe8ee, #ebf3ff, #e9faf0, #fff8e6, #f5ecff, #fff0e8);
+    background-size: 400% 400%;
+    background-attachment: fixed;
+    animation: pastel-shift 40s ease infinite;
     color: var(--text);
 
     font-family: "Sansita Swashed", system-ui;
@@ -55,6 +61,26 @@ html, body {
     max-width: 100%;
     overflow-x: hidden;
     font-size: x-large;
+}
+
+@media (prefers-color-scheme: dark) {
+    /* Dark scheme: muted "dark pastel" gradient — deep enough for light text.
+       Placed after the base html, body rule so it wins on equal specificity. */
+    html, body {
+        background-image: linear-gradient(-45deg, #3d2b38, #2b3a4d, #2c4a44, #4d4430, #3a2c4d, #4d3030);
+    }
+}
+
+@keyframes pastel-shift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html, body {
+        animation: none;
+    }
 }
 
 img {
@@ -104,10 +130,10 @@ h1, h2, h3, h4, h5, h6, .title {
     align-items: center;
     justify-content: center;
     height: 48px;
-    border: none;
+    border: 2px solid var(--text);
     border-radius: 50px;
-    background-color: var(--accent);
-    color: var(--accent-text);
+    background-color: var(--surface);
+    color: var(--text);
     font-family: "Sansita Swashed", system-ui;
     font-size: 16px;
     letter-spacing: 0.03em;
@@ -211,7 +237,7 @@ h1, h2, h3, h4, h5, h6, .title {
     left: 0;
     right: 0;
     z-index: 1000;
-    background-color: var(--bg);
+    background-color: rgb(from var(--surface) r g b /0.5);
     padding: 20px 16px 14px;
     box-shadow: 0 4px 24px var(--shadow);
 }
@@ -268,6 +294,7 @@ h1, h2, h3, h4, h5, h6, .title {
 .search-btn {
     width: 96px;
     flex-shrink: 0;
+    background-color: var(--spotify);
 }
 
 /* ── Search results ── */
@@ -532,7 +559,7 @@ table.itinerary th:last-child {
     left: 0;
     width: 100%;
     padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
-    background: linear-gradient(transparent, var(--bg) 35%);
+    background: transparent;
     box-sizing: border-box;
 }
 
@@ -608,7 +635,7 @@ table.itinerary th:last-child {
 
 
 .location-card {
-    background-color: var(--surface);
+    background-color: rgb(from var(--surface) r g b / 0.6);
     border-radius: var(--radius);
     padding: 16px;
     margin-bottom: 12px;
@@ -701,7 +728,7 @@ table.itinerary th:last-child {
     align-items: center;
     justify-content: center;
     gap: 14px;
-    background-color: rgb(from var(--surface) r g b / 0.85);
+    background-color: rgb(from var(--surface) r g b / 0.5);
     border-radius: 20px;
     border: none;
     padding: 32px 16px;
@@ -1049,7 +1076,7 @@ table.itinerary th:last-child {
 }
 
 input:checked + .slider {
-  background-color: var(--accent);
+  background-color: var(--confirm);
 }
 
 input:focus + .slider {
@@ -1090,7 +1117,7 @@ input:checked + .slider:before {
     aspect-ratio: 1;
     overflow: hidden;
     cursor: pointer;
-    background-color: var(--surface);
+    background: none;
 }
 
 .gallery-thumb img {
@@ -1223,8 +1250,9 @@ input:checked + .slider:before {
 
 
 .dancing-text span {
-  display: inline-block;
-  animation: dance .25s infinite alternate; /* Loops the dance infinitely */
+    color: var(--text);
+    display: inline-block;
+    animation: dance .25s infinite alternate; /* Loops the dance infinitely */
 }
 
 /* Add delays to create the "wave" effect */
