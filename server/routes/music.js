@@ -92,9 +92,9 @@ router.post('/queue/:trackId', (req, res) => {
   const [fname, lname] = req.user.split('_');
 
   shouldAllowQueueForUser(fname, lname)
-  .then(shouldAllowQueueing => {
+  .then((allowed, nextTime)  => {
 
-    if (!shouldAllowQueueing) {
+    if (!allowed) {
       const data = { success: false, message: 'TOO_SOON', time: nextTime };
       res.set('Content-Type', 'application/json');
       return res.send(data);
@@ -188,18 +188,11 @@ async function shouldAllowQueueForUser(fname, lname) {
   // bypass limit if disabled or if it's a super user
   if (!limitFlag ||
       !!SUPER_USERS.includes(`${fname.toUpperCase()}_${lname.toUpperCase()}`)) {
-    return true;
+    return (true, new Date());
   }
 
-  getUsersNextQueueTime(fname, lname)
-  .then( time => {
-    return time < new Date();
-  })
-  .catch(err => {
-    console.log("Error checking the date of next queue time!", err);
-    // default to allow
-    return true;
-  });
+  var time = await getUsersNextQueueTime(fname, lname);
+  return (time < new Date(), time);
 }
 
 async function getUsersNextQueueTime(fname, lname) {

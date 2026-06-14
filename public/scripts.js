@@ -63,7 +63,7 @@ function musicSearch(searchText) {
             document.getElementById('search-results').innerHTML += 
             // '<div class="result-button">' +
             '<tr id="search-result-' + inc +'" class="result-button" onclick=javascript:makeSelection(' + inc + ')>' +
-            '<td class="cell-left" style="text-align:center;width:65px;">' + '<img src="' + entry.album_image + '" style="max-width:66%;"/></td>' +
+            '<td class="cell-left" style="text-align:center;width:48px;">' + '<img src="' + entry.album_image + '" style="width:48px;height:48px;object-fit:cover;display:block;"/></td>' +
             '<td style="width:80%;max-width:300px;">' + entry.track + 
             '<div class="under-text">' + entry.artist + ' - ' + entry.album + '</div>' +
             '</td>' +

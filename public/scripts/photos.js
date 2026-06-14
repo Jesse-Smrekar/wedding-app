@@ -86,7 +86,7 @@ function renderPreviews() {
     const atLimit = selectedFiles.length >= MAX_PHOTOS;
     if (selectedFiles.length > 0) {
         countEl.textContent = `${selectedFiles.length} / ${MAX_PHOTOS} photos selected`;
-        countEl.className = 'photo-count' + (atLimit ? ' at-limit' : '');
+        countEl.className = 'hint photo-count' + (atLimit ? ' at-limit' : '');
         countEl.style.display = 'block';
         // pubSlider.style.display = 'flex';
     } else {

@@ -25,21 +25,17 @@
         </header>
 
         <p class="page-intro">Share photos with everyone or privately with the bride and groom. If you would like to see what others have shared, go to the </br>
-            <b><a href="/photos/gallery" class="dancing-text" style="text-decoration: none;">
-            <span>P</span>
-            <span>h</span>
-            <span>o</span>
-            <span>t</span>
-            <span>o</span>
-            <span>&nbsp;</span>
-            <span>G</span>
-            <span>a</span>
-            <span>l</span>
-            <span>l</span>
-            <span>e</span>
-            <span>r</span>
-            <span>y</span>
-            </a></b>!
+            <b><a href="/photos/gallery" class="plain-link">
+            Photo Gallery
+            <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" width="11" height="11" fill="currentColor">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier"> 
+                    <path fill="currentColor" d="M12.1.6a.944.944 0 0 0 .2 1.04l1.352 1.353L10.28 6.37a.956.956 0 0 0 1.35 1.35l3.382-3.38 1.352 1.352a.944.944 0 0 0 1.04.2.958.958 0 0 0 .596-.875V.96a.964.964 0 0 0-.96-.96h-4.057a.958.958 0 0 0-.883.6z"></path> 
+                    <path fill="currentColor" d="M14 11v5a2.006 2.006 0 0 1-2 2H2a2.006 2.006 0 0 1-2-2V6a2.006 2.006 0 0 1 2-2h5a1 1 0 0 1 0 2H2v10h10v-5a1 1 0 0 1 2 0z"></path> 
+                </g>
+            </svg>
+            </a></b>
         </p>
 
         <!-- Hidden file input -->
@@ -54,17 +50,17 @@
             style="display:none;"
         >
 
-        <button id="upload-area" class="btn btn-block" onclick="document.getElementById('photo-input').click()">Take / Select Photos</button>
+        <button id="upload-area" class="btn btn-block" onclick="document.getElementById('photo-input').click()">Add Photos</button>
 
         <!-- Photo count -->
-        <p class="photo-count" id="photo-count" style="display:none;"></p>
+        <p class="hint" id="photo-count" style="display:none;text-align: right;"></p>
 
         <!-- Preview grid -->
         <div class="preview-grid" id="preview-grid"></div>
 
         <!-- Note -->
         <div class="note-label">
-            <span>Caption <span style="color: var(--text-muted); font-size:13px;">(optional)</span></span>
+            <span>Caption <span class="hint">(optional)</span></span>
             <span class="note-char-count" id="note-char-count">0 / 500</span>
         </div>
         <textarea
@@ -77,19 +73,19 @@
 
         <!-- Public slider -->
          <div class="note-label">
-            <span>Visibility <span style="color: var(--text-muted); font-size:13px;">(optional)</span></span>
+            <span>Visibility <span class="hint">(optional)</span></span>
         </div>
         <div id="pub-slider" style="display:flex;align-items:center;margin-top:20px;">
             <label class="switch">
                 <input id="public" type="checkbox">
                 <span class="slider round"></span>
             </label>
-            <span class="photo-count" style="margin:auto;margin-left:8px;">Make these public?</span>
+            <div style="font-size:13px; margin-left:8px;">Make these public?</br></div>
         </div>
-        <span class="photo-count">(others will be able to see your photos and caption)</span>
-
-
+        <div class="hint">(others will be able to see your photos and caption)</div>
     </div>
+
+    <div style="height:50px; width:100%"></div>
 
     <div id="photos-submit-bar">
         <button id="photos-submit-btn" class="btn btn-block" onclick="submitPhotos()" disabled>Upload Photos</button>

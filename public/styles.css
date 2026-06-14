@@ -41,10 +41,10 @@
 html, body {
     /* background: url('/images/rose_background_15.png') no-repeat center center fixed; */
     /* Default (light scheme): bright pastel gradient — light enough for dark text */    
-    background-image: linear-gradient(-45deg, #ffe8ee, #ebf3ff, #e9faf0, #fff8e6, #f5ecff, #fff0e8);
+    background-image: linear-gradient(-45deg, #ffe8ee, #ebf3ff, #e9faf0, #fff8e6, #f4effb, #fff0e8);
     background-size: 400% 400%;
     background-attachment: fixed;
-    animation: pastel-shift 40s ease infinite;
+    animation: pastel-shift 60s ease infinite;
     color: var(--text);
 
     font-family: "Sansita Swashed", system-ui;
@@ -61,6 +61,8 @@ html, body {
     max-width: 100%;
     overflow-x: hidden;
     font-size: x-large;
+    overscroll-behavior: none;
+
 }
 
 @media (prefers-color-scheme: dark) {
@@ -72,9 +74,11 @@ html, body {
 }
 
 @keyframes pastel-shift {
-    0%   { background-position: 0% 50%; }
-    50%  { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0%   { background-position: 0% 0%; }
+    25%  { background-position: 50% 50%; }
+    50%  { background-position: 100% 100%; }
+    75%  { background-position: 50% 50%;}
+    100% { background-position: 0% 0%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -237,7 +241,7 @@ h1, h2, h3, h4, h5, h6, .title {
     left: 0;
     right: 0;
     z-index: 1000;
-    background-color: rgb(from var(--surface) r g b /0.5);
+    background-color: var(--surface);
     padding: 20px 16px 14px;
     box-shadow: 0 4px 24px var(--shadow);
 }
@@ -464,11 +468,10 @@ table.itinerary th:last-child {
 
 /* ── Photos ── */
 
-.photo-count {
-    font-size: 13px;
+.hint {
+    color: var(--text-muted); 
+    font-size:13px;
     font-style: normal;
-    color: var(--text-muted);
-    text-align: right;
     margin: 8px 0 4px;
 }
 
@@ -943,8 +946,8 @@ table.itinerary th:last-child {
 }
 
 .queued-track-thumb {
-    width: 44px;
-    height: 44px;
+    width: 64px;
+    height: 64px;
     object-fit: cover;
     border-radius: 6px;
     flex-shrink: 0;
@@ -1247,31 +1250,8 @@ input:checked + .slider:before {
 }
 
 
-
-
-.dancing-text span {
+.plain-link {
     color: var(--text);
     display: inline-block;
-    animation: dance .25s infinite alternate; /* Loops the dance infinitely */
-}
-
-/* Add delays to create the "wave" effect */
-.dancing-text span:nth-child(2) { animation-delay: 0.05s; }
-.dancing-text span:nth-child(3) { animation-delay: 0.1s; }
-.dancing-text span:nth-child(4) { animation-delay: 0.15s; }
-.dancing-text span:nth-child(5) { animation-delay: 0.2s; }
-.dancing-text span:nth-child(6) { animation-delay: 0.25s; }
-.dancing-text span:nth-child(7) { animation-delay: 0.3s; }
-.dancing-text span:nth-child(8) { animation-delay: 0.35s; }
-.dancing-text span:nth-child(9) { animation-delay: 0.4s; }
-.dancing-text span:nth-child(10) { animation-delay: 0.45s; }
-.dancing-text span:nth-child(11) { animation-delay: 0.5s; }
-.dancing-text span:nth-child(12) { animation-delay: 0.55s; }
-.dancing-text span:nth-child(13) { animation-delay: 0.60s; }
-
-
-
-@keyframes dance {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-2px); } /* Moves text up */
+    text-decoration: none;
 }
