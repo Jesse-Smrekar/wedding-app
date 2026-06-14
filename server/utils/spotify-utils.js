@@ -158,6 +158,88 @@ function setToken(token) {
 }
 
 
+/**
+ * Fetches an app access token from Spotify using the client-credentials flow.
+ * Schedules itself to re-run shortly before the token expires.
+ * Docs: https://developer.spotify.com/documentation/web-api/tutorials/client-credentials-flow
+ */
+function fetchToken() {
+  if (!CLIENT_ID || !CLIENT_SECRET) {
+    return Promise.reject(new Error('Cannot fetch Spotify token: SPOTIFY_CLIENT_ID/SPOTIFY_CLIENT_SECRET not set'));
+  }
+
+  return new Promise((resolve, reject) => {
+    var options = {
+      'method': 'POST',
+      'hostname': 'accounts.spotify.com',
+      'path': '/api/token',
+      'headers': {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Basic ' + new Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64')
+      },
+      'maxRedirects': 20
+    };
+
+    var req = https.request(options, function (res) {
+      var chunks = [];
+
+      res.on("data", function (chunk) {
+        chunks.push(chunk);
+      });
+
+      res.on("end", function () {
+        try {
+          var body = JSON.parse(Buffer.concat(chunks));
+          if (!body.access_token) {
+            console.error('Spotify client-credentials request did not return an access_token:', body);
+            return reject(new Error('Spotify did not return an access_token'));
+          }
+          ACCESS_TOKEN = body.access_token;
+          if (body.expires_in) {
+            setTimeout(fetchToken, (body.expires_in - 30) * 1000);
+          }
+          console.log('GOT SPOTIFY TOKEN (client-credentials flow)');
+          resolve(ACCESS_TOKEN);
+        } catch (err) {
+          console.error('Failed to parse Spotify client-credentials response:', err);
+          reject(err);
+        }
+      });
+
+      res.on("error", function (error) {
+        console.error('Spotify client-credentials response error:', error);
+        reject(error);
+      });
+    });
+
+    req.on("error", function (error) {
+      console.error('Spotify client-credentials request error:', error);
+      reject(error);
+    });
+
+    req.write(qs.stringify({ 'grant_type': 'client_credentials' }));
+    req.end();
+  });
+}
+
+
+/**
+ * Initializes the Spotify access token on server startup.
+ * If SPOTIFY_TOKEN is set in the environment it is used directly and the
+ * network fetch is skipped; otherwise a token is fetched via client-credentials.
+ */
+function init() {
+  if (process.env.SPOTIFY_TOKEN) {
+    console.log('Using Spotify token from SPOTIFY_TOKEN env var; skipping startup fetch');
+    setToken(process.env.SPOTIFY_TOKEN);
+    return Promise.resolve();
+  }
+
+  console.log('No SPOTIFY_TOKEN set; fetching Spotify token on startup...');
+  return fetchToken();
+}
+
+
 
 
 
@@ -362,5 +444,5 @@ function randStr(length) {
 
 
 module.exports = {
-  getAuthorization, login, setToken, searchTracks, addToQueue, getQueue
+  getAuthorization, login, setToken, fetchToken, init, searchTracks, addToQueue, getQueue
 };

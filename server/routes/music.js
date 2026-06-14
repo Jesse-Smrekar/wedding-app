@@ -7,11 +7,6 @@ const db = require('../utils/db.js');
 const SUPER_USERS = ["JESSE_SMREKAR"];
 
 
-if (process.env.SPOTIFY_TOKEN) {
-  spotify.setToken(process.env.SPOTIFY_TOKEN);
-}
-
-
 /**
  * GET /music
  * 

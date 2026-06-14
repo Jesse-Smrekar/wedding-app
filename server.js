@@ -8,6 +8,7 @@ const fs = require('fs');
 const utils = require('./server/utils/utils.js');
 const auth = require('./server/utils/auth.js');
 const db = require('./server/utils/db.js');
+const spotify = require('./server/utils/spotify-utils.js');
 
 
 // Server Constants
@@ -138,6 +139,10 @@ app.listen(process.env.HTTP_PORT, () => {
 
 db.init().catch(err => {
   console.error('❌ Database initialization failed:', err);
+});
+
+spotify.init().catch(err => {
+  console.error('❌ Spotify token initialization failed:', err);
 });
 
 fs.appendFile(path.join(__dirname, 'server', 'logs', 'conn_logs.txt'), `\n\n--- SERVER START ${new Date().toISOString()} ---\n\n`, ()=>{});
