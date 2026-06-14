@@ -1,18 +1,15 @@
 require('dotenv').config();
 var https = require('follow-redirects').https;
-var fs = require('fs');
 var qs = require('querystring');
+var db = require('./db.js');
 
-var ACCESS_TOKEN;
-var REFRESH_TOKEN;
-var EXPIRES_SECONDS;
-
-// Documentation: 
-// https://developer.spotify.com/documentation/web-api/tutorials/client-credentials-flow
+// Spotify auth Authorization Code flow.
+// Docs: https://developer.spotify.com/documentation/web-api/tutorials/code-flow
 
 const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 const REDIRECT_URI = process.env.SPOTIFY_AUTH_REDIRECT_URL;
+const REFRESH_MARGIN_MILLIS = 60 * 1000;
 
 
 function getAuthorization(res) {
@@ -28,146 +25,11 @@ function getAuthorization(res) {
 }
 
 
-function login(code) {
-    if (!code) {
-        console.error('spotify.login() called without a code');
-        return;
-    }
-
-    var options = {
-      'method': 'POST',
-      'hostname': 'accounts.spotify.com',
-      'path': '/api/token',
-      'headers': {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Basic ' + new Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64')
-      },
-      'maxRedirects': 20
-    };
-
-    var req = https.request(options, function (res) {
-      var chunks = [];
-
-      res.on("data", function (chunk) {
-        chunks.push(chunk);
-      });
-
-      res.on("end", function () {
-        try {
-          var body = JSON.parse(Buffer.concat(chunks));
-          if (!body.access_token) {
-            console.error('Spotify login did not return an access_token:', body);
-            return;
-          }
-          ACCESS_TOKEN = body.access_token;
-          REFRESH_TOKEN = body.refresh_token;
-          if (body.expires_in) {
-            setTimeout(refreshToken, (body.expires_in - 30) * 1000);
-          }
-          console.log(`GOT SPOTIFY TOKEN: ${ACCESS_TOKEN}`);
-        } catch (err) {
-          console.error('Failed to parse Spotify login response:', err);
-        }
-      });
-
-      res.on("error", function (error) {
-        console.error('Spotify login response error:', error);
-      });
-    });
-
-    req.on("error", function (error) {
-      console.error('Spotify login request error:', error);
-    });
-
-    var postData = qs.stringify({
-      'grant_type': 'authorization_code',
-      'code': code,
-      'redirect_uri': REDIRECT_URI
-    });
-
-    req.write(postData);
-    req.end();
-}
-
-
-function refreshToken() {
-  if (!REFRESH_TOKEN) {
-    console.error('refreshToken() called but no REFRESH_TOKEN is available');
-    return;
-  }
-
-  var options = {
-    method: 'POST',
-    hostname: 'accounts.spotify.com',
-    path: '/api/token',
-    headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Basic ' + (new Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64'))
-    },
-    json: true
-  };
-
-  var req = https.request(options, function (res) {
-      var chunks = [];
-
-      res.on("data", function (chunk) {
-        chunks.push(chunk);
-      });
-
-      res.on("end", function () {
-        try {
-          var body = JSON.parse(Buffer.concat(chunks));
-          if (!body.access_token) {
-            console.error('Spotify token refresh did not return an access_token:', body);
-            return;
-          }
-          ACCESS_TOKEN = body.access_token;
-          if (body.refresh_token) {
-            REFRESH_TOKEN = body.refresh_token;
-          }
-          if (body.expires_in) {
-            setTimeout(refreshToken, (body.expires_in - 30) * 1000);
-          }
-          console.log(`GOT SPOTIFY TOKEN: ${ACCESS_TOKEN}`);
-        } catch (err) {
-          console.error('Failed to parse Spotify refresh response:', err);
-        }
-      });
-
-      res.on("error", function (error) {
-        console.error('Spotify refresh response error:', error);
-      });
-  });
-
-  req.on("error", function (error) {
-    console.error('Spotify refresh request error:', error);
-  });
-
-  var postData = qs.stringify({
-    'grant_type': 'refresh_token',
-    'refresh_token': REFRESH_TOKEN
-  });
-  req.write(postData);
-  req.end();
-}
-
-
-function setToken(token) {
-  console.log('Setting access token: %s', token)
-  ACCESS_TOKEN = token;
-}
-
-
 /**
- * Fetches an app access token from Spotify using the client-credentials flow.
- * Schedules itself to re-run shortly before the token expires.
- * Docs: https://developer.spotify.com/documentation/web-api/tutorials/client-credentials-flow
+ * POSTs a form body to Spotify's token endpoint and resolves the parsed JSON.
+ * Used by both the authorization-code exchange and the refresh flow.
  */
-function fetchToken() {
-  if (!CLIENT_ID || !CLIENT_SECRET) {
-    return Promise.reject(new Error('Cannot fetch Spotify token: SPOTIFY_CLIENT_ID/SPOTIFY_CLIENT_SECRET not set'));
-  }
-
+function requestSpotifyToken(postData) {
   return new Promise((resolve, reject) => {
     var options = {
       'method': 'POST',
@@ -180,80 +42,157 @@ function fetchToken() {
       'maxRedirects': 20
     };
 
-    var req = https.request(options, function (res) {
+    var req = https.request(options, (res) => {
       var chunks = [];
 
-      res.on("data", function (chunk) {
+      res.on("data", (chunk) => {
         chunks.push(chunk);
       });
 
-      res.on("end", function () {
+      res.on("end", () => {
+        var body = Buffer.concat(chunks).toString();
+        if (res.statusCode >= 400) {
+          return reject(new Error(`Spotify token endpoint returned ${res.statusCode}: ${body}`));
+        }
         try {
-          var body = JSON.parse(Buffer.concat(chunks));
-          if (!body.access_token) {
-            console.error('Spotify client-credentials request did not return an access_token:', body);
-            return reject(new Error('Spotify did not return an access_token'));
+          var parsed = JSON.parse(body);
+          if (!parsed.access_token) {
+            return reject(new Error('Spotify token response did not include an access_token: ' + body));
           }
-          ACCESS_TOKEN = body.access_token;
-          if (body.expires_in) {
-            setTimeout(fetchToken, (body.expires_in - 30) * 1000);
-          }
-          console.log('GOT SPOTIFY TOKEN (client-credentials flow)');
-          resolve(ACCESS_TOKEN);
+          resolve(parsed);
         } catch (err) {
-          console.error('Failed to parse Spotify client-credentials response:', err);
           reject(err);
         }
       });
 
-      res.on("error", function (error) {
-        console.error('Spotify client-credentials response error:', error);
+      res.on("error", (error) => {
         reject(error);
       });
     });
 
-    req.on("error", function (error) {
-      console.error('Spotify client-credentials request error:', error);
+    req.on("error", (error) => {
       reject(error);
     });
 
-    req.write(qs.stringify({ 'grant_type': 'client_credentials' }));
+    req.write(postData);
     req.end();
   });
 }
 
 
-/**
- * Initializes the Spotify access token on server startup.
- * If SPOTIFY_TOKEN is set in the environment it is used directly and the
- * network fetch is skipped; otherwise a token is fetched via client-credentials.
- */
-function init() {
-  if (process.env.SPOTIFY_TOKEN) {
-    console.log('Using Spotify token from SPOTIFY_TOKEN env var; skipping startup fetch');
-    setToken(process.env.SPOTIFY_TOKEN);
-    return Promise.resolve();
-  }
-
-  console.log('No SPOTIFY_TOKEN set; fetching Spotify token on startup...');
-  return fetchToken();
+/** Reads the single spotify_token row, or null if it does not exist. */
+async function readTokenRow() {
+  const rows = await db.read('SELECT access_token, refresh_token, expires_at FROM spotify_token WHERE id = 1');
+  return rows[0] || null;
 }
 
 
+/**
+ * Upserts the token row. COALESCE keeps the existing refresh_token when Spotify
+ * returns none (the normal case on refresh) and overwrites only if rotated.
+ * Concurrent refreshes across instances are safe: the upsert is last-writer-wins
+ * and always leaves a valid token.
+ */
+function saveTokens({ access_token, refresh_token, expires_in }) {
+  const expires_at = new Date(Date.now() + (expires_in || 3600) * 1000);
+  return db.query(
+    `INSERT INTO spotify_token (id, access_token, refresh_token, expires_at, updated_at)
+     VALUES (1, $1, $2, $3, now())
+     ON CONFLICT (id) DO UPDATE SET
+       access_token  = EXCLUDED.access_token,
+       refresh_token = COALESCE(EXCLUDED.refresh_token, spotify_token.refresh_token),
+       expires_at    = EXCLUDED.expires_at,
+       updated_at    = now()`,
+    [access_token, refresh_token || null, expires_at]
+  );
+}
 
 
+/**
+ * Exchanges an authorization code for tokens and persists them to the DB.
+ * Called from the /spotify/auth/redirect callback after admin consent.
+ */
+async function login(code) {
+  if (!code) {
+    throw new Error('spotify.login() called without a code');
+  }
+
+  const body = await requestSpotifyToken(qs.stringify({
+    'grant_type': 'authorization_code',
+    'code': code,
+    'redirect_uri': REDIRECT_URI
+  }));
+
+  await saveTokens(body);
+  console.log('Stored Spotify token from authorization-code login.');
+}
 
 
+/** Refreshes the access token using the stored refresh_token and persists it. */
+async function refreshFromDb(row) {
+  if (!row || !row.refresh_token) {
+    throw new Error('No Spotify refresh_token in DB; admin must visit /admin/spotify/login');
+  }
+
+  const body = await requestSpotifyToken(qs.stringify({
+    'grant_type': 'refresh_token',
+    'refresh_token': row.refresh_token
+  }));
+
+  await saveTokens(body);
+  console.log('Refreshed Spotify access token.');
+  return body.access_token;
+}
 
 
-function searchTracks(search) {
+/**
+ * Returns a currently-valid access token, refreshing from the DB-stored
+ * refresh_token if the access token is missing or about to expire. This is the
+ * single entry point used by all Spotify API calls.
+ */
+async function getValidToken() {
+  const row = await readTokenRow();
+
+  if (!row || !row.access_token) {
+    throw new Error('Spotify is not authorized. An admin must visit /admin/spotify/login first.');
+  }
+
+  const expiresAt = row.expires_at ? new Date(row.expires_at).getTime() : 0;
+  if (!expiresAt || expiresAt - Date.now() < REFRESH_MARGIN_MILLIS) {
+    return refreshFromDb(row);
+  }
+
+  return row.access_token;
+}
+
+
+/**
+ * Loads Spotify token state on server startup. No network call is made — the
+ * token is read from the shared DB on demand via getValidToken().
+ */
+async function init() {
+
+  if (!!process.env.SPOTIFY_TOKEN) {
+    await saveTokens({access_token: process.env.SPOTIFY_TOKEN});
+    console.log('Spotify token loaded from env var.');
+    return;
+  }
+  
+  const row = await readTokenRow();
+  if (!row || !row.refresh_token || row.expires_at < new Date()) {
+    console.log('No Spotify token in DB. An admin must visit /admin/spotify/login to authorize queueing.');
+    return;
+  }
+  console.log('Spotify token loaded from DB.');
+}
+
+
+async function searchTracks(search) {
     if (!search) {
-        return Promise.reject(new Error('searchTracks() called without a search term'));
+        throw new Error('searchTracks() called without a search term');
     }
 
-    if (!ACCESS_TOKEN) {
-        return Promise.reject(new Error('Spotify ACCESS_TOKEN is not set. Admin must log in via /admin/spotify/login first.'));
-    }
+    const token = await getValidToken();
 
     return new Promise((resolve, reject) => {
         var options = {
@@ -261,19 +200,19 @@ function searchTracks(search) {
         'hostname': 'api.spotify.com',
         'path': `/v1/search?q=${encodeURIComponent(search)}&type=track&limit=10`,
         'headers': {
-            'Authorization': 'Bearer ' + ACCESS_TOKEN,
+            'Authorization': 'Bearer ' + token,
         },
         'maxRedirects': 20
         };
 
-        var req = https.request(options, function (res) {
+        var req = https.request(options, (res) => {
         var chunks = [];
 
-        res.on("data", function (chunk) {
+        res.on("data", (chunk) => {
             chunks.push(chunk);
         });
 
-        res.on("end", function () {
+        res.on("end", () => {
             try {
                 var body = Buffer.concat(chunks);
                 var parsed = JSON.parse(body);
@@ -288,13 +227,13 @@ function searchTracks(search) {
             }
         });
 
-        res.on("error", function (error) {
+        res.on("error", (error) => {
             console.error('Spotify search response error:', error);
             reject(error);
         });
         });
 
-        req.on("error", function (error) {
+        req.on("error", (error) => {
             console.error('Spotify search request error:', error);
             reject(error);
         });
@@ -304,8 +243,8 @@ function searchTracks(search) {
 }
 
 
-
-function getQueue() {
+async function getQueue() {
+  const token = await getValidToken();
 
   return new Promise((resolve, reject) => {
       var options = {
@@ -313,44 +252,41 @@ function getQueue() {
       'hostname': 'api.spotify.com',
       'path': `/v1/me/player/queue`,
       'headers': {
-          'Authorization': 'Bearer ' + ACCESS_TOKEN,
+          'Authorization': 'Bearer ' + token,
       },
       'maxRedirects': 20
       };
-      
-      var req = https.request(options, function (res) {
+
+      var req = https.request(options, (res) => {
       var chunks = [];
-      
-      res.on("data", function (chunk) {
+
+      res.on("data", (chunk) => {
           chunks.push(chunk);
       });
-      
-      res.on("end", function (chunk) {
+
+      res.on("end", (chunk) => {
           var body = Buffer.concat(chunks);
           // console.log(`Search Result: ${body.toString()}`);
           resolve(JSON.parse(body).queue);
       });
-      
-      res.on("error", function (error) {
+
+      res.on("error", (error) => {
           console.error(error);
           reject(error);
       });
       });
-      
+
       req.end();
   });
 }
 
 
-
-function addToQueue(track) {
+async function addToQueue(track) {
   if (!track) {
-      return Promise.reject(new Error('addToQueue() called without a track URI'));
+      throw new Error('addToQueue() called without a track URI');
   }
 
-  if (!ACCESS_TOKEN) {
-      return Promise.reject(new Error('Spotify ACCESS_TOKEN is not set. Admin must log in via /admin/spotify/login first.'));
-  }
+  const token = await getValidToken();
 
   var htmlEscapedTrack = track.replace(':', '%3A');
 
@@ -362,19 +298,19 @@ function addToQueue(track) {
       'hostname': 'api.spotify.com',
       'path': `/v1/me/player/queue?uri=${htmlEscapedTrack}`,
       'headers': {
-          'Authorization': 'Bearer ' + ACCESS_TOKEN,
+          'Authorization': 'Bearer ' + token,
       },
       'maxRedirects': 20
       };
 
-      var req = https.request(options, function (res) {
+      var req = https.request(options, (res) => {
         var chunks = [];
 
-        res.on("data", function (chunk) {
+        res.on("data", (chunk) => {
             chunks.push(chunk);
         });
 
-        res.on("end", function () {
+        res.on("end", () => {
             const body = Buffer.concat(chunks).toString();
             if (res.statusCode >= 400) {
                 console.error(`Spotify addToQueue failed (${res.statusCode}):`, body);
@@ -384,13 +320,13 @@ function addToQueue(track) {
             resolve();
         });
 
-        res.on("error", function (error) {
+        res.on("error", (error) => {
             console.error('Spotify addToQueue response error:', error);
             reject(error);
         });
       });
 
-      req.on("error", function (error) {
+      req.on("error", (error) => {
           console.error('Spotify addToQueue request error:', error);
           reject(error);
       });
@@ -411,38 +347,6 @@ function randStr(length) {
 }
 
 
-
-
-
-// server.get('/refresh_token', function(req, res) {
-
-//     var refresh_token = req.query.refresh_token;
-//     var authOptions = {
-//       url: 'https://accounts.spotify.com/api/token',
-//       headers: {
-//         'content-type': 'application/x-www-form-urlencoded',
-//         'Authorization': 'Basic ' + (new Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64'))
-//       },
-//       form: {
-//         grant_type: 'refresh_token',
-//         refresh_token: ACCESS_TOKEN
-//       },
-//       json: true
-//     };
-  
-//     request.post(authOptions, function(error, response, body) {
-//       if (!error && response.statusCode === 200) {
-//         var access_token = body.access_token,
-//             refresh_token = body.refresh_token || refresh_token;
-//         res.send({
-//           'access_token': access_token,
-//           'refresh_token': refresh_token
-//         });
-//       }
-//     });
-//   });
-
-
 module.exports = {
-  getAuthorization, login, setToken, fetchToken, init, searchTracks, addToQueue, getQueue
+  getAuthorization, login, init, getValidToken, searchTracks, addToQueue, getQueue
 };

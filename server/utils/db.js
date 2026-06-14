@@ -71,6 +71,20 @@ async function init() {
             ON CONFLICT DO NOTHING
         `);
 
+        // Single-row table holding the shared Spotify user token. Populated when
+        // an admin authorizes via /admin/spotify/login; read/refreshed by every
+        // server instance so they share one token and survive restarts.
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS spotify_token (
+                id            INTEGER PRIMARY KEY DEFAULT 1,
+                access_token  TEXT,
+                refresh_token TEXT,
+                expires_at    TIMESTAMPTZ,
+                updated_at    TIMESTAMPTZ DEFAULT now(),
+                CONSTRAINT spotify_token_singleton CHECK (id = 1)
+            )
+        `);
+
         console.log('✅ Database Initialized.');
     } catch (err) {
         console.error('❌ Database init error:', err);
