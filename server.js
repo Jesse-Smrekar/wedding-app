@@ -80,6 +80,13 @@ app.get('/favicon.ico', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'images', 'diamond-ring.png'));
 });
 
+// Tell crawlers not to index any part of the site
+app.get('/robots.txt', (req, res) => {
+
+  res.set('Content-Type', 'text/plain');
+  res.sendFile(path.join(__dirname, 'public', 'robots.txt'));
+});
+
 
 // login user
 app.post('/login/user', async (req, res) => {
