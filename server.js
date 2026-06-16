@@ -14,6 +14,14 @@ const spotify = require('./server/utils/spotify-utils.js');
 // Server Constants
 const app = express();
 app.use(utils.logRequest);
+
+// Redirect the naked/root domain to the www subdomain (301, preserve path+query)
+app.use((req, res, next) => {
+  if (req.hostname === 'jaredandtati.com') {
+    return res.redirect(301, `https://www.jaredandtati.com${req.originalUrl}`);
+  }
+  next();
+});
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true })); // For URL-encoded data
 app.use(auth.auth);
