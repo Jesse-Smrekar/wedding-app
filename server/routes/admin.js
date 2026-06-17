@@ -30,24 +30,6 @@ router.get('/', (req, res) => {
 });
 
 
-/**
- * GET /admin/spotify/login
- * 
- * Attempts to get an authorized session from Spotify that can be
- * used by the app later to search for tracks and queue songs.
- * 
- * This must be called by an admin before users are able to use the 
- * music page.
- */
-router.get('/spotify/login', (req, res) => {
-  console.log(`REQUEST: GET, /admin/spotify/login`)
-  if (!req.user || !adminList.includes(req.user)) {
-    return res.status(403).json({ error: 'Forbidden' });
-  }
-
-  spotify.getAuthorization(res);
-});
-
 
 
 
@@ -110,21 +92,6 @@ router.delete('/users', (req, res) => {
 });
 
 
-router.patch('/toggleMusicQueue', (req, res) => {
-  if (!req.user || !adminList.includes(req.user)) {
-    return res.status(403).json({ error: 'Forbidden' });
-  }
 
-  db.write(`UPDATE music_queue SET limit_enabled = NOT limit_enabled RETURNING limit_enabled`)
-  .then(result => {
-    res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify({ queueLimitEnabled: result[0].limit_enabled }));
-  })
-  .catch(err => {
-    console.error('Error toggling music queue limit:', err);
-    res.status(500).json({ error: 'Failed to toggle music queue limit.' });
-  });
-
-});
 
 module.exports = router;

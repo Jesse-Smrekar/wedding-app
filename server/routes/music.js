@@ -223,13 +223,13 @@ function getQueuedTracks(fname, lname) {
 
 function updateUserNextQueueTime(fname, lname) {
     if (!fname || !lname) return Promise.resolve();
-    return db.write(`UPDATE users SET next_music_queue_date = NOW() + ((SELECT wait_minutes FROM music_queue LIMIT 1) * INTERVAL '1 minute') WHERE first_name = '${fname.toUpperCase()}' AND last_name = '${lname.toUpperCase()}'`)
+    return db.write(`UPDATE users SET next_music_queue_date = NOW() + ((SELECT queue_wait_minutes FROM music_settings LIMIT 1) * INTERVAL '1 minute') WHERE first_name = '${fname.toUpperCase()}' AND last_name = '${lname.toUpperCase()}'`)
         .catch(err => console.error('Error updating queue time:', err));
 }
 
 function getQueueLimitFlag() {
-  return db.read(`SELECT limit_enabled FROM music_queue LIMIT 1`)
-  .then(rows => rows[0].limit_enabled)
+  return db.read(`SELECT queue_limit_enabled FROM music_settings LIMIT 1`)
+  .then(rows => rows[0].queue_limit_enabled)
 }
 
 module.exports = router;

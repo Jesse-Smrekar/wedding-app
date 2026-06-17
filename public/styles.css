@@ -754,6 +754,33 @@ table.itinerary th:last-child {
     transform: scale(0.96);
 }
 
+/* Wait-minutes card — extends .home-card with an inline numeric input */
+.minutes-card {
+    cursor: default;
+    gap: 8px;
+}
+.minutes-card:active {
+    background-color: transparent;
+    transform: none;
+}
+.minutes-input {
+    width: 80px;
+    text-align: center;
+    background-color: transparent;
+    border: 2px solid var(--text);
+    border-radius: 12px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 28px;
+    padding: 4px 8px;
+    -moz-appearance: textfield;
+}
+.minutes-input::-webkit-outer-spin-button,
+.minutes-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 .slideshow-gallery-hint {
     text-align: center;
     font-size: 13px;

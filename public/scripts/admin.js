@@ -72,15 +72,6 @@ function purgeUsers() {
 }
 
 
-function toggleMusicQueue() {
-    fetch(`${location.origin}/admin/toggleMusicQueue`, { method: 'PATCH' })
-    .then(res => {
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        return res.json();
-    })
-    .then(data => window.alert(`Music queue limit is: ${data.queueLimitEnabled ? 'ON' : 'OFF'}`));
-}
-
 window.onload = () => {
     getUsers();
 }

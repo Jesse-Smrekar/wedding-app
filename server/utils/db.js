@@ -58,16 +58,18 @@ async function init() {
         `);
 
         await pool.query(`
-           CREATE TABLE IF NOT EXISTS music_queue (
+           CREATE TABLE IF NOT EXISTS music_settings (
                 id SERIAL PRIMARY KEY,
-                limit_enabled BOOLEAN default true,
-                wait_minutes INTEGER
+                queue_limit_enabled BOOLEAN default true,
+                queue_wait_minutes INTEGER,
+				explicit_allowed BOOLEAN default false
+
            ) 
         `);
 
         await pool.query(`
-            INSERT INTO music_queue (id, limit_enabled, wait_minutes)
-            VALUES (1, true, 30)
+            INSERT INTO music_settings (id, queue_limit_enabled, queue_wait_minutes, explicit_allowed)
+            VALUES (1, true, 30, false)
             ON CONFLICT DO NOTHING
         `);
 

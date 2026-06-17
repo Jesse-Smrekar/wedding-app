@@ -84,7 +84,6 @@ public/
 - Authentication is intentionally minimal — it exists to attribute actions to a
   guest, not to secure sensitive data.
 - The naked domain `jaredandtati.com` is 301-redirected to `www.jaredandtati.com`.
-- Music queue rate limiting is configurable via the `music_queue` table
-  (`wait_minutes`, `limit_enabled`); admins can toggle the limit from `/admin`.
+
 </content>
 </invoke>

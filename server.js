@@ -124,6 +124,10 @@ app.post('/login/user', async (req, res) => {
 const adminEndpoints = require('./server/routes/admin.js');
 app.use('/admin', adminEndpoints);
 
+// mount music admin endpoints
+const musicAdminEndpoints = require('./server/routes/musicadmin.js');
+app.use('/musicadmin', musicAdminEndpoints);
+
 // mount photos endpoints
 const photosEndpoints = require('./server/routes/photos.js');
 app.use('/photos', photosEndpoints);
