@@ -8,7 +8,7 @@ function renderSettings() {
     document.getElementById('queue-limit-state').textContent =
         MUSIC_SETTINGS.queueLimitEnabled ? 'ON' : 'OFF';
     document.getElementById('explicit-state').textContent =
-        MUSIC_SETTINGS.explicitAllowed ? 'ON' : 'OFF';
+        MUSIC_SETTINGS.explicitAllowed ? 'ALLOWED' : 'BLOCKED';
     var input = document.getElementById('queue-minutes');
     if (document.activeElement !== input) {
         input.value = MUSIC_SETTINGS.queueWaitMinutes ?? '';

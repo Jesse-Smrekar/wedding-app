@@ -32,6 +32,7 @@ router.get('/search', (req, res) => {
   }
 
   spotify.searchTracks(search)
+  .then(data => disableTracks(data))
   .then(data => {
 
     if (!Array.isArray(data)) {
@@ -49,7 +50,9 @@ router.get('/search', (req, res) => {
             "album": hit.album.name,
             "album_image": hit.album.images[2]?.url ?? hit.album.images[0]?.url ?? null,
             "duration": hit.duration_ms,
-            "uri": hit.uri
+            "uri": hit.uri,
+			"disabled": hit.disabled,
+			"explicit": hit.explicit
           }
         );
       } catch (hitErr) {
@@ -199,6 +202,51 @@ async function getUsersNextQueueTime(fname, lname) {
         console.error('Error reading queue time:', err);
         return null;
     }
+}
+
+
+/**
+ * Compares the track details with criteria saved in banned_track_criteria
+ * to determine if it should appear as disabled on the UI
+ */
+async function disableTracks(tracks) {
+
+	var result = false;
+
+	const explicitAllowed = (await db.read('SELECT explicit_allowed FROM music_settings')).at(0).explicit_allowed;
+	const banCriteria = await db.read('SELECT * FROM banned_track_criteria');
+
+	for (var track of tracks) {
+
+		// handle explicit if disallowed
+		if (!explicitAllowed && track.explicit) {
+			track.disabled = true;
+		}
+
+		for (const crit in banCriteria) {
+			if (track.disabled) break;
+
+			if (track.uri == crit.track_uri) {
+				track.disabled = true;
+				break;
+			}
+
+			if (crit.track_name && 
+				track.name.toLowerCase().includes(crit.track_name.toLowerCase())) {
+				track.disabled = true;
+				break;
+			}
+
+			for (const artist of track.artists) {
+				if (artist.uri == crit.artist_uri) {
+					track.disabled = true;
+					break;
+				}
+			}
+		}
+	}
+
+	return tracks;
 }
 
 

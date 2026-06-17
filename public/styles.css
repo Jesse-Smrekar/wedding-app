@@ -348,6 +348,17 @@ thead#search-result-header th {
     background-color: var(--selected-bg);
 }
 
+.result-button.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.result-button.disabled:hover,
+.result-button.disabled:active {
+    background-color: transparent;
+}
+
 .cell-left {
     border-top-left-radius: var(--radius);
     border-bottom-left-radius: var(--radius);

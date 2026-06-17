@@ -60,21 +60,17 @@ function musicSearch(searchText) {
 
         for (inc in data) {
             var entry = data[inc];
-            document.getElementById('search-results').innerHTML += 
+            var rowClass = 'result-button' + (entry.disabled ? ' disabled' : '');
+            var onclick = entry.disabled ? '' : ' onclick=javascript:makeSelection(' + inc + ')';
+            document.getElementById('search-results').innerHTML +=
             // '<div class="result-button">' +
-            '<tr id="search-result-' + inc +'" class="result-button" onclick=javascript:makeSelection(' + inc + ')>' +
+            '<tr id="search-result-' + inc +'" class="' + rowClass + '"' + onclick + '>' +
             '<td class="cell-left" style="text-align:center;width:48px;">' + '<img src="' + entry.album_image + '" style="width:48px;height:48px;object-fit:cover;display:block;"/></td>' +
-            '<td style="width:80%;max-width:300px;">' + entry.track + 
-            '<div class="under-text">' + entry.artist + ' - ' + entry.album + '</div>' +
+            '<td style="width:80%;max-width:300px;">' + entry.track +
+			'<div class="under-text">' + (entry.explicit ? '🅴 ' : '') + entry.artist + ' - ' + entry.album + '</div>' +
             '</td>' +
-            // '<td style="max-width:100px;">' + entry.artist + '</td>' +
-            // '<td style="width:30px;max-width:100px;">' + entry.album + '</td>' +
-            // '<td class="cell-right" style="width:10%;">' + millisToMinutesAndSeconds(entry.duration) + '</td>' +
             '</tr>';
-            // '</div>';
         }
-
-        document.getElementById('search-result-header').style.visibility = 'visible';
     })
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
@@ -89,6 +85,10 @@ function millisToMinutesAndSeconds(millis) {
 }
 
 function makeSelection(record) {
+
+    if (MUSIC_SEARCH_RESULTS && MUSIC_SEARCH_RESULTS[record] && MUSIC_SEARCH_RESULTS[record].disabled) {
+        return;
+    }
 
     if (SELECTION != null) {
         document.getElementById('search-result-' + SELECTION).classList.remove('selected');
