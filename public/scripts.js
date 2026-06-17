@@ -134,7 +134,8 @@ function addToQueue() {
         }
         window.alert(message);
 
-        location.reload();
+		document.getElementById('musicsearch').value = "";
+		location.reload();
     })
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);

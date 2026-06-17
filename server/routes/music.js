@@ -4,7 +4,7 @@ const path = require('path');
 const spotify = require('../utils/spotify-utils.js');
 const db = require('../utils/db.js');
 
-const SUPER_USERS = ["JESSE_SMREKAR"];
+const SUPER_USERS = ["JESSE_SMREKAR", "TATI_SMREKAR", "JARED_JOHNSON"];
 
 
 /**
@@ -195,6 +195,9 @@ async function shouldAllowQueueForUser(fname, lname) {
 
 async function getUsersNextQueueTime(fname, lname) {
     if (!fname || !lname) return null;
+	// bypass time limit for super users
+	if (SUPER_USERS.includes(`${fname.toUpperCase()}_${lname.toUpperCase()}`)) return new Date(0);
+
     try {
         var result = await db.read(`SELECT NEXT_MUSIC_QUEUE_DATE FROM USERS WHERE FIRST_NAME = '${fname.toUpperCase()}' AND LAST_NAME = '${lname.toUpperCase()}'`);
         return !!result && result.length > 0 ? result[0].next_music_queue_date : null;
