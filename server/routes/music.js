@@ -32,7 +32,13 @@ router.get('/search', (req, res) => {
   }
 
   spotify.searchTracks(search)
-  .then(data => disableTracks(data))
+  .then(data => {
+    // only disable tracks for non-super-users
+    if (!SUPER_USERS.includes(req.user.toUpperCase())) {
+      return disableTracks(data);
+    }
+    return data;
+  })
   .then(data => {
 
     if (!Array.isArray(data)) {
@@ -185,7 +191,7 @@ async function shouldAllowQueueForUser(fname, lname) {
 
   // bypass limit if disabled or if it's a super user
   if (!limitFlag ||
-      !!SUPER_USERS.includes(`${fname.toUpperCase()}_${lname.toUpperCase()}`)) {
+      SUPER_USERS.includes(`${fname.toUpperCase()}_${lname.toUpperCase()}`)) {
     return (true, new Date());
   }
 
