@@ -372,6 +372,13 @@ thead#search-result-header th {
     padding: 10px 12px 10px 8px;
 }
 
+ul, li {
+    font-size: 15px;
+    font-style: normal;
+    text-align: left;
+    vertical-align: middle; 
+}
+
 td, th {
     font-size: 15px;
     font-style: normal;
@@ -555,6 +562,7 @@ table.itinerary th:last-child {
 
 .note-label {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     align-items: baseline;
     font-size: 15px;
@@ -1327,4 +1335,17 @@ input:checked + .slider:before {
     color: var(--text);
     display: inline-block;
     text-decoration: none;
+}
+
+.wedding-party {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 40px;
+    margin-top: 20px;
+}
+
+.party-list {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
 }
