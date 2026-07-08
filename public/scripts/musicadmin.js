@@ -80,6 +80,17 @@ function submitQueueMinutes(value) {
         .catch(err => console.error('Error updating queue minutes:', err));
 }
 
+function clearQueueHistory() {
+    if (!confirm('Clear the history of queued tracks? Songs that have already been played will be able to be queued again.')) {
+        return;
+    }
+    fetch(`${location.origin}/musicadmin/queue-history`, { method: 'DELETE' })
+        .then(res => {
+            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        })
+        .catch(err => console.error('Error clearing queue history:', err));
+}
+
 window.onload = () => {
     loadSettings();
 };

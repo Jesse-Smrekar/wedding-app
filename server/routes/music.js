@@ -224,6 +224,7 @@ async function disableTracks(tracks) {
 
 	const explicitAllowed = (await db.read('SELECT explicit_allowed FROM music_settings')).at(0).explicit_allowed;
 	const banCriteria = await db.read('SELECT * FROM banned_track_criteria');
+  const playedTracks = await db.read('SELECT track_id FROM queued_tracks');
 
 	for (var track of tracks) {
 
@@ -232,8 +233,9 @@ async function disableTracks(tracks) {
 			track.disabled = true;
 		}
 
+    // disable banned tracks
+    if (track.disabled) continue;
 		for (const crit in banCriteria) {
-			if (track.disabled) break;
 
 			if (track.uri == crit.track_uri) {
 				track.disabled = true;
@@ -253,6 +255,15 @@ async function disableTracks(tracks) {
 				}
 			}
 		}
+
+    // disable tracks which have already been played
+    if (track.disabled) continue;
+    for (const t_id of playedTracks) {
+      if (t_id.track_id == track.uri) {
+          track.disabled = true;
+          break;
+      }
+    }
 	}
 
 	return tracks;

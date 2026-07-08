@@ -154,4 +154,27 @@ router.patch('/toggle-explicit', (req, res) => {
 });
 
 
+/**
+ * DELETE /musicadmin/queue-history
+ * 
+ * Clears the history of songs which have been queued. This allows songs which have already been played
+ * to be queued again. 
+ */
+router.delete('/queue-history', (req, res) => {
+  if (!req.user || !adminList.includes(req.user)) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
+  db.write('DELETE FROM queued_tracks')
+  .then (result => {
+    res.set('Content-Type', 'application/json');
+    return res.status(204).end();
+  })
+  .catch( err => {
+    console.error('Error clearing the queued tracks:', err);
+    res.status(500).json({ error: 'Failed to clear the queued tracks' });
+  }); 
+});
+
+
 module.exports = router;
