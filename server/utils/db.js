@@ -34,7 +34,7 @@ async function init() {
             CREATE TABLE IF NOT EXISTS queued_tracks (
                 id SERIAL PRIMARY KEY,
                 user_id INTEGER,
-                track_id TEXT
+                track_uri TEXT
             )
         `);
 
@@ -98,12 +98,21 @@ async function init() {
 		`);
 
 		await pool.query(`
-			INSERT INTO banned_track_criteria (track_uri, track_name, artist_uri, artist_name)
+			INSERT INTO banned_track_criteria (id, track_uri, track_name, artist_uri, artist_name)
 			VALUES
-			(NULL, 	'chicken', 	NULL, 										NULL),
-			(NULL, 	NULL, 		'spotify:artist:4kYSro6naA4h99UJvo89HB', 	'Cardi B'),
-			(NULL, 	NULL, 		'spotify:artist:2mxe0TnaNL039ysAj51xPQ', 	'R. Kelly'),
-			(NULL, 	NULL, 		'spotify:artist:7bXgB6jMjp9ATFy66eO08Z', 	'Chris Brown');
+			(1, 	NULL, 	'chicken', 	NULL, 										NULL),
+			(2, 	NULL, 	NULL, 		'spotify:artist:4kYSro6naA4h99UJvo89HB', 	'Cardi B'),
+			(3, 	NULL, 	NULL, 		'spotify:artist:2mxe0TnaNL039ysAj51xPQ', 	'R. Kelly'),
+			(4, 	NULL, 	NULL, 		'spotify:artist:7bXgB6jMjp9ATFy66eO08Z', 	'Chris Brown')
+			ON CONFLICT (id) DO NOTHING;
+		`);
+
+		// Keep the SERIAL sequence ahead of the explicitly-seeded ids
+		await pool.query(`
+			SELECT setval(
+				pg_get_serial_sequence('banned_track_criteria', 'id'),
+				(SELECT COALESCE(MAX(id), 1) FROM banned_track_criteria)
+			);
 		`);
 
         console.log('✅ Database Initialized.');

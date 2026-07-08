@@ -224,7 +224,7 @@ async function disableTracks(tracks) {
 
 	const explicitAllowed = (await db.read('SELECT explicit_allowed FROM music_settings')).at(0).explicit_allowed;
 	const banCriteria = await db.read('SELECT * FROM banned_track_criteria');
-  const playedTracks = await db.read('SELECT track_id FROM queued_tracks');
+  const playedTracks = await db.read('SELECT track_uri FROM queued_tracks');
 
 	for (var track of tracks) {
 
@@ -259,7 +259,7 @@ async function disableTracks(tracks) {
     // disable tracks which have already been played
     if (track.disabled) continue;
     for (const t_id of playedTracks) {
-      if (t_id.track_id == track.uri) {
+      if (t_id.track_uri == track.uri) {
           track.disabled = true;
           break;
       }
@@ -272,7 +272,7 @@ async function disableTracks(tracks) {
 
 function addQueuedTrackRecord(fname, lname, trackId) {
     if (!fname || !lname || !trackId) return Promise.resolve();
-  return db.write(`INSERT INTO queued_tracks (user_id, track_id) 
+  return db.write(`INSERT INTO queued_tracks (user_id, track_uri)
     VALUES ((SELECT id FROM users WHERE first_name = $1 AND last_name = $2), $3)`, [fname, lname, trackId])
     .catch( err => console.error('Error inserting queued track record: ', err));
 }
@@ -280,11 +280,11 @@ function addQueuedTrackRecord(fname, lname, trackId) {
 function getQueuedTracks(fname, lname) {
   if (!fname || !lname) return Promise.resolve();
   return db.read(
-    ` SELECT queued_tracks.track_id
+    ` SELECT queued_tracks.track_uri
       FROM queued_tracks
       JOIN users ON queued_tracks.user_id = users.id
       WHERE users.first_name = $1 AND users.last_name = $2`, [fname, lname])
-    .then(rows => rows.map(r => r.track_id))
+    .then(rows => rows.map(r => r.track_uri))
     .catch( err => console.error('Error inserting queued track record: ', err));
 }
 
