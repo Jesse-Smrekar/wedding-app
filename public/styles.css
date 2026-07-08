@@ -707,6 +707,7 @@ table.itinerary th:last-child {
 .admin-action-row {
     display: flex;
     gap: 10px;
+    margin: 10px;
 }
 
 /* extends .btn — equal-width items in the admin action row */

@@ -65,6 +65,13 @@ function deleteSelectedUsers() {
     Promise.all(requests).then(() => getUsers());
 }
 
+// The endpoint answers with a Content-Disposition attachment, so navigating to
+// it hands the zip straight to the browser's downloader (and carries the
+// session cookie) without buffering the whole archive in memory here.
+function downloadPhotos() {
+    window.location = `${location.origin}/admin/photodump`;
+}
+
 function purgeUsers() {
     if (!confirm('Delete all users? This cannot be undone.')) return;
     fetch(`${location.origin}/admin/users?firstName=*`, { method: 'DELETE' })
