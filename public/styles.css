@@ -704,6 +704,11 @@ table.itinerary th:last-child {
     overflow: hidden;
 }
 
+#googleMap gmp-map {
+    width: 100%;
+    height: 100%;
+}
+
 /* ── Admin ── */
 #admin-content {
     width: 100%;
