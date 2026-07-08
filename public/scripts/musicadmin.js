@@ -5,10 +5,10 @@ var MUSIC_SETTINGS = {
 };
 
 function renderSettings() {
-    document.getElementById('queue-limit-state').textContent =
-        MUSIC_SETTINGS.queueLimitEnabled ? 'ON' : 'OFF';
-    document.getElementById('explicit-state').textContent =
-        MUSIC_SETTINGS.explicitAllowed ? 'ALLOWED' : 'BLOCKED';
+    document.getElementById('queue-limit-toggle').checked =
+        !!MUSIC_SETTINGS.queueLimitEnabled;
+    document.getElementById('explicit-toggle').checked =
+        !!MUSIC_SETTINGS.explicitAllowed;
     var input = document.getElementById('queue-minutes');
     if (document.activeElement !== input) {
         input.value = MUSIC_SETTINGS.queueWaitMinutes ?? '';

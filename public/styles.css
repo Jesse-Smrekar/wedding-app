@@ -792,6 +792,40 @@ table.itinerary th:last-child {
     margin: 0;
 }
 
+/* ── Music Toggle Sliders ── */
+#music-toggles {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 16px 40px;
+    box-sizing: border-box;
+}
+
+.toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background-color: rgb(from var(--surface) r g b / 0.5);
+    border-radius: 20px;
+    padding: 18px 24px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.toggle-label {
+    font-family: "Sansita Swashed", system-ui;
+    font-size: 18px;
+    letter-spacing: 0.03em;
+    color: var(--text);
+}
+
+.toggle-row .switch {
+    flex-shrink: 0;
+}
+
 .slideshow-gallery-hint {
     text-align: center;
     font-size: 13px;
