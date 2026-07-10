@@ -40,6 +40,11 @@ function showQueueOverlay(nextQueueTime, queuedTracks) {
         }
         var minutes = Math.floor(remaining / (60 * 1000));
         var seconds = Math.floor((remaining % (60 * 1000)) / 1000);
+
+        // refresh once a minute to update "in X songs" in case the queue was modified
+        if (seconds == 11) {
+            location.reload();
+        }
         countdown.textContent = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
     }
 
