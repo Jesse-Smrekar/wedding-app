@@ -1082,7 +1082,7 @@ table.itinerary th:last-child {
 .queued-track-order {
     font-size: 12px;
     font-style: normal;
-    color: var(--accent);
+    color: var(--spotify);
     white-space: nowrap;
     flex-shrink: 0;
 }
