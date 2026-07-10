@@ -61,75 +61,27 @@
             </div>
         </div>
 
-        <div id="googleMap">
-            <gmp-map
-                center="45.0221705,-93.4494385"
-                zoom="13"
-                map-id="535576c35344557373e89047">
-            </gmp-map>
-        </div>
+        <div id="googleMap"></div>
 
     </div>
 </body>
 
 
 <script>
-
-// Church, from SVGRepo.
-const CHURCH_SVG =
-    '<svg fill="#ffffff" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21.447 14.105 18 12.382V12a1 1 0 0 0-.485-.857L13 8.434V6h2V4h-2V2h-2v2H9v2h2v2.434l-4.515 2.709A1 1 0 0 0 6 12v.382l-3.447 1.724A.998.998 0 0 0 2 15v6a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-6c0-.379-.214-.725-.553-.895zM4 15.618l2-1V20H4v-4.382zM12 15a2 2 0 0 0-2 2v3H8v-7.434l4-2.4 4 2.4V20h-2v-3a2 2 0 0 0-2-2zm8 5h-2v-5.382l2 1V20z"/></svg>';
-
-// Cup/glass, standing in for the reception venue.
-const RECEPTION_SVG =
-    '<svg fill="#ffffff" width="20" height="20" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M3 1h10l-.5 5.5a4.5 4.5 0 0 1-3.75 4.44V14h2.75a.75.75 0 0 1 0 1.5h-7a.75.75 0 0 1 0-1.5h2.75v-3.06A4.5 4.5 0 0 1 3.5 6.5L3 1zm1.64 1.5.36 4a3 3 0 0 0 6 0l.36-4H4.64z"/></svg>';
-
-const LOCATIONS = [
-    {
-        position: { lat: 45.027831, lng: -93.445264 },
-        title: "St. Joseph Historic Catholic Church",
-        svg: CHURCH_SVG,
-    },
-    {
-        position: { lat: 45.016098, lng: -93.452448 },
-        title: "Crowne Plaza Minneapolis West",
-        svg: RECEPTION_SVG,
-    },
-];
-
-function parseSvg(svgString) {
-    // Each marker needs its own node — AdvancedMarkerElement does not clone content.
-    return new DOMParser().parseFromString(svgString, 'image/svg+xml').documentElement;
-}
-
-async function initMap() {
-    const [{ AdvancedMarkerElement, PinElement }] = await Promise.all([
-        google.maps.importLibrary('marker'),
-        google.maps.importLibrary('maps'),
-    ]);
-
-    // importLibrary('maps') registers <gmp-map>, but the element still has to
-    // upgrade before innerMap exists.
-    await customElements.whenDefined('gmp-map');
-
-    const mapElement = document.querySelector('gmp-map');
-    const innerMap = mapElement.innerMap;
-    innerMap.setOptions({ disableDefaultUI: true, colorScheme: 'DARK' });
-
-    for (const location of LOCATIONS) {
-        const pin = new PinElement({
-            glyph: parseSvg(location.svg),
-            background: '#4a4a4a',
-            borderColor: '#2a2a2a',
-        });
-
-        new AdvancedMarkerElement({
-            map: innerMap,
-            position: location.position,
-            title: location.title,
-            content: pin.element,
-        });
+    function myMap() {
+        var church = new google.maps.LatLng(45.027831,-93.445264);
+        var crownePlaza = new google.maps.LatLng(45.016098, -93.452448);
+        var mapProp= {
+            center: {lat: 45.0221705, lng: -93.4494385},
+            zoom:13,
+            colorScheme: 'FOLLOW_SYSTEM'
+        };
+        var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+        var marker1 = new google.maps.Marker({position: church});
+        marker1.setMap(map);
+        var marker2 = new google.maps.Marker({position: crownePlaza});
+        marker2.setMap(map);
     }
-}
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvVio5UPSA8wPs5KPxlpi9_Adr9rg4jCE&loading=async&callback=initMap"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvVio5UPSA8wPs5KPxlpi9_Adr9rg4jCE&callback=myMap"></script>
