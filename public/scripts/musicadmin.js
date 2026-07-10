@@ -1,10 +1,13 @@
 var MUSIC_SETTINGS = {
+    musicEnabled: null,
     queueLimitEnabled: null,
     queueWaitMinutes: null,
     explicitAllowed: null,
 };
 
 function renderSettings() {
+    document.getElementById('music-enabled-toggle').checked =
+        !!MUSIC_SETTINGS.musicEnabled;
     document.getElementById('queue-limit-toggle').checked =
         !!MUSIC_SETTINGS.queueLimitEnabled;
     document.getElementById('explicit-toggle').checked =
@@ -34,6 +37,19 @@ function loadSettings() {
             renderSettings();
         })
         .catch(err => console.error('Error loading music settings:', err));
+}
+
+function toggleMusic() {
+    fetch(`${location.origin}/musicadmin/toggle-music`, { method: 'PATCH' })
+        .then(res => {
+            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+            return res.json();
+        })
+        .then(data => {
+            MUSIC_SETTINGS.musicEnabled = data.musicEnabled;
+            renderSettings();
+        })
+        .catch(err => console.error('Error toggling music:', err));
 }
 
 function toggleQueueLimit() {

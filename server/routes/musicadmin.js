@@ -40,11 +40,12 @@ router.get('/settings', (req, res) => {
     return res.status(403).json({ error: 'Forbidden' });
   }
 
-  db.read(`SELECT queue_limit_enabled, queue_wait_minutes, explicit_allowed FROM music_settings LIMIT 1`)
+  db.read(`SELECT music_enabled, queue_limit_enabled, queue_wait_minutes, explicit_allowed FROM music_settings LIMIT 1`)
   .then(rows => {
     const row = rows[0] || {};
     res.set('Content-Type', 'application/json');
     res.send(JSON.stringify({
+      musicEnabled: row.music_enabled,
       queueLimitEnabled: row.queue_limit_enabled,
       queueWaitMinutes: row.queue_wait_minutes,
       explicitAllowed: row.explicit_allowed,
@@ -141,7 +142,7 @@ router.patch('/toggle-explicit', (req, res) => {
     return res.status(403).json({ error: 'Forbidden' });
   }
 
-    db.write(`UPDATE music_settings SET explicit_allowed = NOT explicit_allowed RETURNING explicit_allowed`)
+  db.write(`UPDATE music_settings SET explicit_allowed = NOT explicit_allowed RETURNING explicit_allowed`)
   .then(result => {
     res.set('Content-Type', 'application/json');
     res.send(JSON.stringify({ explicitAllowed: result[0].explicit_allowed }));
@@ -152,6 +153,33 @@ router.patch('/toggle-explicit', (req, res) => {
   });
 
 });
+
+
+
+/**
+ * PATCH /musicadmin/toggle-music
+ *
+ * Allows the toggling of music functionality on/off
+ */
+router.patch('/toggle-music', (req, res) => {
+  if (!req.user || !adminList.includes(req.user)) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
+  db.write('UPDATE music_settings SET music_enabled = NOT music_enabled returning music_enabled')
+    .then(rows => {
+      if (rows) {
+        res.status(200).json({ musicEnabled: rows[0].music_enabled });
+      } else {
+        res.status(500).json({ error: "something went wrong toggling music" });
+      }
+    })
+    .catch(err => {
+      console.error('Error toggling explicit songs:', err);
+      res.status(500).json({ error: 'Failed to toggle explicit songs setting.' });
+    });
+});
+
 
 
 /**

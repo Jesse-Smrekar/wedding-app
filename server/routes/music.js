@@ -13,7 +13,32 @@ const SUPER_USERS = ["JESSE_SMREKAR", "TATI_SMREKAR", "JARED_JOHNSON"];
  * Returns the HTML page for adding and removing music
  */
 router.get('/', (req, res) => {
-  res.redirect('/html/music.html');
+
+  db.read('SELECT music_enabled FROM music_settings')
+  .then(rows => {
+    if (rows && rows[0].music_enabled) {
+        res.redirect('/html/music.html');
+    } else {
+      res.redirect('/');
+    }
+  })
+});
+
+
+/**
+ * GET /enabled
+ *
+ * Returns if the music functionality is currently enabled.
+ */
+router.get('/enabled', (req, res) => {
+    db.read('SELECT music_enabled FROM music_settings')
+    .then(rows => {
+      if (rows) {
+        res.status(200).json({ musicEnabled: rows[0].music_enabled });
+      } else {
+        res.status(500).json({ error: "couldn't determine if music is enabled" });
+      }
+    })
 });
 
 
@@ -235,7 +260,7 @@ async function disableTracks(tracks) {
 
     // disable banned tracks
     if (track.disabled) continue;
-		for (const crit in banCriteria) {
+		for (const crit of banCriteria) {
 
 			if (track.uri == crit.track_uri) {
 				track.disabled = true;

@@ -68,8 +68,8 @@ async function init() {
         `);
 
         await pool.query(`
-            INSERT INTO music_settings (id, queue_limit_enabled, queue_wait_minutes, explicit_allowed)
-            VALUES (1, true, 30, false)
+            INSERT INTO music_settings (id, music_enabled, queue_limit_enabled, queue_wait_minutes, explicit_allowed)
+            VALUES (1, false, true, 30, false)
             ON CONFLICT DO NOTHING
         `);
 

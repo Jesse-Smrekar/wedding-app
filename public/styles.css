@@ -779,6 +779,20 @@ table.itinerary th:last-child {
     transform: scale(0.96);
 }
 
+.home-card:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    filter: grayscale(1);
+    color: var(--text-muted, #888);
+    border-color: var(--text-muted, #888);
+}
+
+/* Disabled cards should not react to taps */
+.home-card:disabled:active {
+    background-color: rgb(from var(--surface) r g b / 0.5);
+    transform: none;
+}
+
 /* Wait-minutes card — extends .home-card with an inline numeric input */
 .minutes-card {
     cursor: default;

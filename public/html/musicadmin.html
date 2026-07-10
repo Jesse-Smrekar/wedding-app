@@ -27,6 +27,13 @@
         <!-- TOGGLE SLIDERS -->
         <div id="music-toggles" style="margin-top:20px;">
             <label class="toggle-row">
+                <span class="toggle-label">Music Enabled</span>
+                <span class="switch">
+                    <input type="checkbox" id="music-enabled-toggle" onchange="toggleMusic()">
+                    <span class="slider round"></span>
+                </span>
+            </label>
+            <label class="toggle-row">
                 <span class="toggle-label">Queue Limit</span>
                 <span class="switch">
                     <input type="checkbox" id="queue-limit-toggle" onchange="toggleQueueLimit()">

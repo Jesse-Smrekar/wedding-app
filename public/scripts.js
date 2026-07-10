@@ -163,3 +163,11 @@ function getOverflowEle() {
 }
 */
 
+
+
+makeAuthenticatedRequest('GET', `/music/enabled`)
+.then(data => {
+    if (data && !data.musicEnabled) {
+        document.getElementById('music-button').disabled = true;
+    }
+});
