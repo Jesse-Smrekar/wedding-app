@@ -165,9 +165,14 @@ function getOverflowEle() {
 
 
 
-makeAuthenticatedRequest('GET', `/music/enabled`)
-.then(data => {
-    if (data && !data.musicEnabled) {
-        document.getElementById('music-button').disabled = true;
-    }
-});
+// disable music button if needed
+if (document.location.pathname == '/') {
+    fetch(`${location.origin}/music/enabled`, { credentials: 'same-origin' })
+    .then(res => (res.ok && !res.redirected) ? res.json() : null)
+    .then(data => {
+        if (data && !data.musicEnabled) {
+            document.getElementById('music-button').disabled = true;
+        }
+    })
+    .catch(() => { /* leave the button enabled if the check fails */ });
+}
