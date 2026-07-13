@@ -166,11 +166,13 @@ router.get('/photodump', async (req, res) => {
                 continue;
             }
 
-            archive.append(fileData, { name: filename });
+
+            var newFilename = `${first_name}_${last_name}_${id}.${filename.split('.')[1]}`;
+            archive.append(fileData, { name: newFilename});
             // One line per photo, so a note the guest typed across several lines
             // is flattened rather than corrupting the file:note pairing.
             const flatNote = (note || '').replace(/\s+/g, ' ').trim();
-            noteLines.push(`${filename} : ${first_name} ${last_name} - ${flatNote}`);
+            noteLines.push(`${newFilename} : ${first_name} ${last_name} - ${flatNote}`);
             appended++;
         }
 
