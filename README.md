@@ -8,7 +8,7 @@ info (home, info, directions) and adds two interactive features:
   in a home-page slideshow and a shared photo gallery.
 
 ### Demo
-<video src="./docs/wedding_website_demo.mp4" controls width="25%"></video>
+<video src="https://github.com/user-attachments/assets/ee8a93a5-7dd6-4626-ab8f-eddf49c7b0e4" controls width="25%"></video>
 
 I 3D-printed QR codes which were placed in stands on every table during the reception so guests had easy access. 
 
