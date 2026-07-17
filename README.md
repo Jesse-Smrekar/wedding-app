@@ -1,15 +1,19 @@
 # Wedding App
 
-A small wedding website [jaredandtati.com](https://www.jaredandtati.com) for guests. It serves static event
-info (home, itinerary, directions) and adds two interactive features:
+A website [jaredandtati.com](https://www.jaredandtati.com) for wedding guests. It serves static event
+info (home, info, directions) and adds two interactive features:
 
-- **Music** — guests search and add songs to the live playback queue,
-  rate-limited so no one floods it.
+- **Music** — guests search and add songs to the live playback queue, with restrictions as desired.
 - **Photos** — guests upload photos with an optional note; public uploads appear
-  in a home-page slideshow and a shared gallery.
+  in a home-page slideshow and a shared photo gallery.
 
-Guests "log in" with just a first and last name (this is deliberately lightweight
-identity, not real authentication — see `server/utils/auth.js`).
+### Demo
+<video src="./docs/wedding_website_demo.mp4" controls width="25%"></video>
+
+I 3D-printed QR codes which were placed in stands on every table during the reception so guests had easy access. 
+
+<img src="./docs/qr_code.jpg" controls width="25%"/>
+
 
 ## Tech Stack
 
@@ -34,56 +38,15 @@ identity, not real authentication — see `server/utils/auth.js`).
    npm install
    ```
 
-## Running
-
-```ps1
-node server.js
-```
-
-The server listens on `HTTP_PORT` (e.g. http://localhost:3000) and logs the
-local network IP on startup. You can also use `npm start`.
-
-## Pages
-
-| Path           | Description                                              |
-| -------------- | -------------------------------------------------------- |
-| `/`            | Home page (with public photo slideshow)                  |
-| `/login`       | Guest login (first + last name)                          |
-| `/itinerary`   | Event itinerary                                          |
-| `/directions`  | Directions                                               |
-| `/music`       | Search Spotify and queue songs                           |
-| `/photos`      | Upload photos                                            |
-| `/photos/gallery` | Shared gallery of public photos                       |
-| `/admin`       | Admin tools |
-
-## Project Structure
-
-```
-server.js                  # Express app entry point, route mounting, startup
-server/
-  routes/
-    admin.js               # Admin page + user/queue management
-    music.js               # Spotify search and queue endpoints
-    photos.js              # Photo upload, gallery, slideshow, image serving
-    spotify.js             # Spotify OAuth redirect callback
-  utils/
-    auth.js                # JWT-cookie guest auth middleware
-    db.js                  # PostgreSQL pool + schema init
-    spotify-utils.js       # Spotify token lifecycle and API calls
-    utils.js               # Request logging, local IP lookup
-  logs/                    # Connection logs (gitignored)
-  uploads/                 # Uploaded files (gitignored)
-public/
-  html/                    # Page templates
-  scripts/                 # Frontend JS
-  styles.css, images/      # Static assets
-```
+2. Running
+   ```ps1
+   node server.js
+   ```
 
 ## Notes
-
-- Authentication is intentionally minimal — it exists to attribute actions to a
-  guest, not to secure sensitive data.
-- The naked domain `jaredandtati.com` is 301-redirected to `www.jaredandtati.com`.
+- Guests "log in" with just a first and last name (this is deliberately lightweight
+identity, not real authentication — see `server/utils/auth.js`).
+- The naked domain `jaredandtati.com` is 301-redirected to `www.jaredandtati.com` becuase Wix DNS doesn't support alias/aname (wish I had known this before paying for the domain, oops).
 
 </content>
 </invoke>
